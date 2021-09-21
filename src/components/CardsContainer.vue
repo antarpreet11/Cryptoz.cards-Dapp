@@ -474,7 +474,7 @@ export default {
     cardOriginFilterLabel() {
       const originFilter = this.filterBy[FILTER_TYPES.CARD_ORIGIN]
       if (originFilter) return originFilter.label
-      return "Card Type"
+      return "Card Origin"
     },
   },
   watch: {

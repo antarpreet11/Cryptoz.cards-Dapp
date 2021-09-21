@@ -6,7 +6,6 @@
         :disabled="disabled"
         :text="'Sort By ' + (sortType ? types[sortType] : '')"
       >
-        <!--b-dropdown-item v-if="sortType" @click="clearSortFilter">Clear Sorting</b-dropdown-item-->
         <b-dropdown-item
           v-for="(name, type) in types"
           :key="type"
@@ -25,14 +24,6 @@
         {{ isDescending ? "➘" : "➚" }}
       </b-button>
     </div>
-    <!--b-button
-      v-if="isSorting"
-      class="clear-sorting"
-      variant="outline-warning"
-      @click="clearSortFilter"
-    >
-      Clear Sort Filter
-    </b-button-->
   </div>
 </template>
 

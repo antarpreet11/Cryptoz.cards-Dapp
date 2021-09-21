@@ -131,7 +131,6 @@ export default {
       return this.$refs.cryptTable && this.$refs.cryptTable.isRowSelected(index);
     },
     onRowSelected: function(items) {
-      console.log({items})
       this.$store.dispatch('crypt/setSelectedCards', items)
     },
     onChangeSelection: function(index) {

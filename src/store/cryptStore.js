@@ -58,7 +58,7 @@ const filterByRarity = (includeRarity, cards) => {
 
 // origin is either null (all), STORE, or BOOSTER
 const filterByOrigin = (origin, cards) => {
-  switch (origin) {
+  switch (origin.value) {
     case ORIGIN_CRITERIA.STORE:
       return cards.filter((card) => card.in_store === "Store");
     case ORIGIN_CRITERIA.BOOSTER:

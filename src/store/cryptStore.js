@@ -20,8 +20,9 @@ export const CRYPT_MUTATIONS = {
   LOADING_CRYPT_CARDS_FAILED: "LOADING_CRYPT_CARDS_FAILED",
   CLEAR_CRYPT_CARDS: "CLEAR_CRYPT_CARDS",
   GIFT_CRYPT_CARD: "GIFT_CRYPT_CARD",
-  SACRIFICE_CRYPT_CARD: "SACRIFICE_CRYPT_CARD",
+  SACRIFICE_CRYPT_CARDS: "SACRIFICE_CRYPT_CARDS",
   ADD_BOOSTER_CARD: "ADD_BOOSTER_CARD",
+  SET_SELECTED_CARDS: "SET_SELECTED_CARDS",
 };
 
 const DEFAULT_CRYPT_STATE = {
@@ -30,6 +31,7 @@ const DEFAULT_CRYPT_STATE = {
   isLoadingCrypt: false,
   failedToLoadCrypt: false,
   cryptLoaded: false,
+  selectedCryptCards: [],
 };
 
 const sortCards = (sortParam, cards) => {
@@ -196,12 +198,12 @@ const cryptStore = {
         (card) => card.id !== payload.id
       );
     },
-    [CRYPT_MUTATIONS.SACRIFICE_CRYPT_CARD](state, payload) {
+    [CRYPT_MUTATIONS.SACRIFICE_CRYPT_CARDS](state, payload) {
       state.allCryptCards = state.allCryptCards.filter(
-        (card) => card.id !== payload.id
+        (card) => !payload.ids.includes(card.id)
       );
       state.modifiedCryptCards = state.modifiedCryptCards.filter(
-        (card) => card.id !== payload.id
+        (card) => !payload.ids.includes(card.id)
       );
     },
     [CRYPT_MUTATIONS.ADD_BOOSTER_CARD](state, payload) {
@@ -209,6 +211,9 @@ const cryptStore = {
       if (state.modifiedCryptCards.length > 0) {
         state.modifiedCryptCards.unshift(payload);
       }
+    },
+    [CRYPT_MUTATIONS.SET_SELECTED_CARDS](state, payload) {
+      state.selectedCryptCards = payload
     },
   },
   actions: {
@@ -232,8 +237,8 @@ const cryptStore = {
     cardGifted({ commit }, payload) {
       commit(CRYPT_MUTATIONS.GIFT_CRYPT_CARD, payload);
     },
-    cardSacrificed({ commit }, payload) {
-      commit(CRYPT_MUTATIONS.SACRIFICE_CRYPT_CARD, payload);
+    cardsSacrificed({ commit }, payload) {
+      commit(CRYPT_MUTATIONS.SACRIFICE_CRYPT_CARDS, payload);
     },
     async loadCryptCards({ commit, dispatch, rootState }, payload) {
       const { addressToLoad, isOwnCrypt } = payload;
@@ -296,6 +301,9 @@ const cryptStore = {
         console.error("Failed to get opened booster card. ", cardId);
         return null;
       }
+    },
+    setSelectedCards({ commit }, payload) {
+      commit(CRYPT_MUTATIONS.SET_SELECTED_CARDS, payload);
     },
   },
   getters: {

@@ -33,7 +33,7 @@ let state = {
   },
 
   //Control booster Minting
-  throttle: true
+  throttle: false,
 };
 
 export default state;

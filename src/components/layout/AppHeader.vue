@@ -352,12 +352,17 @@ export default {
       return this.$store.state.lastChainEvent;
     },
     getSponsorRoute() {
-      console.log("Env: ", process.env.NODE_ENV);
-      const siteURL =
-        process.env.NODE_ENV == "development"
-          ? "localhost:8080"
-          : "https://movr.zoombies.world";
-      return `${siteURL}?sponsor=${this.coinbase}`;
+      let url;
+
+      if (window.location.host === "moonbase.zoombies.world") {
+        url = "https://moonbase.zoombies.world";
+      } else if (process.env.NODE_ENV === "development") {
+        url = "localhost:8080";
+      } else {
+        url = "https://movr.zoombies.world";
+      }
+
+      return `${url}?sponsor=${this.coinbase}`;
     },
     sponsorTitle() {
       return this.mySponsor

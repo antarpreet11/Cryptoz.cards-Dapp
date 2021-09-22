@@ -139,10 +139,15 @@ export default {
       this.setFlipped(false)
     },
     getTokenLink(tokenId) {
-      const url =
-        process.env.NODE_ENV == "development"
-          ? "http://localhost:8080"
-          : "https://movr.zoombies.world";
+      let url;
+      if (window.location.host === "moonbase.zoombies.world") {
+        url = "https://moonbase.zoombies.world";
+      } else if (process.env.NODE_ENV === "development") {
+        url = "localhost:8080";
+      } else {
+        url = "https://movr.zoombies.world";
+      }
+
       return `${url}/view/${tokenId}`;
     },
     onCopyLink() {

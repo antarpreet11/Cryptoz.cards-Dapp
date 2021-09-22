@@ -314,10 +314,15 @@ export default {
       return this.$store.state.czxpBalance;
     },
     getMyCryptLink() {
-      const url =
-        process.env.NODE_ENV == "development"
-          ? "localhost:8080"
-          : "https://movr.zoombies.world";
+      let url;
+      if (window.location.host === "moonbase.zoombies.world") {
+        url = "https://moonbase.zoombies.world";
+      } else if (process.env.NODE_ENV === "development") {
+        url = "localhost:8080";
+      } else {
+        url = "https://movr.zoombies.world";
+      }
+
       return `${url}/my-zoombies-nfts/${this.coinbase}`;
     },
   },

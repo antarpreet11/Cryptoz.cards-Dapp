@@ -4,37 +4,38 @@
       <div id="button-container">
         <div class="modifier-wrapper">
           <div class="primary-actions">
-            <SortDropdown :disabled="!ownsCards" @sort-by-attr="sortByAttr" />
             <b-button
               id="view-change-button"
               variant="info"
               :disabled="!ownsCards"
               @click="() => toggleTableView()"
+              v-b-tooltip.hover="tableButtonTooltip"
             >
               {{ "View " + (isTableView ? "Gallery" : "Table") }}
             </b-button>
+            <SortDropdown :disabled="!ownsCards" @sort-by-attr="sortByAttr" />
           </div>
           <div class="filter-by-wrapper">
             <b-dropdown
               class="filter-by"
-              text="Filter By"
+              :text="cardOriginFilterLabel"
               variant="outline-secondary"
             >
               <b-dropdown-item
-                :active="isActive('ORIGIN', null)"
-                @click="setOriginFilter(null)"
+                :active="isActive('ORIGIN', cardOriginData.ALL)"
+                @click="setOriginFilter(cardOriginData.ALL)"
               >
                 All Cards
               </b-dropdown-item>
               <b-dropdown-item
-                :active="isActive('ORIGIN', 'STORE')"
-                @click="setOriginFilter('STORE')"
+                :active="isActive('ORIGIN', cardOriginData.STORE)"
+                @click="setOriginFilter(cardOriginData.STORE)"
               >
                 Store Cards
               </b-dropdown-item>
               <b-dropdown-item
-                :active="isActive('ORIGIN', 'BOOSTER')"
-                @click="setOriginFilter('BOOSTER')"
+                :active="isActive('ORIGIN', cardOriginData.BOOSTER)"
+                @click="setOriginFilter(cardOriginData.BOOSTER)"
               >
                 Booster cards
               </b-dropdown-item>
@@ -143,15 +144,13 @@
                         cardsBeingSacrificed[card.id]
                       "
                       class="btn btn-danger"
-                      @click="sacrificeCard(card.id)"
+                      @click="sacrificeCards([card.id])"
                     >
                       <span class="emoji">☠️</span>
                     </button>
                   </div>
                   <b-spinner
-                    v-if="
-                      cardsBeingGifted[card.id] || cardsBeingSacrificed[card.id]
-                    "
+                    v-if="cardsBeingGifted[card.id] || cardsBeingSacrificed[card.id]"
                     label="Spinning"
                   />
                   <div class="float-right">
@@ -170,7 +169,22 @@
                 </div>
               </div>
             </div>
-            <div v-else>
+            <div v-else-if="!isOthersCrypt">
+              <div class="mass-sac">
+                <span v-if="selectedCards.length === 0">
+                  <b-icon-arrow-90deg-down />
+                  Select Zoombies to Mass Sacrifice
+                </span>
+                <span v-else>
+                  <b-button
+                    variant="danger"
+                    v-b-modal="'mass-sacrifice-modal'"
+                    :disabled="Object.keys(cardsBeingSacrificed).length > 0"
+                  >
+                    ☠️ Sacrifice {{selectedCards.length}} Zoombies
+                  </b-button>
+                </span>
+              </div>
               <crypt-table
                 :display-cards="displayCards"
                 :table-fields="tableFields"
@@ -179,7 +193,7 @@
                 :cards-being-sacrificed="cardsBeingSacrificed"
                 :cards-being-gifted="cardsBeingGifted"
                 @giftCard="openGiftModal"
-                @sacrificeCard="sacrificeCard"
+                @sacrificeCards="sacrificeCards"
                 @loadMore="loadMoreCards"
               ></crypt-table>
             </div>
@@ -210,6 +224,35 @@
         </div>
       </div>
     </div>
+    <b-modal
+      id="mass-sacrifice-modal"
+      :title="`Are you sure you want to Sacrifice ${selectedCards.length} Zoombies?`"
+    >
+      <div>
+        <strong>You will be sacrificing:</strong>
+        <ul>
+          <li v-if="getSelectedCardCountByRarity('Diamond') > 0">{{ getSelectedCardCountByRarity('Diamond') }} Diamond Zoombie(s)</li>
+          <li v-if="getSelectedCardCountByRarity('Platinum') > 0">{{ getSelectedCardCountByRarity('Platinum') }} Platinum Zoombie(s)</li>
+          <li v-if="getSelectedCardCountByRarity('Epic') > 0" class="epic">{{ getSelectedCardCountByRarity('Epic') }} Epic Zoombie(s)</li>
+          <li v-if="getSelectedCardCountByRarity('Rare') > 0" class="rare">{{ getSelectedCardCountByRarity('Rare') }} Rare Zoombie(s)</li>
+          <li v-if="getSelectedCardCountByRarity('Uncommon') > 0" class="uncommon">{{ getSelectedCardCountByRarity('Uncommon') }} Uncommon Zoombie(s)</li>
+          <li v-if="getSelectedCardCountByRarity('Common') > 0" class="common">{{ getSelectedCardCountByRarity('Common') }} Common Zoombie(s)</li>
+        </ul>
+      </div>
+      <template #modal-footer>
+        <div class="mass-sac-modal-footer">
+          <b-button variant="danger" @click="confirmMassSacrifice">
+            ☠️ Sacrifice
+          </b-button>
+          <b-button
+            variant="secondary"
+            @click="$bvModal.hide('mass-sacrifice-modal')"
+          >
+            Cancel
+          </b-button>
+        </div>
+      </template>
+    </b-modal>
   </div>
 </template>
 
@@ -235,6 +278,7 @@ import {
 import dAppStates from "@/dAppStates";
 import { MessageBus } from "@/messageBus";
 import { mapGetters } from "vuex";
+import { BIcon, BIconArrow90degDown } from 'bootstrap-vue';
 
 export default {
   name: "CardsContainer",
@@ -250,6 +294,8 @@ export default {
     BDropdown,
     BDropdownItem,
     BButtonGroup,
+    BIcon,
+    BIconArrow90degDown,
   },
   props: {
     addressToLoad: {
@@ -262,7 +308,6 @@ export default {
     },
   },
   emits: ["cryptChanged"],
-
   beforeDestroy() {
     this.observer.disconnect();
   },
@@ -303,6 +348,7 @@ export default {
     );
   },
   mounted() {
+    this.$store.dispatch('crypt/setSelectedCards', [])
     if (this.CryptozInstance && this.addressToLoad) {
       this.fetchCryptCards();
     }
@@ -311,6 +357,20 @@ export default {
   },
   data() {
     return {
+      cardOriginData: {
+        ALL: {
+          value: 'ALL',
+          label: 'All Cards',
+        },
+        STORE: {
+          value: 'STORE',
+          label: 'Store Cards',
+        },
+        BOOSTER: {
+          value: 'BOOSTER',
+          label: 'Booster Cards',
+        },
+      },
       selected: [], // Must be an array reference!
       options: [
         { text: "E", value: "epic" },
@@ -392,7 +452,9 @@ export default {
         ];
       }
     },
-
+    tableButtonTooltip() {
+      return this.isTableView || this.isOthersCrypt ? '' : 'Use Table to Sacrifice multiple Zoombies at once'
+    },
     getMyCryptLink() {
       const url =
         process.env.NODE_ENV == "development"
@@ -406,8 +468,19 @@ export default {
         filterBy: this.filterBy,
       };
     },
+    selectedCards() {
+      return this.$store.state.crypt.selectedCryptCards;
+    },
+    cardOriginFilterLabel() {
+      const originFilter = this.filterBy[FILTER_TYPES.CARD_ORIGIN]
+      if (originFilter) return originFilter.label
+      return "Card Origin"
+    },
   },
   watch: {
+    cardsBeingSacrificed(val) {
+      console.log({cardsBeingSacrificed: val})
+    },
     CryptozInstance(newVal) {
       if (newVal && this.addressToLoad && !this.isCryptLoaded) {
         this.fetchCryptCards();
@@ -468,12 +541,13 @@ export default {
 
       return isCurrentRarityFilterActive ? "filter-button-active" : null;
     },
+    getSelectedCardCountByRarity(rarity) {
+      return this.selectedCards.filter((card) => card.rarityValue === rarity).length
+    },
     setOriginFilter: async function (criteria) {
       this.filterBy = {
+        ...this.filterBy,
         [FILTER_TYPES.CARD_ORIGIN]: criteria,
-        [FILTER_TYPES.CARD_RARITY]: [
-          ...this.filterBy[FILTER_TYPES.CARD_RARITY],
-        ],
       };
 
       await this.$store.dispatch("crypt/filterCryptCards", {
@@ -495,8 +569,11 @@ export default {
         this.modifiedPaginatedCryptCards = [];
         this.modifiedPageNext = 0;
       }
+
+      this.$store.dispatch('crypt/setSelectedCards', [])
     },
     setRarityFilter: async function (criteria) {
+      this.$store.dispatch('crypt/setSelectedCards', [])
       if (this.filterBy[FILTER_TYPES.CARD_RARITY].includes(criteria)) {
         // remove it from filter by
         this.filterBy[FILTER_TYPES.CARD_RARITY] = this.filterBy[
@@ -543,6 +620,7 @@ export default {
       this.modifiedPaginatedCryptCards = [];
     },
     toggleTableView: function () {
+      this.$store.dispatch("crypt/setSelectedCards", [])
       const nextVal = !this.isTableView;
       this.isTableView = nextVal;
     },
@@ -639,36 +717,43 @@ export default {
         }
       }
     },
-    sacrificeCard: async function (id) {
-      console.log('Sac id:',id);
+    sacrificeCards: async function (ids) {
       this.$store.dispatch("setIsTransactionPending", true);
-      Vue.set(this.cardsBeingSacrificed, id, true);
+      
+      ids.forEach(id => {
+        Vue.set(this.cardsBeingSacrificed, id, true);
+      })
       const sacrificeRes = await this.CryptozInstance.methods
-        .sacrificeNFTs([id])
+        .sacrificeNFTs(ids)
         .send({ from: this.coinbase }, (err, txHash) => {
           this.$store.dispatch("setIsTransactionPending", false);
 
           if (err) {
-            Vue.set(this.cardsBeingSacrificed, id, false);
+            ids.forEach(id => {
+              Vue.delete(this.cardsBeingSacrificed, id);
+            })
           }
         })
         .catch((err) => {
           if (err.code !== 4001) {
             console.log(err);
-            Vue.set(this.cardsBeingSacrificed, id, false);
-            showErrorToast(this, "Failed to sacrifice card");
+            showErrorToast(this, "Failed to sacrifice card(s)");
           }
         });
+  
+      ids.forEach(id => {
+        Vue.delete(this.cardsBeingSacrificed, id);
+      })
 
       if (sacrificeRes) {
-        this.$store.dispatch("crypt/cardSacrificed", { id });
+        this.$store.dispatch("crypt/cardsSacrificed", { ids });
         this.paginatedCryptCards = this.paginatedCryptCards.filter(
-          (card) => card.id !== id
+          (card) => !ids.includes(card.id)
         );
         this.modifiedPaginatedCryptCards = this.modifiedPaginatedCryptCards.filter(
-          (card) => card.id !== id
+          (card) => !ids.includes(card.id)
         );
-        showSuccessToast(this, "Card sacrificed.");
+        showSuccessToast(this, "Card(s) sacrificed.");
       }
     },
     transferCard: async function (id) {
@@ -704,9 +789,14 @@ export default {
         showSuccessToast(this, "Card Gifted.");
       }
     },
+    confirmMassSacrifice: function() {
+      this.isSacrificing = true
+      this.$bvModal.hide('mass-sacrifice-modal')
+      this.sacrificeCards(this.selectedCards.map(card => card.id))
+    },
     sortByAttr: async function (param, isDescending) {
+      this.$store.dispatch('crypt/setSelectedCards', [])
       if (!param) {
-        // We cleared sort.
         this.sortParam = null;
       } else {
         this.sortParam = {
@@ -775,14 +865,19 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
 #button-container {
   display: flex;
   margin-bottom: 2rem;
   flex-direction: column;
+   
+  & button {
+    white-space: nowrap !important;
+  }
 }
 
 #view-change-button {
-  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .loading {
@@ -964,4 +1059,45 @@ table {
 .filter-rarity-wrapper {
   margin-left: 10px;
 }
+
+.mass-sac {
+  font-weight: 700;
+  box-shadow: 0 4px 5px -5px gray;
+  padding: 10px 15px;
+  margin-bottom: 5px;
+  height: 55px;
+  display: flex;
+  align-items: center;
+
+  svg {
+    stroke-width: 2;
+    margin-right: 15px;
+  }
+}
+
+.mass-sac-modal-footer {
+  display: flex;
+  align-items: flex-end;
+
+  button {
+    margin-left: 16px;
+  }
+}
+
+.common {
+  color: rgb(84, 81, 97);
+}
+
+.uncommon {
+  color: rgb(43, 164, 250);
+}
+
+.rare {
+  color: rgb(202, 60, 44);
+}
+
+.epic {
+  color: rgb(87, 69, 229);
+}
+
 </style>

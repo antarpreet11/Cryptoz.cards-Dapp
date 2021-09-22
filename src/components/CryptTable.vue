@@ -6,12 +6,18 @@
       small
       striped
       responsive
+      :selectable="!isOthersCrypt"
+      select-mode="multi"
       ref="cryptTable"
+      @row-selected="onRowSelected"
     >
       <template #cell(name)="row">
-        <div class="cell" :ref="'tableRow' + row.item.id" :data-id="row.item.id">
-          <img :src="row.item.image" :class="`cell mr-4 ${row.item.rarity}`" />
-          {{ row.item.name }}
+        <div class="flex">
+          <input v-if="!isOthersCrypt" type="checkbox" v-bind:checked="isRowSelected(row.index)" @change="onChangeSelection(row.index)" />
+          <div class="cell" :ref="'tableRow' + row.item.id" :data-id="row.item.id">
+            <img :src="row.item.image" :class="`cell mr-4 ${row.item.rarity}`" />
+            {{ row.item.name }}
+          </div>
         </div>
       </template>
       <template #cell(card_level)="row">
@@ -42,7 +48,7 @@
             :disabled="
               cardsBeingGifted[row.item.id] || cardsBeingSacrificed[row.item.id]
             "
-            @click="sacrificeCard(row.item.id)"
+            @click="sacrificeCards([row.item.id])"
           >
             <span class="emoji">☠️</span>
           </b-button>
@@ -74,7 +80,7 @@ export default {
     BTable,
     BButton,
   },
-  emits: ["loadMore", "sacrificeCard", "giftCard"],
+  emits: ["loadMore", "sacrificeCards", "giftCard"],
   props: {
     displayCards: {
       type: Array,
@@ -112,14 +118,27 @@ export default {
     }
   },
   methods: {
-    sacrificeCard: async function (id) {
-      this.$emit("sacrificeCard", id);
+    sacrificeCards: function(id) {
+      this.$emit("sacrificeCards", id);
     },
-    openGiftModal: function (id) {
+    openGiftModal: function(id) {
       this.$emit("giftCard", id);
     },
-    loadMore: function () {
+    loadMore: function() {
       this.$emit("loadMore");
+    },
+    isRowSelected: function(index) {
+      return this.$refs.cryptTable && this.$refs.cryptTable.isRowSelected(index);
+    },
+    onRowSelected: function(items) {
+      this.$store.dispatch('crypt/setSelectedCards', items)
+    },
+    onChangeSelection: function(index) {
+      if (this.isRowSelected(index)) {
+        this.$refs.cryptTable.unselectRow(index)
+      } else {
+        this.$refs.cryptTable.selectRow(index)
+      }
     },
     observeRefs: function() {
       this.$nextTick(() => {
@@ -179,5 +198,14 @@ table {
   align-items: center;
   justify-content: center;
   width: 100%;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+
+  input[type="checkbox"] {
+    margin: 0 10px;
+  }
 }
 </style>

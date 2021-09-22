@@ -4,7 +4,8 @@
     :class="{ fullsize: isFullSize }"
     :data-index="index"
     @click="isFlipped = !isFlipped"
-    @mouseleave="isFlipped = false"
+    @mouseover="handleMouseOver"
+    @mouseleave="handleMouseLeave"
   >
     <div id="flip-container" :class="{ flipped: isFlipped }">
       <!-- front content -->
@@ -63,6 +64,7 @@
 <script>
 import { BButton, BIcon, BIconLink45deg } from 'bootstrap-vue'
 import { showSuccessToast } from "../util/showToast";
+import debounce from "lodash/debounce";
 
 export default {
   name: "OwnedCardContent",
@@ -124,16 +126,24 @@ export default {
       this.observer.observe(this.$el);
     }
   },
+  created() {
+    this.setFlipped = debounce((value) => {      
+      this.isFlipped = value;
+    }, 250, {leading: true});
+  },
   methods: {
+    handleMouseOver() {
+      this.setFlipped(true)
+    },
+    handleMouseLeave() {
+      this.setFlipped(false)
+    },
     getTokenLink(tokenId) {
       const url =
         process.env.NODE_ENV == "development"
           ? "http://localhost:8080"
           : "https://movr.zoombies.world";
       return `${url}/view/${tokenId}`;
-    },
-    toggleFlipped() {
-      this.isFlipped = !this.isFlipped;
     },
     onCopyLink() {
       navigator.clipboard.writeText(this.getTokenLink(this.id))
@@ -341,7 +351,7 @@ export default {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  #card-container:hover #flip-container {
+  #card-container:hover #flip-container.flipped {
     transform: rotateY(180deg);
   }
 }

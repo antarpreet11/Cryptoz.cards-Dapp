@@ -9,12 +9,12 @@
         <b-dropdown-item
           v-for="(name, type) in types"
           :key="type"
-          @click="callSort(type)"
+          @click="changeSort(type)"
+          :active="type === sortType"
         >
           {{ name }}
         </b-dropdown-item>
       </b-dropdown>
-
       <b-button
         v-if="sortType"
         id="toggle-order-button"
@@ -24,14 +24,6 @@
         {{ isDescending ? "➘" : "➚" }}
       </b-button>
     </div>
-    <b-button
-      v-if="isSorting"
-      class="clear-sorting"
-      variant="outline-warning"
-      @click="clearSortFilter"
-    >
-      Clear Sort Filter
-    </b-button>
   </div>
 </template>
 
@@ -55,7 +47,6 @@ export default {
     return {
       isDescending: false,
       sortType: null,
-      isSorting: false,
       types: {
         name: "Name",
         rarity: "Rarity",
@@ -71,9 +62,16 @@ export default {
     };
   },
   methods: {
+    changeSort(param) {
+      if (this.sortType === param) {
+        this.sortType = null;
+      }
+      else {
+        this.sortType = param;
+      }
+      this.callSort(param)
+    },
     callSort(param) {
-      this.sortType = param;
-      this.isSorting = true;
       this.$emit("sort-by-attr", param, this.isDescending);
     },
     toggleOrder() {
@@ -81,7 +79,6 @@ export default {
       this.callSort(this.sortType);
     },
     clearSortFilter() {
-      this.isSorting = false;
       this.sortType = null;
       this.$emit("sort-by-attr", null, this.isDescending);
     },
@@ -90,9 +87,9 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped lang="scss">
 #toggle-order-button {
-  margin-left: 0.5rem;
+  margin-left: 0.15rem;
 }
 
 .clear-sorting {
@@ -101,7 +98,11 @@ export default {
 
 .dropdown-wrapper {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+
+  & button {
+    white-space: nowrap !important;
+  }
 }
 
 /* Desktop CSS */
@@ -110,10 +111,6 @@ export default {
     margin-top: 0px;
     margin-left: 16px;
     max-width: 250px;
-  }
-
-  .dropdown-wrapper {
-    flex-direction: row;
   }
 }
 </style>

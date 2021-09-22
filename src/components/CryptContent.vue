@@ -292,7 +292,6 @@ export default {
     },
     isWagerValid() {
       const wagerAmount = parseInt(this.wagerAmount);
-      //console.log("isValidWager",wagerAmount,wagerAmount >= 1000000 && wagerAmount <= 5000000);
       if (wagerAmount === 0) {
         return true;
       }
@@ -306,8 +305,6 @@ export default {
     hasEnoughCZXP() {
       const wagerAmount = parseInt(this.wagerAmount);
       if (wagerAmount > 0) {
-        //console.log("tokens:",this.czxp_balance);
-        //console.log(this.czxp_balance > wagerAmount);
         return this.czxp_balance > wagerAmount;
       }
 
@@ -334,6 +331,9 @@ export default {
   },
   methods: {
     checkThrottleStatus() {
+      if (!this.throttle) {
+        return true
+      }
       const nowSec = Date.now() / 1000
       const lastMintTime = localStorage.getItem('lastMintTime')
 
@@ -433,6 +433,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+button {
+  white-space: nowrap !important;
+}
+
 .action-buttons {
   display: flex;
   flex-direction: column;

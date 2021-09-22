@@ -55,6 +55,7 @@ import zoombiesContractJSON from "./contracts/Zoombies.json";
 import zoomTokenContractJSON from "./contracts/ZoomToken.json";
 
 const isLocal = (process.env.NODE_ENV === "development" || window.location.host !== 'movr.zoombies.world');
+
 const ethChainParam = isLocal
   ? {
       chainId: "0x507", // Moonbase Alpha's chainId is 1287, which is 0x507 in hex
@@ -225,7 +226,7 @@ export default {
         web3.eth.net.getId(),
       ]);
 
-      if (networkId !== 1285) {
+      if (networkId !== 1285 || isLocal) {
         await this.configureMoonriver();
       }
 

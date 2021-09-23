@@ -49,7 +49,7 @@
         To mint a FREE NFT Or buy a Limited edition NFT at cost, you will need the
         required minimum balance of ZOOM tokens displayed on the botton of the
         card to update the minting button.<br/>
-        You will automatically see a <img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Emojione_1F680.svg" class="rocket-fp-icon" /> Fast Pass price to bypass the ZOOM requirement and may buy immediately.</p>
+        You will automatically see a <img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Emojione_1F680.svg" class="rocket-fp-icon" /> Fast Pass price to bypass the ZOOM requirement and may pay 3x the cost to buy immediately on non-Free cards.</p>
 
         <p>The newly minted NFT will appear in
         <router-link to="/my-zoombies-nfts"> Your NFT Crypt </router-link> once

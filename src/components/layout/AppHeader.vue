@@ -419,7 +419,7 @@ export default {
     },
   },
   mounted() {
-    if (this.$store.state.web3.chainId == "0x505") {
+    if (window.location.host == 'movr.zoombies.world') {
       this.onMainNet = true;
     } else {
       this.onMainNet = false;

@@ -256,10 +256,16 @@ export default {
       this.released_date = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'long' }).format(releaseTime*1000);
     },
     getCryptLink(owner) {
-      const url =
-        process.env.NODE_ENV == "development"
-          ? "http://localhost:8080"
-          : "https://movr.zoombies.world";
+      let url;
+
+      if (window.location.host === "moonbase.zoombies.world") {
+        url = "https://moonbase.zoombies.world";
+      } else if (process.env.NODE_ENV === "development") {
+        url = "localhost:8080";
+      } else {
+        url = "https://movr.zoombies.world";
+      }
+
       return `${url}/my-zoombies-nfts/${owner}`;
     },
     getCardData: function (card_id) {

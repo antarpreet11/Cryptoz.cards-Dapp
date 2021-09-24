@@ -54,7 +54,9 @@ import "./main.css";
 import zoombiesContractJSON from "./contracts/Zoombies.json";
 import zoomTokenContractJSON from "./contracts/ZoomToken.json";
 
-const isLocal = (process.env.NODE_ENV === "development" || window.location.host !== 'movr.zoombies.world');
+const isLocal =
+  process.env.NODE_ENV === "development" ||
+  window.location.host !== "movr.zoombies.world";
 
 const ethChainParam = isLocal
   ? {
@@ -178,7 +180,7 @@ export default {
       this.handleConnect();
     });
   },
-  mounted() {
+  async mounted() {
     // Twitter library - footer follow button uses it
     window.twttr = (function (d, s, id) {
       var js,
@@ -198,7 +200,11 @@ export default {
       return t;
     })(document, "script", "twitter-wjs");
 
-    if (window.web3 === undefined || window.ethereum === undefined) {
+    const provider = await detectEthereumProvider({
+      mustBeMetaMask: true,
+    });
+
+    if (!provider) {
       this.$bvModal.show("no-web3-modal");
     }
   },

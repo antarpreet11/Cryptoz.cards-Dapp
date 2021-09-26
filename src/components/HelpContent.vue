@@ -86,9 +86,7 @@
               role="tabpanel"
             >
               <b-card-body>
-                <div class="card-body">
-                  <img src="./assets/legend_zoombies.jpg" />
-                </div>
+                <img src="./assets/legend_zoombies.jpg" />
                 <p />
                 <h2>Default Mint Booster NFT Rarity Distribution</h2>
                 <p>
@@ -514,7 +512,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .czxp-logo {
-  width: 4%;
+  width: 22px;
   margin-right: 0.2em;
 }
 
@@ -541,5 +539,11 @@ export default {
 
 .rocket-fp-icon {
   max-height: 30px;
+  width: 30px;
+  display: inline;
+}
+
+img {
+  width: 100%;
 }
 </style>

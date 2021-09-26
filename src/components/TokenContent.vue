@@ -52,12 +52,12 @@
                 :is_single_card_view="true"
               />
             </div>
-            <div id="stats-container" class="col">
+            <div id="stats-container">
               <div class="flex-row">
                 <div class="text-right font-weight-bold label">Owner:</div>
                 <div>
                   <a class="wrap-text" :href="owner_url">{{
-                    owner
+                    owner.substr(0, 8) + "..." + owner.substr(36)
                   }}</a>
                 </div>
               </div>
@@ -261,7 +261,7 @@ export default {
       if (window.location.host === "moonbase.zoombies.world") {
         url = "https://moonbase.zoombies.world";
       } else if (process.env.NODE_ENV === "development") {
-        url = "localhost:8080";
+        url = "http://localhost:8080";
       } else {
         url = "https://movr.zoombies.world";
       }
@@ -331,12 +331,14 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #container {
+  width: 100%;
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
 }
 
 #stats-container {
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;

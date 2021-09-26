@@ -3,9 +3,8 @@
     id="card-container"
     :class="{ fullsize: isFullSize }"
     :data-index="index"
-    @click="isFlipped = !isFlipped"
-    @mouseover="handleMouseOver"
-    @mouseleave="handleMouseLeave"
+    @mouseover="isFlipped = true"
+    @mouseleave="isFlipped = false"
   >
     <div id="flip-container" :class="{ flipped: isFlipped }">
       <!-- front content -->
@@ -126,18 +125,7 @@ export default {
       this.observer.observe(this.$el);
     }
   },
-  created() {
-    this.setFlipped = debounce((value) => {      
-      this.isFlipped = value;
-    }, 250, {leading: true});
-  },
   methods: {
-    handleMouseOver() {
-      this.setFlipped(true)
-    },
-    handleMouseLeave() {
-      this.setFlipped(false)
-    },
     getTokenLink(tokenId) {
       let url;
       if (window.location.host === "moonbase.zoombies.world") {

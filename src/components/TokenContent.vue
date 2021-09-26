@@ -252,7 +252,6 @@ export default {
       const owner = await this.CryptozInstance.methods.ownerOf(token_id).call();
       this.owner = owner;
       this.owner_url = this.getCryptLink(owner)
-      console.log(this.owner_url)
       const releaseTime = await this.CryptozInstance.methods.storeReleaseTime(cardTypeId).call();
       this.released_date = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'long' }).format(releaseTime*1000);
     },

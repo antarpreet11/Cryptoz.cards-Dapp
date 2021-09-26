@@ -448,19 +448,16 @@ button {
   align-items: center;
   justify-content: center;
 
-  @media screen and (min-width: 600px) {
+  @media screen and (min-width: 685px) {
     flex-direction: row;
     justify-content: space-between;
   }
 
   div {
-    margin-top: 16px;
-
+    margin: 6px;
     button {
-      min-width: 200px;
-      max-width: 200px;
-
-      @media screen and (min-width: 600px) {
+      @media screen and (min-width: 685px) {
+        margin: 16px 6px;
         min-width: fit-content;
       }
     }
@@ -563,7 +560,7 @@ button {
 }
 
 .mint-booster-btn {
-  min-height:62px;
+  min-height:48px;
 }
 
 .mr-icon {

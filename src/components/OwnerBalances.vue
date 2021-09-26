@@ -1,10 +1,10 @@
 <template>
   <div v-if="isWalletConnected" id="container" class="row-col">
     <p>
-      <strong>Your <b-icon-lightning-fill /> Booster credits :</strong>
+      <strong>Your <b-icon-lightning-fill /> Booster credits:</strong>
       {{ boosters_owned }}
     </p>
-    <p><strong>Your Zoombies NFTs :</strong> {{ cards_owned }}</p>
+    <p><strong>Your Zoombies NFTs:</strong> {{ cards_owned }}</p>
     <p>
       <strong
         >Your ZOOM
@@ -13,7 +13,7 @@
           src="https://zoombies.world/images/zoombies_coin.svg"
           align="middle"
         />
-        Balance :</strong
+        Balance:</strong
       >
       {{ czxp_balance }}
     </p>
@@ -63,6 +63,7 @@ p {
 .row-col {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 @media screen and (min-width: 600px) {

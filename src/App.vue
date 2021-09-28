@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <AppHeader @connect="handleConnect" />
+    <!-- <AppHeader @connect="handleConnect" /> -->
+    <NewAppHeader @connect="handleConnect" />
     <b-modal id="no-web3-modal" hide-footer>
       <template #modal-title> Web3 Not Detected! </template>
       <div class="d-block text-center">
@@ -35,6 +36,7 @@ import debounce from "lodash/debounce";
 import watchEvents from "./util/watchEvents";
 import { showSuccessToast } from "./util/showToast";
 import AppHeader from "./components/layout/AppHeader";
+import NewAppHeader from "./components/layout/NewAppHeader.vue";
 import AppFooter from "./components/layout/AppFooter";
 import TransactionModal from "./components/TransactionModal.vue";
 import dAppStates from "@/dAppStates";
@@ -129,6 +131,7 @@ export default {
     AppFooter,
     TransactionModal,
     CzxpRewardEffect,
+    NewAppHeader,
   },
   data() {
     return {

@@ -133,7 +133,7 @@
               v-b-tooltip.hover="getSoldCardToolTipText"
               class="disabled-btn"
             >
-              <button id="owned-button" disabled class="btn btn-danger">
+              <button id="sold-button" disabled class="btn btn-danger">
                 SOLD OUT!
               </button>
             </div>
@@ -647,6 +647,13 @@ export default {
   border-bottom: 10px solid #dc3545;
 }
 
+#sold-button {
+  color: cornsilk;
+}
+#unreleased-button {
+  color:springgreen;
+}
+
 .loading {
   display: flex;
   width: 100%;
@@ -718,18 +725,21 @@ export default {
     background-image: url('assets/purple_button.png');
     background-size: 100% 100%;
     border: none;
-    color: white;
-    text-shadow: 2px 2px black;
+    /* color: white; */
+    text-shadow: 1px 1px black;
     font-weight: 650;
   }
 
+/* let' get colour specific on why we disabled, sold vs unreleased
   .disabled-btn {
     button {
       color: #333;
       text-shadow: none;
     }
   }
+*/
 }
+
 
 .shop-description {
   a {
@@ -818,7 +828,7 @@ export default {
           width: 80%;
           text-shadow: 1.5px 1.5px black;
         }
-        
+
         .disabled-btn {
           button {
             text-shadow: none;

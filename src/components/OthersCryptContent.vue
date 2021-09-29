@@ -1,5 +1,5 @@
 <template>
-  <div class="jumbotron">
+  <div>
     <universe-balances />
     <div class="description">
       <h1>NFT Wallet</h1>
@@ -63,10 +63,6 @@ export default {
 </script>
 
 <style scoped>
-.jumbotron {
-  margin: auto;
-  width: 95%;
-}
 
 .description {
   margin-bottom: 16px;

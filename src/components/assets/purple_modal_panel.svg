@@ -1,0 +1,84 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="765px" height="833px" viewBox="0 0 765 833">
+<defs>
+<radialGradient id="Gradient_1" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="350.1" fx="0" fy="0" gradientTransform="matrix( 1, 0, 0, -1.7861682376463868, 170.15,815.45) " spreadMethod="pad">
+<stop  offset="0%" stop-color="#2C3667"/>
+
+<stop  offset="100%" stop-color="#3D2398"/>
+</radialGradient>
+
+<linearGradient id="Gradient_2" gradientUnits="userSpaceOnUse" x1="154.75" y1="787.8625" x2="154.75" y2="-34.36250000000001" spreadMethod="pad">
+<stop  offset="0%" stop-color="#C4D4FF"/>
+
+<stop  offset="100%" stop-color="#434EF7"/>
+</linearGradient>
+
+<linearGradient id="Gradient_3" gradientUnits="userSpaceOnUse" x1="154.75" y1="773.25" x2="154.75" y2="-25.650000000000034" spreadMethod="pad">
+<stop  offset="0%" stop-color="#9871FF"/>
+
+<stop  offset="55.294117647058826%" stop-color="#D5C3FF"/>
+</linearGradient>
+
+<g id="panel_purple_0_Layer1_0_MEMBER_0_FILL">
+<path fill="url(#Gradient_1)" stroke="none" d="
+M 521.2 687.65
+Q 541.35 631 556.8 438.65 572.2 245.95 513.9 117 455.3 -11.95 245.25 -15.7 34.95 -19.4 -52.4 12.25 -144.75 45.05 -160.45 80.85 -190.75 149.45 -201.75 357.05 -212.75 562.4 -188.7 650 -164.6 737.2 -70.7 775.6 22.95 813.65 166.8 817.35 310.4 820.7 405.85 782.3 501.1 743.95 521.2 687.65 Z"/>
+</g>
+
+<g id="panel_purple_0_Layer1_0_MEMBER_1_FILL">
+<path fill="url(#Gradient_2)" stroke="none" d="
+M 533.75 387.95
+Q 533.5 193.05 486.7 114.75 439.6 36.5 237.7 12.25 35.75 -11.95 -53.95 18.6 -143.95 49.15 -159.65 83.85 -189.2 150.55 -196.55 348.45 -203.85 545.65 -170.9 633.25 -138.2 720.8 -73.05 746.55 -7.95 771.9 131.2 783.8 270.35 795.75 376.85 757.7 483.3 718.6 508.4 650 533.75 582.55 533.75 387.95 Z"/>
+</g>
+
+<g id="panel_purple_0_Layer1_0_MEMBER_2_FILL">
+<path fill="url(#Gradient_3)" stroke="none" d="
+M 525.15 345.5
+Q 530.1 161 485.1 104.7 439.85 48.8 160.5 27.55 -118.85 6.3 -150.25 80.1 -181.9 153.55 -192.1 344.35 -202.55 532.95 -168.3 620.2 -134 707.05 -44.55 736.1 44.65 765.2 243.95 757.7 443.25 749.9 481.7 640.3 520.15 530 525.15 345.5 Z"/>
+</g>
+
+<g id="panel_purple_0_Layer1_0_MEMBER_3_FILL">
+<path fill="#FFFFFF" stroke="none" d="
+M 341.55 138.45
+Q 341.4232421875 138.8146484375 341.25 139.3 340.55 141.3 340.6 141.85 340.7 142.35 341.5 141.25 342.3 140.15 342.5 139.35 342.6390625 138.701171875 341.55 138.45 Z"/>
+</g>
+
+<g id="panel_purple_0_Layer1_0_MEMBER_4_FILL">
+<path fill="#FFFFFF" stroke="none" d="
+M 342.55 136.5
+Q 343.05 136.7 345.4 135.35 347.75 134 347.5 133.7 347.35 133.4 346 133.6 344.8 133.8 344 134.15 343.3 134.45 342.7 135.4 342.1 136.3 342.55 136.5 Z"/>
+</g>
+
+<g id="panel_purple_0_Layer1_0_MEMBER_5_FILL">
+<path fill="#FFFFFF" stroke="none" d="
+M 342.55 136.5
+Q 343.05 136.7 345.4 135.35 347.75 134 347.5 133.7 347.35 133.4 346 133.6 344.8 133.8 344 134.15 343.3 134.45 342.7 135.4 342.1 136.3 342.55 136.5 Z"/>
+</g>
+</defs>
+
+<g transform="matrix( 1, 0, 0, 1, 205.2,16.1) ">
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#panel_purple_0_Layer1_0_MEMBER_0_FILL"/>
+</g>
+
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#panel_purple_0_Layer1_0_MEMBER_1_FILL"/>
+</g>
+
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#panel_purple_0_Layer1_0_MEMBER_2_FILL"/>
+</g>
+
+<g transform="matrix( 14.79681396484375, 0, 0, 21.08489990234375, -5206.1,-2765.65) ">
+<use xlink:href="#panel_purple_0_Layer1_0_MEMBER_3_FILL"/>
+</g>
+
+<g transform="matrix( 14.79681396484375, 0, 0, 21.08489990234375, -5203.7,-2765.65) ">
+<use xlink:href="#panel_purple_0_Layer1_0_MEMBER_4_FILL"/>
+</g>
+
+<g transform="matrix( -14.79681396484375, 0, 0, -21.08489990234375, 5525.8,3518.25) ">
+<use xlink:href="#panel_purple_0_Layer1_0_MEMBER_5_FILL"/>
+</g>
+</g>
+</svg>

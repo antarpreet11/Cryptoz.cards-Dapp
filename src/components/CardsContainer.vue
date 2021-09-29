@@ -19,7 +19,7 @@
             <b-dropdown
               class="filter-by"
               :text="cardOriginFilterLabel"
-              variant="outline-secondary"
+              variant="secondary"
             >
               <b-dropdown-item
                 :active="isActive('ORIGIN', cardOriginData.ALL)"
@@ -169,7 +169,7 @@
                 </div>
               </div>
             </div>
-            <div v-else-if="!isOthersCrypt">
+            <div v-else-if="!isOthersCrypt" class="table">
               <div class="mass-sac">
                 <span v-if="selectedCards.length === 0">
                   <b-icon-arrow-90deg-down />
@@ -950,20 +950,6 @@ export default {
   border: 2px solid rgb(87, 69, 229);
 }
 
-table {
-  .cell {
-    min-height: 60px;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    img {
-      height: 60px;
-    }
-  }
-}
-
 .sacrifice-wrapper {
   display: flex;
   align-items: center;
@@ -1063,6 +1049,12 @@ table {
 
 .filter-rarity-wrapper {
   margin-left: 10px;
+}
+
+.table {
+  background: rgba(255,255,255,0.8);
+  border-radius: 8px;
+  padding: 4px 4px 0 4px;
 }
 
 .mass-sac {

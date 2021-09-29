@@ -250,6 +250,7 @@ export default {
   right: 5%;
   top: 70%;
   bottom: 13%;
+  color: black;
 
   display: flex;
   justify-content: center;

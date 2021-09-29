@@ -168,7 +168,7 @@
         </div>
       </b-modal>
 
-      <div class="jumbotron">
+      <div>
         <UniverseBalances />
 
         <h1>Your NFT Crypt</h1>
@@ -199,17 +199,15 @@
               <b-icon-pie-chart-fill />
             </b-button>
           </div>
-          <div class="buy-and-open-booster">
-            <b-button
-              v-b-tooltip.hover="'Mint 1 random booster NFT +500 ZOOM'"
-              class="btn btn-danger"
-              :disabled="balance < 10000001000000000"
-              @click="buyAndOpenBooster"
-            >
-              Buy and Mint <b-icon-lightning-fill /> Booster NFT 0.01
-              <img src="https://zoombies.world/images/mr-icon.png" class="mr-icon" />
-            </b-button>
-          </div>
+          <b-button
+            class="buy-and-open-booster btn btn-dange"
+            v-b-tooltip.hover="'Mint 1 random booster NFT +500 ZOOM'"
+            :disabled="balance < 10000001000000000"
+            @click="buyAndOpenBooster"
+          >
+            Buy and Mint <b-icon-lightning-fill /> Booster NFT 0.01
+            <img src="https://zoombies.world/images/mr-icon.png" class="mr-icon" />
+          </b-button>
         </div>
         <br />
 
@@ -464,13 +462,15 @@ button {
   }
 }
 
-.jumbotron {
-  margin: auto;
-  width: 95%;
-}
-
 .buy-and-open-booster {
   display: flex;
+  background-color: transparent;
+  background-image: url('assets/pink_button_wide.png');
+  background-size: 100% 100%;
+  border: none;
+  color: #111;
+  font-weight: 650;
+  padding: 10px 14px;
 }
 
 #open-booster-modal div {
@@ -560,7 +560,17 @@ button {
 }
 
 .mint-booster-btn {
-  min-height:48px;
+  background-color: transparent;
+  background-image: url('assets/pink_button_wide.png');
+  background-size: 100% 100%;
+  border: none;
+  color: #111;
+  font-weight: 650;
+  padding: 10px 14px;
+
+  &.disabled {
+    color: #444;
+  }
 }
 
 .mr-icon {

@@ -9,7 +9,9 @@
     -->
     <br/><br/><br/>
     <div>
-   <b-jumbotron header="Community Feedback" lead="The core value of Zoombies is the Community">
+   <div>
+    <h1>Community Feedback</h1>
+    <h4>The core value of Zoombies is the Community</h4>
     <p>NFT ownership is a revolutionary idea. Zoombies are fun little collectible cards right now, but you are part of a new era of digital ownership. Owning a peice of the Zoombies World NFT collection comes with a responsibility to have the vision and ambassador for something amazing.</p>
     <p>This is why, we are taking the first steps to create a process for decision making. Over time this process will evolve and we may end up with a Decentralized Autonomous Organization (DAO). Today we start with community feedback.</p>
 
@@ -33,7 +35,7 @@
     Closed Sept 6, 2021 21:53-UTC
     <br/><br/>
 
-  </b-jumbotron>
+  </div>
 </div>
       <h1></h1>
 

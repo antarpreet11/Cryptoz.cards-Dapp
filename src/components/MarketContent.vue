@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="jumbotron">
+    <div>
       <div class="page-title">
         <h1>Markets</h1>
       </div>
 
       <b-card class="market-card" no-body>
-        <b-tabs fill card>
-          <b-tab title="Zoombies NFT Cards" active>
+        <b-tabs card>
+          <b-tab title="Zoombies NFT Cards">
             <h3>Zoombies NFT Collectible Cards</h3>
             <h5>
               ERC-721 NFT tokens are supported on the following auction
@@ -20,7 +20,7 @@
 
 
           </b-tab>
-          <b-tab title="ZOOM token">
+          <b-tab title="ZOOM Token">
             <h3>
             ZOOM
             <img
@@ -30,7 +30,7 @@
               token
             </h3>
             <h5>
-              The ERC-20 compliant ZOOM Moonriver tokens are supported on the following token exchanges :<br/>
+              The ERC-20 compliant ZOOM Moonriver tokens are supported on the following token exchanges:<br/>
             </h5>
             ZOOM token Contract - 0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4
             <br/><br/><br/>
@@ -93,7 +93,7 @@ export default {
   },
 };
 </script>
-<style scoped lang="scss">
+<style lang="scss">
 .page-title {
   margin-top: 36px;
 }
@@ -130,9 +130,8 @@ h3 {
   margin-bottom: 1em;
 }
 
-.jumbotron {
-  margin: auto;
-  width: 95%;
+.market-card {
+  color: black;
 }
 
 .markets-wrapper {
@@ -166,11 +165,6 @@ h3 {
   h2 {
     font-size: 18px;
   }
-}
-
-.market-card {
-  margin-top: 24px;
-  margin-bottom: 24px;
 }
 
 .oneinch-exchange {

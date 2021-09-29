@@ -1,7 +1,7 @@
 <template>
   <div>
     <main role="main" class="container">
-      <div class="jumbotron">
+      <div>
         <div v-if="load_state == -1" class="row">
           <div class="col">
             <h2>Loading....please wait</h2>
@@ -30,7 +30,7 @@
               <p>Please search for a valid token</p>
             </div>
           </div>
-          <div v-else id="container" class="row">
+          <div v-else class="row">
             <div id="card-wrapper">
               <OwnedCardContent
                 :id="card.id"
@@ -330,10 +330,15 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#container {
-  width: 100%;
-  display: flex;
-  flex-flow: row wrap;
+.container {
+  padding-top: 20px;
+}
+
+a {
+  color: #7EF4F6;
+}
+
+.row {
   justify-content: center;
 }
 

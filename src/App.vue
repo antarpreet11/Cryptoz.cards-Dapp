@@ -35,6 +35,27 @@
   background-image: url('components/assets/space_bg.svg');
   background-size: cover;
 }
+
+/* unvisited link */
+a:link {
+  color: #ffa7c4;
+}
+
+/* visited link */
+a:visited {
+  color: #ffa7c4;
+}
+
+/* mouse over link */
+a:hover {
+  color: #82ffd6;
+}
+
+/* selected link */
+a:active {
+  color: #82ffd6;
+}
+
 .app-body {
   padding: 50px 30px;
   color: white;
@@ -387,5 +408,3 @@ export default {
   },
 };
 </script>
-
-

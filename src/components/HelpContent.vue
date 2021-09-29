@@ -511,7 +511,8 @@ export default {
 <style scoped>
 
 .card-body {
-  color: black;
+  color: white;
+  background-color: darkslateblue;
 }
 
 .czxp-logo {

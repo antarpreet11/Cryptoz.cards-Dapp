@@ -169,7 +169,7 @@ export default {
     },
   },
   mounted() {
-    if(this.$store.state.web3.chainId == "0x505") {
+    if(this.$store.state.web3.chainId == "1285") {
       this.onMainNet = true;
     } else{
       this.onMainNet = false;

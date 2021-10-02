@@ -58,13 +58,17 @@ const filterByRarity = (includeRarity, cards) => {
 
 // origin is either null (all), STORE, or BOOSTER
 const filterByOrigin = (origin, cards) => {
-  switch (origin.value) {
-    case ORIGIN_CRITERIA.STORE:
-      return cards.filter((card) => card.in_store === "Store");
-    case ORIGIN_CRITERIA.BOOSTER:
-      return cards.filter((card) => card.in_store === "Booster");
-    default:
-      return cards;
+  if (!!origin) {
+    switch (origin.value) {
+      case ORIGIN_CRITERIA.STORE:
+        return cards.filter((card) => card.in_store === "Store");
+      case ORIGIN_CRITERIA.BOOSTER:
+        return cards.filter((card) => card.in_store === "Booster");
+      default:
+        return cards;
+    }
+  } else {
+    return cards;
   }
 };
 

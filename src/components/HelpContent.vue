@@ -516,8 +516,8 @@ export default {
 }
 
 .czxp-logo {
-  width: 22px;
-  margin-right: 0.2em;
+  width: 25px;
+  height: 25px;
 }
 
 .accordion-header {

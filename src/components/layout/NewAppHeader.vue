@@ -128,6 +128,31 @@
         >
       </div>
     </b-modal>
+    <div class="wallet-info" v-if="isWalletConnected">
+      <img src="@/assets/metamask-face.png" class="header-icon" />
+      <span
+        v-b-tooltip.hover.bottom
+        :title="coinbase"
+      >
+        {{ coinbase.substr(0, 6) + "..." + coinbase.substr(38) }}
+      </span>
+      <div
+        id="wallet-balance"
+        v-b-tooltip.hover.bottom
+        :title="ethBalance"
+      >
+        <img
+          v-if="onMainNet"
+          src="https://zoombies.world/images/mr-icon.png"
+          class="header-icon"
+        />
+        <span
+          >{{
+            onMainNet ? ethBalance.toFixed(4) : ethBalance.toFixed(3) + " DEV"
+          }}
+        </span>
+      </div>
+    </div>
     <div class="app-menu-bar">
       <router-link to="/">
         <img
@@ -185,47 +210,68 @@
         <img src="@/assets/button_menu.svg" />
       </div>
     </div>
-    <div class="wallet-info">
-      <img src="@/assets/metamask-face.png" class="header-icon" />
-      <span v-if="isWalletConnected"
-        v-b-tooltip.hover.bottom
-        :title="coinbase"
-      >
-        {{ coinbase.substr(0, 6) + "..." + coinbase.substr(38) }}
-      </span>
+    <b-button
+      v-if="!isWalletConnected"
+      v-b-toggle.nav-collapse
+      variant="warning"
+      @click="$emit('connect')"
+      class="desktop-connect-btn"
+    >
+      Connect To {{ onMainNet ? "Moonriver" : "Moonbase" }}
+    </b-button>
+    <div class="desktop-bonus">
       <div
-        v-if="isWalletConnected"
-        id="wallet-balance"
-        v-b-tooltip.hover.bottom
-        :title="ethBalance"
+        v-if="isWalletConnected && bonusReady && showSpinner == false"
+        class="bonusClass"
+        @click="GetBonus"
       >
-        <img
-          v-if="onMainNet"
-          src="https://zoombies.world/images/mr-icon.png"
-          class="header-icon"
+        Claim 2 FREE Boosters!
+      </div>
+      <div v-else-if="isWalletConnected && showSpinner == true">
+        <b-spinner
+          style="width: 1.5rem; height: 1.5rem"
+          type="grow"
+          variant="light"
         />
-        <span
-          >{{
-            onMainNet ? ethBalance.toFixed(4) : ethBalance.toFixed(3) + " DEV"
-          }}
-        </span>
+        <transition>
+          <span class="spinner-text-style">
+            {{ transactionMessage }}</span
+          >
+        </transition>
+      </div>
+      <div
+        v-else-if="
+          isWalletConnected &&
+          !bonusReady &&
+          timeToBonus &&
+          showSpinner == false
+        "
+        class="bonusClassNo"
+      >
+        Your Next Bonus: <strong>{{ timeToBonus }}</strong>
       </div>
     </div>
     <div
       ref="mobileDropdown"
       :class="{'mobile-dropdown': true, 'dropdown-hidden': !isMobileDropdownOpen}"
     >
-      <div class="mobile-wallet-info">
+      <b-button
+        v-if="!isWalletConnected"
+        v-b-toggle.nav-collapse
+        variant="warning"
+        @click="$emit('connect')"
+      >
+        Connect To {{ onMainNet ? "Moonriver" : "Moonbase (testnet)" }}
+      </b-button>
+      <div class="mobile-wallet-info" v-if="isWalletConnected">
         <img src="@/assets/metamask-face.png" class="header-icon" />
         <span
-          v-if="isWalletConnected"
           v-b-tooltip.hover="{ customClass: 'tooltip-1' }"
           :title="coinbase"
         >
           {{ coinbase.substr(0, 6) + "..." + coinbase.substr(38) }}
         </span>
         <div
-          v-if="isWalletConnected"
           id="wallet-balance"
           v-b-tooltip.hover="{ customClass: 'tooltip-2' }"
           :title="ethBalance"
@@ -275,7 +321,7 @@
             Your Next Bonus: <strong>{{ timeToBonus }}</strong>
           </div>
         </li>
-        <li @click="toggleMobileDropdown"><button v-b-modal.sponsor-modal class="aqua-header">Affiliate</button></li>
+        <li @click="toggleMobileDropdown"><button v-b-modal.sponsor-modal class="affiliate-btn aqua-header">Affiliate</button></li>
         <li @click="toggleMobileDropdown"><router-link to="/shop" class="aqua-header">Shop</router-link></li>
         <li @click="toggleMobileDropdown"><router-link to="/my-zoombies-nfts" class="aqua-header">Your NFT Crypt</router-link></li>
         <li @click="toggleMobileDropdown"><router-link to="/market" class="aqua-header">Markets</router-link></li>
@@ -596,10 +642,14 @@ export default {
   }
 
   .bonusClassNo {
-    color: white;
+    color: #f7162c;
+
+    strong {
+      font-weight: 500;
+    }
   }
 
-  button {
+  .affiliate-btn {
     :hover {
       text-decoration: underline;
     }
@@ -617,7 +667,7 @@ export default {
     padding: 2px 0;
     display: block;
 
-    :hover {
+    :not(.bonusClassNo):hover {
       text-decoration: underline;
     }
   }
@@ -636,6 +686,11 @@ export default {
   padding-bottom: 0;
 }
 
+.desktop-connect-btn {
+  margin: 5px;
+  width: 200px;
+}
+
 .hamburger-menu {
   cursor: pointer;
   display: none;
@@ -643,12 +698,14 @@ export default {
 
 .app-header {
   padding: 16px 0 0 0;
-  margin: 10px 6px 0 6px;
+  margin: 0px 6px 0 6px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .wallet-info {
-  height: 40px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -758,12 +815,17 @@ export default {
     }
   }
 
-  .wallet-info {
+  .desktop-connect-btn, .desktop-bonus, .app-menu-bar-items, .wallet-info {
     display: none;
   }
+}
 
-  .app-menu-bar-items {
-    display: none;
+.desktop-bonus {
+  margin-right: 32px;
+
+  .bonusClass {
+    font-size: 18px;
+    color: #00ff00;
   }
 }
 
@@ -903,14 +965,6 @@ OLD CSS
   border: 1px solid transparent;
 }
 
-.tooltip-1 {
-  // top: 65px !important;
-}
-
-.tooltip-2 {
-  // top: 45px !important;
-}
-
 @media screen and (max-width: 600px) {
   .nav-item {
     height: 40px;
@@ -920,10 +974,6 @@ OLD CSS
 
   .bonusClass {
     margin-right: 0;
-  }
-
-  #connect-button {
-    margin: auto;
   }
 
   #shop {
@@ -1032,16 +1082,6 @@ a {
   flex-direction: row;
 }
 
-#connect-button {
-  margin-left: auto;
-  min-width: 190px;
-  grid-row: 3;
-}
-
-#connect-button:empty {
-  min-width: 0;
-}
-
 .eth-link,
 .bsc-link {
   white-space: nowrap;
@@ -1097,7 +1137,8 @@ a {
 }
 
 .czxp-logo {
-  width: 20px;
+  width: 25px;
+  height: 25px;
   vertical-align: middle;
 }
 </style>

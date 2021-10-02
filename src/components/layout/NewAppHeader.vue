@@ -128,29 +128,6 @@
         >
       </div>
     </b-modal>
-    <div class="wallet-info">
-      <img src="@/assets/metamask-face.png" class="header-icon" />
-      <span v-if="isWalletConnected">{{
-        coinbase.substr(0, 6) + "..." + coinbase.substr(38)
-      }}</span>
-      <div
-        v-if="isWalletConnected"
-        id="wallet-balance"
-        v-b-tooltip.hover="{ customClass: 'tooltip-2' }"
-        :title="ethBalance"
-      >
-        <img
-          v-if="onMainNet"
-          src="https://zoombies.world/images/mr-icon.png"
-          class="header-icon"
-        />
-        <span
-          >{{
-            onMainNet ? ethBalance.toFixed(4) : ethBalance.toFixed(3) + " DEV"
-          }}
-        </span>
-      </div>
-    </div>
     <div class="app-menu-bar">
       <router-link to="/">
         <img
@@ -206,6 +183,29 @@
         @click="toggleMobileDropdown"
       >
         <img src="@/assets/button_menu.svg" />
+      </div>
+    </div>
+    <div class="wallet-info">
+      <img src="@/assets/metamask-face.png" class="header-icon" />
+      <span v-if="isWalletConnected">{{
+        coinbase.substr(0, 6) + "..." + coinbase.substr(38)
+      }}</span>
+      <div
+        v-if="isWalletConnected"
+        id="wallet-balance"
+        v-b-tooltip.hover="{ customClass: 'tooltip-2' }"
+        :title="ethBalance"
+      >
+        <img
+          v-if="onMainNet"
+          src="https://zoombies.world/images/mr-icon.png"
+          class="header-icon"
+        />
+        <span
+          >{{
+            onMainNet ? ethBalance.toFixed(4) : ethBalance.toFixed(3) + " DEV"
+          }}
+        </span>
       </div>
     </div>
     <ul
@@ -519,8 +519,7 @@ export default {
 
 .app-header {
   padding: 16px 0;
-  max-width: 1140px;
-  margin: 32px auto 48px auto;
+  margin: 10px 6px 48px 6px;
 }
 
 .wallet-info {
@@ -544,36 +543,27 @@ export default {
 }
 
 .app-menu-bar {
-  background-image: url("~@/assets/menu_bar.svg");
+  background-image: url("~@/assets/menu_bar.png");
+  background-size: 100% 100%;
   width: 100%;
   height: 70px;
-  background-size: cover;
+  background-repeat: no-repeat;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-
-  @media screen and (min-width: 1100px) {
-    height: 80px;
-  }
 }
 
 .zoombie-logo {
-  width: 200px;
-  height: 200px;
+  height: 105px;
+  width: 105px;
   position: absolute;
-  top: -80%;
-  left: 70px;
+  left: 3%;
+  top: 50%;
+  transform: translateY(-50%);
 
   &:hover {
-    width: 220px;
-    height: 220px;
-    top: -90%;
-    left: 65px;
-  }
-
-  @media screen and (min-width: 1100px) {
-    top: -90%;
+    transform: translateY(-50%) scale(1.1);
   }
 }
 
@@ -582,7 +572,52 @@ export default {
 
   li {
     display: inline-block;
-    margin-right: 24px;
+    margin-right: 12px;
+
+    &:hover {
+      transform: scale(1.1);
+
+      button {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 740px) {
+  .app-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .app-menu-bar {
+    height: 60px;
+  }
+
+  .zoombie-logo {
+    height: 80px;
+    width: 80px;
+  }
+
+  .hamburger-menu {
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    img {
+      width: 40px;
+      height: 30px;
+      margin-right: 30px;
+    }
+  }
+
+  .wallet-info {
+    display: none;
+  }
+
+  .app-menu-bar-items {
+    display: none;
   }
 }
 
@@ -615,113 +650,6 @@ ul {
 .header-item {
   font-family: "Oswald", sans-serif;
   font-size: 22px;
-}
-
-@media screen and (max-width: 992px) {
-  .hamburger-menu {
-    display: flex;
-    align-items: center;
-    height: 100%;
-
-    img {
-      width: 35px;
-      height: 25px;
-      margin-right: 25px;
-    }
-  }
-
-  .wallet-info {
-    display: none;
-  }
-
-  .app-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .app-menu-bar {
-    width: 700px;
-    height: 50px;
-  }
-
-  .zoombie-logo {
-    width: 100px;
-    height: 100px;
-    top: -50%;
-    left: 40px;
-
-    &:hover {
-      width: 110px;
-      height: 110px;
-      top: -45%;
-      left: 35px;
-    }
-  }
-
-  .app-menu-bar-items {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .app-menu-bar {
-    background-image: url("~@/assets/menu_bar_mobile.svg");
-    width: 600px;
-    height: 60px;
-  }
-
-  .hamburger-menu {
-    img {
-      width: 35px;
-      height: 25px;
-      margin-right: 40px;
-    }
-  }
-}
-
-@media screen and (max-width: 576px) {
-  .app-menu-bar {
-    width: 450px;
-    height: 45px;
-  }
-
-  .hamburger-menu {
-    img {
-      width: 35px;
-      height: 25px;
-      margin-right: 40px;
-    }
-  }
-}
-
-@media screen and (max-width: 450px) {
-  .hamburger-menu {
-    img {
-      width: 30px;
-      height: 20px;
-      margin-right: 30px;
-    }
-  }
-
-  .app-menu-bar {
-    width: 350px;
-    height: 35px;
-  }
-
-  .zoombie-logo {
-    width: 50px;
-    height: 50px;
-    top: -25%;
-    left: 25px;
-
-    &:hover {
-      width: 60px;
-      height: 60px;
-      top: -20%;
-      left: 20px;
-    }
-  }
 }
 
 /*******************************
@@ -923,12 +851,6 @@ a {
 .bsc-link {
   color: #f0b90b;
 }
-
-// a:hover {
-//   color: #fff;
-//   text-decoration: none;
-//   transform: scale(1.1);
-// }
 
 .fade-enter-active,
 .fade-leave-active {

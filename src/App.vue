@@ -2,7 +2,6 @@
   <div id="app">
     <!-- <AppHeader @connect="handleConnect" /> -->
     <NewAppHeader @connect="handleConnect" />
-    <div class="test-menu-bar-png"></div>
     <b-modal id="no-web3-modal" hide-footer>
       <template #modal-title> Web3 Not Detected! </template>
       <div class="d-block text-center">
@@ -344,14 +343,6 @@ export default {
 </script>
 
 <style>
-.test-menu-bar-png {
-  background-image: url("~@/assets/menu_bar.png");
-  width: 90%;
-  height: 50px;
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-
 #app {
   min-height: 100vh;
   overflow-x: hidden;

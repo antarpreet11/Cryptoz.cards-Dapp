@@ -1,13 +1,13 @@
 <template>
   <div>
-    <main role="main" class="container">
+    <main role="main">
       <!--
         brown       - 585858
         light blue  - 03c1e8
         red         - d5005a
         purple      - b92ee4
     -->
-      <div class="jumbotron">
+      <div>
         <h1>Frequently Asked Questions</h1>
         <p><span class="text-danger"><strong>NOTE:</strong></span> Please read all of the information below in detail, there are inherent risks with Cryptocurrency, NFTs and tokenomics. Know your limits and don't risk more than you are willing to lose.</p>
         <div class="accordion" role="tablist">
@@ -28,7 +28,7 @@
               role="tabpanel"
             >
               <b-card-body>
-                <div class="card-body">
+                <div>
                   You will need:
                   <ul>
                     <li>
@@ -179,21 +179,19 @@
               role="tabpanel"
             >
               <b-card-body>
-                <div class="card-body">
-                  <p>You will need to buy MOVR or have it sent to your wallet. For more information, follow the offical Announcements
-                  from the <a href="https://moonbeam.foundation/" target="_blank">Moonbeam Foundation</a>.
-                  <br/>
-                  You can trade for MOVR tokens at these exchanges <a href="https://www.kucoin.com/" target="_blank">KuCoin</a> or <a href="https://www.kraken.com/" target="_blank">Kraken</a>.
-                  </p>
-                  As of this writing, the transaction cost (gas) by Moonriver blockchain to interact with Zoombies will cost approx $0.002 to
-                  $0.30 USD per transaction, depending on how fast you would
-                  like the transactions confirmed and what exactly you are
-                  trying to do.
-                  <br />
-                  This fee is not charged by the Zoombies contract, but by the
-                  Moonriver platform to execute contract code for you
-                  by you on this massive worldscale blockchain.
-                </div>
+                <p>You will need to buy MOVR or have it sent to your wallet. For more information, follow the offical Announcements
+                from the <a href="https://moonbeam.foundation/" target="_blank">Moonbeam Foundation</a>.
+                <br/>
+                You can trade for MOVR tokens at these exchanges <a href="https://www.kucoin.com/" target="_blank">KuCoin</a> or <a href="https://www.kraken.com/" target="_blank">Kraken</a>.
+                </p>
+                As of this writing, the transaction cost (gas) by Moonriver blockchain to interact with Zoombies will cost approx $0.002 to
+                $0.30 USD per transaction, depending on how fast you would
+                like the transactions confirmed and what exactly you are
+                trying to do.
+                <br />
+                This fee is not charged by the Zoombies contract, but by the
+                Moonriver platform to execute contract code for you
+                by you on this massive worldscale blockchain.
               </b-card-body>
             </b-collapse>
           </b-card>
@@ -482,7 +480,7 @@ export default {
   },
   methods: {
     addCZXPtoMetaMask: async function() {
-      const tokenAddress = this.onMainNet ? '0x8e21404bAd3A1d2327cc6D2B2118f47911a1f316' : '0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4';
+      const tokenAddress = this.onMainNet ? '0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4' : '0x8e21404bAd3A1d2327cc6D2B2118f47911a1f316';
       const tokenSymbol = this.onMainNet ? 'ZOOM' : 'ZOOM-DEV';
       const tokenDecimals = 18;
       const tokenImage = 'https://zoombies.world/images/zoombies_coin.svg';
@@ -511,6 +509,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.card-body {
+  color: white;
+  background-color: darkslateblue;
+}
+
 .czxp-logo {
   width: 22px;
   margin-right: 0.2em;

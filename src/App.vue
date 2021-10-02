@@ -21,13 +21,83 @@
       </div>
     </b-modal>
     <transition name="component-fade" mode="out-in">
-      <router-view />
+      <router-view class="app-body" />
     </transition>
     <CzxpRewardEffect />
     <AppFooter />
     <transaction-modal />
   </div>
 </template>
+
+<style lang="scss">
+#app {
+  height: 100vh;
+  overflow-x: hidden;
+  background-image: url('components/assets/space_bg.svg');
+  background-size: cover;
+}
+
+/* unvisited link */
+a:link {
+  color: #ffa7c4;
+}
+
+/* visited link */
+a:visited {
+  color: #ffa7c4;
+}
+
+/* mouse over link */
+a:hover {
+  color: #82ffd6;
+}
+
+/* selected link */
+a:active {
+  color: #82ffd6;
+}
+
+.app-body {
+  padding: 50px 30px;
+  color: white;
+
+  a.dropdown-item {
+    color: black;
+
+    &.active {
+      background: #7EF4F6;
+    }
+  }
+}
+.tooltip {
+  top: -10px;
+}
+
+.component-fade-enter-active,
+.component-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.component-fade-enter, .component-fade-leave-to
+    /* .component-fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+.toast-wrapper {
+  display: flex;
+  align-items: center;
+}
+.toast-message {
+  margin-left: 10px;
+  font-size: 20px;
+}
+.web3modal-modal-card {
+  margin-top: 150px;
+}
+/* BINANCE color #F0B90B */
+a {
+  padding: 2px;
+  color: #f0b90b;
+}
+</style>
 
 <script>
 import detectEthereumProvider from "@metamask/detect-provider";
@@ -341,37 +411,3 @@ export default {
   },
 };
 </script>
-
-<style>
-#app {
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-.jumbotron {
-  margin-top: 4em;
-}
-.component-fade-enter-active,
-.component-fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-.component-fade-enter, .component-fade-leave-to
-    /* .component-fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-.toast-wrapper {
-  display: flex;
-  align-items: center;
-}
-.toast-message {
-  margin-left: 10px;
-  font-size: 20px;
-}
-.web3modal-modal-card {
-  margin-top: 150px;
-}
-/* BINANCE color #F0B90B */
-a {
-  padding: 2px;
-  color: #f0b90b;
-}
-</style>

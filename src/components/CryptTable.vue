@@ -179,7 +179,9 @@ export default {
   border: 2px solid rgb(87, 69, 229);
 }
 
-table {
+.table {
+  background: white;
+
   .cell {
     min-height: 60px;
 
@@ -191,13 +193,6 @@ table {
       height: 60px;
     }
   }
-}
-
-.button-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
 }
 
 .flex {

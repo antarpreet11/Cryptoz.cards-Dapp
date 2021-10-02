@@ -169,7 +169,8 @@ export default {
     },
   },
   mounted() {
-    if(this.$store.state.web3.chainId == "0x505") {
+    console.log('chain:',this.$store.state.web3.chainId);
+    if(this.$store.state.web3.chainId == "1285" || window.location.host == 'movr.zoombies.world') {
       this.onMainNet = true;
     } else{
       this.onMainNet = false;
@@ -189,7 +190,7 @@ export default {
   },
   methods: {
     addZOOMtoMetaMask: async function() {
-      const tokenAddress = this.onMainNet ? '0x8e21404bAd3A1d2327cc6D2B2118f47911a1f316' :'0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4';
+      const tokenAddress = this.onMainNet ? '0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4' : '0x8e21404bAd3A1d2327cc6D2B2118f47911a1f316';
       const tokenSymbol = this.onMainNet ? 'ZOOM' : 'ZOOM-DEV';
       const tokenDecimals = 18;
       const tokenImage = 'https://zoombies.world/images/zoombies_coin.svg';

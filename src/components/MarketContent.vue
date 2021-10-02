@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="jumbotron">
+    <div>
       <div class="page-title">
         <h1>Markets</h1>
       </div>
 
       <b-card class="market-card" no-body>
-        <b-tabs fill card>
-          <b-tab title="Zoombies NFT Cards" active>
+        <b-tabs card>
+          <b-tab title="Zoombies NFT Cards">
             <h3>Zoombies NFT Collectible Cards</h3>
             <h5>
               ERC-721 NFT tokens are supported on the following auction
@@ -15,12 +15,35 @@
             </h5>
             Zoombies NFT Contract - 0x08716e418e68564C96b68192E985762740728018
             <br/><br/><br/>
-            We are working with partner NFT markets for integration.
+            <b-card class="market" no-body>
+              <a
+                class="market-btn"
+                href="https://cheapswap.cc"
+                target="_blank"
+              >
+                <div class="market-info">
+                  <div class="">
+                    <img
+                     class="markets-logo"
+                      src="https://s.cheapswap.cc/52/img/logo.svg"
+                      align="absmiddle"
+                    />
+                  </div>
+                  <div class="market-detail">
+                    <h2>Cheapswap - ZOOM-MOVR-ZoombiesNFT Swap</h2>
+                    <p>
+                      Swap any combo of MOVR, ERC20, ERC721 and ERC1155 tokens on Moonriver.<br/>
+                      This service takes 0.1% fee of swapped MOVR and ERC20 tokens. NFTs are swapped for free.
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </b-card>
             <br/><br/><br/>
 
 
           </b-tab>
-          <b-tab title="ZOOM token">
+          <b-tab title="ZOOM Token">
             <h3>
             ZOOM
             <img
@@ -30,7 +53,7 @@
               token
             </h3>
             <h5>
-              The ERC-20 compliant ZOOM Moonriver tokens are supported on the following token exchanges :<br/>
+              The ERC-20 compliant ZOOM Moonriver tokens are supported on the following token exchanges:<br/>
             </h5>
             ZOOM token Contract - 0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4
             <br/><br/><br/>
@@ -93,7 +116,7 @@ export default {
   },
 };
 </script>
-<style scoped lang="scss">
+<style lang="scss">
 .page-title {
   margin-top: 36px;
 }
@@ -130,9 +153,25 @@ h3 {
   margin-bottom: 1em;
 }
 
-.jumbotron {
-  margin: auto;
-  width: 95%;
+.nav-tabs .nav-link {
+  background-color: darkslateblue;
+  color: grey;
+  border: 1px solid black;
+}
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+  background-color: darkslateblue;
+  color: white;
+  border: 1px solid white;
+}
+
+.tab-content > .active {
+  border: 1px solid grey;
+}
+
+.market-card {
+    color: white;
+    background-color: darkslateblue;
 }
 
 .markets-wrapper {
@@ -142,6 +181,7 @@ h3 {
 .market-info {
   display: flex;
   flex-direction: column;
+  background-color: darkslategrey;
 }
 
 .market-img {
@@ -168,13 +208,13 @@ h3 {
   }
 }
 
-.market-card {
-  margin-top: 24px;
-  margin-bottom: 24px;
-}
-
 .oneinch-exchange {
   background-color: lightgray;
+}
+
+.markets-logo {
+  height: 40px;
+  margin-bottom: 10px;
 }
 
 @media only screen and (min-width: 1300px) {
@@ -207,9 +247,10 @@ h3 {
     }
   }
 
-  .uni-logo {
+  .markets-logo {
     height: 40px;
     margin-bottom: 10px;
   }
+
 }
 </style>

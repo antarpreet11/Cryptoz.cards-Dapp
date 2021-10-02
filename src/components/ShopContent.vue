@@ -36,25 +36,27 @@
         </div>
       </template>
     </b-modal>
-    <div class="jumbotron">
+    <div>
       <UniverseBalances />
-      <h1><b-icon-tag-fill /> Minting Shop</h1>
-      <p>
-        The Shop is a place to mint limited edition Zoombies Cards NFT tokens.
-        Some cards are free, some have a cost. You may also buy and
-        <router-link to="/my-zoombies-nfts"> open a booster card </router-link>,
-        which will mint a random booster edition NFT token.
-      </p>
-      <p>
-        To mint a FREE NFT Or buy a Limited edition NFT at cost, you will need the
-        required minimum balance of ZOOM tokens displayed on the botton of the
-        card to update the minting button.<br/>
-        You will automatically see a <img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Emojione_1F680.svg" class="rocket-fp-icon" /> Fast Pass price to bypass the ZOOM requirement and may pay 3x the cost to buy immediately on non-Free cards.</p>
+      <div class="shop-description">
+        <h1><b-icon-tag-fill /> Minting Shop</h1>
+        <p>
+          The Shop is a place to mint limited edition Zoombies Cards NFT tokens.
+          Some cards are free, some have a cost. You may also buy and
+          <router-link to="/my-zoombies-nfts"> open a booster card </router-link>,
+          which will mint a random booster edition NFT token.
+        </p>
+        <p>
+          To mint a FREE NFT Or buy a Limited edition NFT at cost, you will need the
+          required minimum balance of ZOOM tokens displayed on the botton of the
+          card to update the minting button.<br/>
+          You will automatically see a <img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Emojione_1F680.svg" class="rocket-fp-icon" /> Fast Pass price to bypass the ZOOM requirement and may pay 3x the cost to buy immediately on non-Free cards.</p>
 
-        <p>The newly minted NFT will appear in
-        <router-link to="/my-zoombies-nfts"> Your NFT Crypt </router-link> once
-        the transaction is confirmed. ZOOM is NOT burned when minting.
-      </p>
+          <p>The newly minted NFT will appear in
+          <router-link to="/my-zoombies-nfts"> Your NFT Crypt </router-link> once
+          the transaction is confirmed. ZOOM is NOT burned when minting.
+        </p>
+      </div>
 
       <div v-if="isWalletConnected">
         <div class="row">
@@ -64,6 +66,7 @@
               v-b-modal.buy-boosters-modal
               class="btn btn-danger"
               :disabled="balance < 10000000100000000 || isBuyingBooster"
+              id="buy-boosters-btn"
             >
               Buy <b-icon-lightning-fill /> Booster NFT Minting Credits @ 0.01
               <img src="https://zoombies.world/images/mr-icon.png" class="mr-icon" />
@@ -130,7 +133,7 @@
               v-b-tooltip.hover="getSoldCardToolTipText"
               class="disabled-btn"
             >
-              <button id="owned-button" disabled class="btn btn-danger">
+              <button id="sold-button" disabled class="btn btn-danger">
                 SOLD OUT!
               </button>
             </div>
@@ -198,6 +201,7 @@
                 v-else
                 id="getBtnwrapper"
                 v-b-tooltip.hover="getBtnTooltipText(card.unlock_czxp)"
+                :class="{'disabled-btn': czxpBalance < parseInt(card.unlock_czxp)}"
               >
                 <button
                   id="get-button"
@@ -263,7 +267,7 @@ export default {
          "Fast Pass the ZOOM requirement and mint the NFT now",
       getBtnTooltipTextContent: "Click to mint a copy of this card at no cost",
       getBtnBlockedTooltipTextContent:
-        "You do Not have the required ZOOM to claim this for FREE",
+        "You do not have the required ZOOM to claim this for FREE",
       getOwnedCardToolTipText: "You can only mint 1 card of each type",
       getSoldCardToolTipText:
         "All NFTs of this type have been minted, check markets",
@@ -643,8 +647,11 @@ export default {
   border-bottom: 10px solid #dc3545;
 }
 
-.disabled-btn::before {
-  opacity: 0.65;
+#sold-button {
+  color: cornsilk;
+}
+#unreleased-button {
+  color:springgreen;
 }
 
 .loading {
@@ -659,10 +666,6 @@ export default {
   margin-bottom: 36px;
 }
 
-.jumbotron {
-  margin: auto;
-  width: 95%;
-}
 .spinner {
   width: 2em;
 }
@@ -684,7 +687,7 @@ export default {
   transform: translateX(-50%);
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-bottom: 10px solid #007bff;
+  border-bottom: 10px solid rgba(177, 49, 254, 0.5);
 }
 
 #owned-button-wrapper::before {
@@ -716,6 +719,42 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   place-items: center;
+
+  button {
+    background-color: transparent;
+    background-image: url('assets/purple_button.png');
+    background-size: 100% 100%;
+    border: none;
+    /* color: white; */
+    text-shadow: 1px 1px black;
+    font-weight: 650;
+  }
+
+/* let' get colour specific on why we disabled, sold vs unreleased
+  .disabled-btn {
+    button {
+      color: #333;
+      text-shadow: none;
+    }
+  }
+*/
+}
+
+
+.shop-description {
+  a {
+    color: #7EF4F6;
+  }
+}
+
+#buy-boosters-btn {
+  background-color: transparent;
+  background-image: url('assets/pink_button_wide.png');
+  background-size: 100% 100%;
+  border: none;
+  color: #111;
+  font-weight: 650;
+  padding: 10px 14px;
 }
 
 .card-wrapper {
@@ -766,6 +805,13 @@ export default {
   padding: 36px 36px;
 }
 
+.rocket-icon {
+  height:2.2em;
+  position: absolute;
+  top: -6px;
+  left: -22px;
+}
+
 @media screen and (max-width: 1000px) {
   #cards-wrapper {
     grid-template-columns: repeat(auto-fit, minmax(calc(0.55 * 260px), 1fr));
@@ -780,25 +826,35 @@ export default {
           padding: 3%;
           font-size: 12px;
           width: 80%;
+          text-shadow: 1.5px 1.5px black;
+        }
+
+        .disabled-btn {
+          button {
+            text-shadow: none;
+          }
         }
       }
     }
   }
 
+  .rocket-icon {
+    height:1.8em;
+    top: -6px;
+    left: -4px;
+  }
+
   .booster-modal-content {
     padding: 10px 10px;
+  }
+
+  #buy-get-button-wrapper {
+    text-shadow: 1px 1px black;
   }
 }
 
 .mr-icon {
   height: 20px;
-}
-
-.rocket-icon {
-  max-height:2.2em;
-  position: absolute;
-  top: -4px;
-  left: -16px;
 }
 
 .rocket-fp-icon {

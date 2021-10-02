@@ -102,7 +102,7 @@ export default {
       if (this.in_store == "Store") {
         return "#FFA500"; //orange
       } else {
-        return "#FFFF33"; //yellow
+        return "#F8FF02"; //yellow
       }
     },
     edition_label() {
@@ -250,6 +250,7 @@ export default {
   right: 5%;
   top: 70%;
   bottom: 13%;
+  color: black;
 
   display: flex;
   justify-content: center;
@@ -378,9 +379,13 @@ export default {
 
 #share {
   cursor: pointer;
-  
+
   &:hover {
     color: #0645AD;
   }
+}
+
+.card-booster-shop-icon {
+  color: #000000
 }
 </style>

@@ -9,21 +9,16 @@
     -->
     <br/><br/><br/>
     <div>
-   <b-jumbotron header="Community Feedback" lead="The core value of Zoombies is the Community">
+   <div>
+    <h1>Community Feedback</h1>
+    <h4>The core value of Zoombies is the Community</h4>
     <p>NFT ownership is a revolutionary idea. Zoombies are fun little collectible cards right now, but you are part of a new era of digital ownership. Owning a peice of the Zoombies World NFT collection comes with a responsibility to have the vision and ambassador for something amazing.</p>
     <p>This is why, we are taking the first steps to create a process for decision making. Over time this process will evolve and we may end up with a Decentralized Autonomous Organization (DAO). Today we start with community feedback.</p>
 
     <h2>Open Feedback Forms</h2>
     <hr>
+    There are no forms open at this time.
 
-
-    <h4><a href="https://forms.gle/q2PQosoRyaPt3XAJ8" target="_blank">Zombify It!</a></h4>
-    Closes Sept 17, 2021 18:00-UTC
-    <br/><br/>
-
-    <h4><a href="https://forms.gle/f5nQp5WwvDxW2uir7" target="_blank">Zoombies General Feature Suggestion</a></h4>
-    Closes Sept 24, 2021 18:00-UTC
-    <br/><br/>
 
 
     <h2>Closed forms</h2>
@@ -33,7 +28,15 @@
     Closed Sept 6, 2021 21:53-UTC
     <br/><br/>
 
-  </b-jumbotron>
+    <h4><a href="https://forms.gle/q2PQosoRyaPt3XAJ8" target="_blank">Zombify It!</a></h4>
+    Closed Sept 17, 2021 18:00-UTC
+    <br/><br/>
+
+    <h4><a href="https://forms.gle/f5nQp5WwvDxW2uir7" target="_blank">Zoombies General Feature Suggestion</a></h4>
+    Closed Sept 24, 2021 18:00-UTC
+    <br/><br/>
+
+  </div>
 </div>
       <h1></h1>
 

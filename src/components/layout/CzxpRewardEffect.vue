@@ -12,6 +12,24 @@
 </template>
 
 <script>
+/*
+  Lottie animation files can be referenced from:
+  https://zoombies.world/lotties/18188-stars-in-space.json
+  and previewed at : https://lottiefiles.com/preview
+
+ lotties/18188-stars-in-space.json
+ lotties/25692-outer-space.json
+ lotties/29238-rocket-in-space-transparent-background.json
+ lotties/33886-check-okey-done.json
+ lotties/37674-sparkle-filter.json
+ lotties/4899-new-label.json
+ lotties/58666-sputnik-mission-launch.json
+ lotties/61280-star-blast.json
+ lotties/68314-starfall.json
+ lotties/70197-cohetes.json
+ lotties/75315-rocket.json
+*/
+
   import { MessageBus } from '@/messageBus'
 
   export default {

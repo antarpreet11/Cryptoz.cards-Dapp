@@ -58,7 +58,7 @@ a:active {
 }
 
 .app-body {
-  padding: 50px 30px;
+  padding: 10px 30px;
   color: white;
 
   a.dropdown-item {

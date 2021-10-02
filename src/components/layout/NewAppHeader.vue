@@ -187,13 +187,16 @@
     </div>
     <div class="wallet-info">
       <img src="@/assets/metamask-face.png" class="header-icon" />
-      <span v-if="isWalletConnected">{{
-        coinbase.substr(0, 6) + "..." + coinbase.substr(38)
-      }}</span>
+      <span v-if="isWalletConnected"
+        v-b-tooltip.hover.bottom
+        :title="coinbase"
+      >
+        {{ coinbase.substr(0, 6) + "..." + coinbase.substr(38) }}
+      </span>
       <div
         v-if="isWalletConnected"
         id="wallet-balance"
-        v-b-tooltip.hover="{ customClass: 'tooltip-2' }"
+        v-b-tooltip.hover.bottom
         :title="ethBalance"
       >
         <img
@@ -208,16 +211,80 @@
         </span>
       </div>
     </div>
-    <ul
+    <div
       ref="mobileDropdown"
-      :style="mobileDropdownStyle"
-      class="mobile-dropdown"
+      :class="{'mobile-dropdown': true, 'dropdown-hidden': !isMobileDropdownOpen}"
     >
-      <li><a href="#">Lorem Ipsum</a></li>
-      <li><a href="#">Lorem Ipsum</a></li>
-      <li><a href="#">Lorem Ipsum</a></li>
-      <li><a href="#">Lorem Ipsum</a></li>
-    </ul>
+      <div class="mobile-wallet-info">
+        <img src="@/assets/metamask-face.png" class="header-icon" />
+        <span
+          v-if="isWalletConnected"
+          v-b-tooltip.hover="{ customClass: 'tooltip-1' }"
+          :title="coinbase"
+        >
+          {{ coinbase.substr(0, 6) + "..." + coinbase.substr(38) }}
+        </span>
+        <div
+          v-if="isWalletConnected"
+          id="wallet-balance"
+          v-b-tooltip.hover="{ customClass: 'tooltip-2' }"
+          :title="ethBalance"
+        >
+          <img
+            v-if="onMainNet"
+            src="https://zoombies.world/images/mr-icon.png"
+            class="header-icon"
+          />
+          <span
+            >{{
+              onMainNet ? ethBalance.toFixed(4) : ethBalance.toFixed(3) + " DEV"
+            }}
+          </span>
+        </div>
+      </div>
+      <ul>
+        <li>
+          <div
+            v-if="isWalletConnected && bonusReady && showSpinner == false"
+            class="bonusClass"
+            @click="GetBonus"
+          >
+            Claim 2 FREE Boosters!
+          </div>
+          <div v-else-if="isWalletConnected && showSpinner == true">
+            <b-spinner
+              style="width: 1.5rem; height: 1.5rem"
+              type="grow"
+              variant="light"
+            />
+            <transition>
+              <span class="spinner-text-style">
+                {{ transactionMessage }}</span
+              >
+            </transition>
+          </div>
+          <div
+            v-else-if="
+              isWalletConnected &&
+              !bonusReady &&
+              timeToBonus &&
+              showSpinner == false
+            "
+            class="bonusClassNo"
+          >
+            Your Next Bonus: <strong>{{ timeToBonus }}</strong>
+          </div>
+        </li>
+        <li @click="toggleMobileDropdown"><button v-b-modal.sponsor-modal class="aqua-header">Affiliate</button></li>
+        <li @click="toggleMobileDropdown"><router-link to="/shop" class="aqua-header">Shop</router-link></li>
+        <li @click="toggleMobileDropdown"><router-link to="/my-zoombies-nfts" class="aqua-header">Your NFT Crypt</router-link></li>
+        <li @click="toggleMobileDropdown"><router-link to="/market" class="aqua-header">Markets</router-link></li>
+        <li><img class="brain" src="@/components/assets/brain.svg" /></li>
+        <li @click="toggleMobileDropdown"><router-link to="/view/1" class="white-header">View</router-link></li>
+        <li @click="toggleMobileDropdown"><router-link to="/help" class="white-header">Help</router-link></li>
+        <li @click="toggleMobileDropdown"><router-link to="/feedback" class="white-header">Feedback</router-link></li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -264,9 +331,6 @@ export default {
       //    default:
       return "eth-link";
       //  }
-    },
-    mobileDropdownStyle() {
-      return this.isMobileDropdownOpen ? { height: "300px" } : {};
     },
     CryptozInstance() {
       return this.$store.state.contractInstance.cryptoz;
@@ -500,26 +564,87 @@ export default {
 <style scoped lang="scss">
 // Dropdowns
 .mobile-dropdown {
-  clear: both;
-  width: 100%;
-  height: 0px;
-  background-color: #dc3545;
+  position: absolute;
+  bottom: 7px;
+  z-index: 1;
+  width: 90%;
+  transform: translateY(100%);
+  display: none;
+  height: 350px;
+  background-image: url('../assets/space_bg.svg');
+  background-size: 500px 600px;
+  background-position-x: right;
+  background-position-y: bottom;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border: 2px solid #888;
   overflow: hidden;
   text-align: center;
-  transition: height 0.5s ease;
+  transition: all 0.5s ease;
+  padding: 20px;
+  
+  .mobile-wallet-info {
+    display: flex;
+    color: orange;
+    font-size: 14px;
+    margin: 10px 0;
+
+    .header-icon {
+      width: 24px;
+      height: 18px;
+    }
+  }
+
+  .bonusClassNo {
+    color: white;
+  }
+
+  button {
+    :hover {
+      text-decoration: underline;
+    }
+
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  ul {
+    margin-bottom: 0;
+  }
+
+  li {
+    padding: 2px 0;
+    display: block;
+
+    :hover {
+      text-decoration: underline;
+    }
+  }
+
+  .brain {
+    width: 35px;
+    padding: 10px 0;
+  }
 }
 
-.mobile-dropdown li {
-  padding: 30px;
+.dropdown-hidden {
+  height: 0;
+  display: hidden;
+  border: none;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .hamburger-menu {
+  cursor: pointer;
   display: none;
 }
 
 .app-header {
-  padding: 16px 0;
-  margin: 10px 6px 48px 6px;
+  padding: 16px 0 0 0;
+  margin: 10px 6px 0 6px;
+  position: relative;
 }
 
 .wallet-info {
@@ -552,6 +677,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  z-index: 2;
 }
 
 .zoombie-logo {
@@ -569,6 +695,11 @@ export default {
 
 .app-menu-bar-items {
   margin-right: 5%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+  padding: 0;
 
   li {
     display: inline-block;
@@ -589,6 +720,21 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-family: "Oswald", sans-serif;
+
+    ul {
+      padding-left: 0;
+
+      li {
+        margin: 0;
+        text-align: left;
+      }
+    }
+  }
+
+  .mobile-dropdown {
+    display: flex;
+    flex-direction: column;
   }
 
   .app-menu-bar {
@@ -619,10 +765,6 @@ export default {
   .app-menu-bar-items {
     display: none;
   }
-}
-
-ul {
-  margin: 0;
 }
 
 .affiliate-header {
@@ -754,7 +896,7 @@ OLD CSS
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;
-  color: #00ff00;
+  color: $COLOR_PINK;
   margin-right: 0.8em;
   cursor: pointer;
   padding: 1px;
@@ -762,11 +904,11 @@ OLD CSS
 }
 
 .tooltip-1 {
-  top: 65px !important;
+  // top: 65px !important;
 }
 
 .tooltip-2 {
-  top: 45px !important;
+  // top: 45px !important;
 }
 
 @media screen and (max-width: 600px) {
@@ -777,7 +919,6 @@ OLD CSS
   }
 
   .bonusClass {
-    text-align: center;
     margin-right: 0;
   }
 

@@ -9,7 +9,8 @@
           Booster NFT cards will NEVER be sold in the shop
         </p>
         <p class="booster-modal-explain">
-          Enter the number of booster NFT minting credits you would like to purchase:
+          Enter the number of booster NFT minting credits you would like to
+          purchase:
         </p>
         <input
           id="toWallet"
@@ -43,18 +44,26 @@
         <p>
           The Shop is a place to mint limited edition Zoombies Cards NFT tokens.
           Some cards are free, some have a cost. You may also buy and
-          <router-link to="/my-zoombies-nfts"> open a booster card </router-link>,
-          which will mint a random booster edition NFT token.
+          <router-link to="/my-zoombies-nfts"> open a booster card </router-link
+          >, which will mint a random booster edition NFT token.
         </p>
         <p>
-          To mint a FREE NFT Or buy a Limited edition NFT at cost, you will need the
-          required minimum balance of ZOOM tokens displayed on the botton of the
-          card to update the minting button.<br/>
-          You will automatically see a <img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Emojione_1F680.svg" class="rocket-fp-icon" /> Fast Pass price to bypass the ZOOM requirement and may pay 3x the cost to buy immediately on non-Free cards.</p>
+          To mint a FREE NFT Or buy a Limited edition NFT at cost, you will need
+          the required minimum balance of ZOOM tokens displayed on the botton of
+          the card to update the minting button.<br />
+          You will automatically see a
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Emojione_1F680.svg"
+            class="rocket-fp-icon"
+          />
+          Fast Pass price to bypass the ZOOM requirement and may pay 3x the cost
+          to buy immediately on non-Free cards.
+        </p>
 
-          <p>The newly minted NFT will appear in
-          <router-link to="/my-zoombies-nfts"> Your NFT Crypt </router-link> once
-          the transaction is confirmed. ZOOM is NOT burned when minting.
+        <p>
+          The newly minted NFT will appear in
+          <router-link to="/my-zoombies-nfts"> Your NFT Crypt </router-link>
+          once the transaction is confirmed. ZOOM is NOT burned when minting.
         </p>
       </div>
 
@@ -62,14 +71,17 @@
         <div class="row">
           <div class="col">
             <b-button
+              id="buy-boosters-btn"
               v-b-tooltip.hover="'Earn +500 ZOOM per credit'"
               v-b-modal.buy-boosters-modal
               class="btn btn-danger"
               :disabled="balance < 10000000100000000 || isBuyingBooster"
-              id="buy-boosters-btn"
             >
               Buy <b-icon-lightning-fill /> Booster NFT Minting Credits @ 0.01
-              <img src="https://zoombies.world/images/mr-icon.png" class="mr-icon" />
+              <img
+                src="https://zoombies.world/images/mr-icon.png"
+                class="mr-icon"
+              />
             </b-button>
           </div>
         </div>
@@ -139,20 +151,16 @@
             </div>
 
             <div
-              v-else-if="parseInt(card.release_time*1000) > getNowTimeStamp"
+              v-else-if="parseInt(card.release_time * 1000) > getNowTimeStamp"
               id="unreleased-button-wrapper"
               class="disabled-btn"
             >
-              <div
-                v-b-tooltip.hover="getBtnTooltipTextUnreleased"
-              >
-                <button
-                  id="unreleased-button"
-                  class="btn btn-warning"
-                  disabled
-                >
+              <div v-b-tooltip.hover="getBtnTooltipTextUnreleased">
+                <button id="unreleased-button" class="btn btn-warning" disabled>
                   <b-icon-lock-fill />
-                   {{getFormattedReleasedLabel(card.id,card.release_time*1000)}}
+                  {{
+                    getFormattedReleasedLabel(card.id, card.release_time * 1000)
+                  }}
                 </button>
               </div>
             </div>
@@ -161,7 +169,8 @@
               v-else-if="!card.isOwned"
               id="buy-get-button-wrapper"
               :class="
-                ( parseFloat(weiToEther(balance)) <= parseFloat(3*card.cost) && czxpBalance < parseInt(card.unlock_czxp) ) ||
+                (parseFloat(weiToEther(balance)) <= parseFloat(3 * card.cost) &&
+                  czxpBalance < parseInt(card.unlock_czxp)) ||
                 parseFloat(weiToEther(balance)) <= card.cost
                   ? 'disabled-btn'
                   : ''
@@ -177,7 +186,9 @@
                 <b-button
                   id="buy-button"
                   :disabled="
-                    ( parseFloat(weiToEther(balance)) <= parseFloat(3*card.cost) && czxpBalance < parseInt(card.unlock_czxp) ) ||
+                    (parseFloat(weiToEther(balance)) <=
+                      parseFloat(3 * card.cost) &&
+                      czxpBalance < parseInt(card.unlock_czxp)) ||
                     parseFloat(weiToEther(balance)) <= card.cost
                   "
                   variant="primary"
@@ -185,23 +196,36 @@
                 >
                   <b-icon-lock-fill
                     v-if="
-                      ( parseFloat(weiToEther(balance)) <= parseFloat(3*card.cost) && czxpBalance < parseInt(card.unlock_czxp) ) ||
+                      (parseFloat(weiToEther(balance)) <=
+                        parseFloat(3 * card.cost) &&
+                        czxpBalance < parseInt(card.unlock_czxp)) ||
                       parseFloat(weiToEther(balance)) <= card.cost
                     "
                   />
-                  Mint NFT for {{ czxpBalance < card.unlock_czxp ? (card.cost*3).toFixed(3) : card.cost }}
-                  <img src="https://zoombies.world/images/mr-icon.png" class="mr-icon" />
+                  Mint NFT for
+                  {{
+                    czxpBalance < card.unlock_czxp
+                      ? (card.cost * 3).toFixed(3)
+                      : card.cost
+                  }}
+                  <img
+                    src="https://zoombies.world/images/mr-icon.png"
+                    class="mr-icon"
+                  />
                 </b-button>
                 <img
                   v-if="czxpBalance < parseInt(card.unlock_czxp)"
-                  src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Emojione_1F680.svg" class="rocket-icon"
+                  src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Emojione_1F680.svg"
+                  class="rocket-icon"
                 />
               </div>
               <div
                 v-else
                 id="getBtnwrapper"
                 v-b-tooltip.hover="getBtnTooltipText(card.unlock_czxp)"
-                :class="{'disabled-btn': czxpBalance < parseInt(card.unlock_czxp)}"
+                :class="{
+                  'disabled-btn': czxpBalance < parseInt(card.unlock_czxp),
+                }"
               >
                 <button
                   id="get-button"
@@ -260,18 +284,20 @@ export default {
   },
   data() {
     return {
-      buyBtnTooltipTextContent: "Click to mint a limited edition NFT of this card",
+      buyBtnTooltipTextContent:
+        "Click to mint a limited edition NFT of this card",
       buyBtnBlockedTooltipTextContent:
         "You do not have enough MOVR tokens to unlock minting",
-        buyBtnFastPassTooltipTextContent:
-         "Fast Pass the ZOOM requirement and mint the NFT now",
+      buyBtnFastPassTooltipTextContent:
+        "Fast Pass the ZOOM requirement and mint the NFT now",
       getBtnTooltipTextContent: "Click to mint a copy of this card at no cost",
       getBtnBlockedTooltipTextContent:
         "You do not have the required ZOOM to claim this for FREE",
       getOwnedCardToolTipText: "You can only mint 1 card of each type",
       getSoldCardToolTipText:
         "All NFTs of this type have been minted, check markets",
-      getBtnTooltipTextUnreleased: "This type has not been released for NFT minting yet",
+      getBtnTooltipTextUnreleased:
+        "This type has not been released for NFT minting yet",
       totalCreditsToBuy: 1,
       isBuyingBooster: false,
       isCardSorted: false,
@@ -284,7 +310,7 @@ export default {
       nowTimeStamp: 0,
     };
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.observer.disconnect();
     clearInterval(window.nowTimer);
   },
@@ -405,17 +431,24 @@ export default {
       return web3.utils.toWei(val);
     },
     weiToEther(wei) {
-      return web3.utils.fromWei(wei, 'ether');
+      return web3.utils.fromWei(wei, "ether");
     },
-    getBuyZoom(val) { //unlock * 10 * baseCost   =    val * 10 * 100000000000000
+    getBuyZoom(val) {
+      //unlock * 10 * baseCost   =    val * 10 * 100000000000000
       return parseFloat(0.0000001 * 10 * val);
     },
-    getFormattedReleasedLabel(id,releaseTime){
-      var timeRemaining = new Date(releaseTime - new Date().getTime()).getTime();
+    getFormattedReleasedLabel(id, releaseTime) {
+      var timeRemaining = new Date(
+        releaseTime - new Date().getTime()
+      ).getTime();
 
       var days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-      var hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+      var hours = Math.floor(
+        (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
+      var minutes = Math.floor(
+        (timeRemaining % (1000 * 60 * 60)) / (1000 * 60)
+      );
       var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
       return days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
@@ -435,8 +468,8 @@ export default {
       });
 
       let freeCost = 0;
-      if(this.czxpBalance < parseInt(cardAttributes.unlock_czxp)){
-        let cardBNValue = new web3.utils.BN(cardAttributes.unlock_czxp)
+      if (this.czxpBalance < parseInt(cardAttributes.unlock_czxp)) {
+        let cardBNValue = new web3.utils.BN(cardAttributes.unlock_czxp);
         cardBNValue.imul(new web3.utils.BN("10000000000000"));
         freeCost = cardBNValue.toString();
       }
@@ -445,11 +478,13 @@ export default {
         .getFreeCard(cardAttributes.type_id)
         .send(
           {
-            from : this.coinbase,
-            value: freeCost
-          }, (err, txHash) => {
-          this.hideTransactionModal();
-        })
+            from: this.coinbase,
+            value: freeCost,
+          },
+          (err, txHash) => {
+            this.hideTransactionModal();
+          }
+        )
         .catch((err) => {
           this.$store.dispatch("setCardAsNotBought", {
             cardId: cardAttributes.type_id,
@@ -478,29 +513,30 @@ export default {
 
       this.showTransactionModal();
 
-      let cardBNValue = new web3.utils.BN(web3.utils.toWei(cardAttributes.cost)).toString()
+      let cardBNValue = new web3.utils.BN(
+        web3.utils.toWei(cardAttributes.cost)
+      ).toString();
       //HAck for cemetary wolf
-      if(cardAttributes.type_id == 147){
-        cardBNValue =  "8999999999999999";
+      if (cardAttributes.type_id == 147) {
+        cardBNValue = "8999999999999999";
       }
 
-      if(cardAttributes.type_id == 149 || cardAttributes.type_id == 151){
-        cardBNValue =  "70000000000000008";
+      if (cardAttributes.type_id == 149 || cardAttributes.type_id == 151) {
+        cardBNValue = "70000000000000008";
       }
 
-      if ( this.czxpBalance < cardAttributes.unlock_czxp  ) {
-          cardBNValue = web3.utils.toWei( (cardAttributes.cost*3).toFixed(5) );
-          //console.log(cardBNValue.toString());
-          if(cardAttributes.type_id == 147){//HAck for cemetary wolf
-            cardBNValue =  "26999999999999997";
-          }
+      if (this.czxpBalance < cardAttributes.unlock_czxp) {
+        cardBNValue = web3.utils.toWei((cardAttributes.cost * 3).toFixed(5));
+        //console.log(cardBNValue.toString());
+        if (cardAttributes.type_id == 147) {
+          //HAck for cemetary wolf
+          cardBNValue = "26999999999999997";
+        }
 
-          if(cardAttributes.type_id == 149 || cardAttributes.type_id == 151){
-            cardBNValue =  "210000000000000024";
-          }
+        if (cardAttributes.type_id == 149 || cardAttributes.type_id == 151) {
+          cardBNValue = "210000000000000024";
+        }
       }
-
-
 
       //console.log(cardBNValue.toString());
 
@@ -560,11 +596,16 @@ export default {
         });
     },
     buyBtnTooltipText(cost, unlock_czxp) {
-      if (  parseFloat(this.weiToEther(this.balance)) <= parseFloat(3*cost) && parseInt(this.czxpBalance) < parseInt(unlock_czxp) ||
-          parseFloat(this.weiToEther(this.balance)) <= parseFloat(3*cost))
-      {
+      if (
+        (parseFloat(this.weiToEther(this.balance)) <= parseFloat(3 * cost) &&
+          parseInt(this.czxpBalance) < parseInt(unlock_czxp)) ||
+        parseFloat(this.weiToEther(this.balance)) <= parseFloat(3 * cost)
+      ) {
         return this.buyBtnBlockedTooltipTextContent;
-      } else if ( parseFloat(this.weiToEther(this.balance)) > parseFloat(3*cost) && parseInt(this.czxpBalance) < parseInt(unlock_czxp) ) {
+      } else if (
+        parseFloat(this.weiToEther(this.balance)) > parseFloat(3 * cost) &&
+        parseInt(this.czxpBalance) < parseInt(unlock_czxp)
+      ) {
         return this.buyBtnFastPassTooltipTextContent;
       } else {
         return this.buyBtnTooltipTextContent;
@@ -651,7 +692,7 @@ export default {
   color: cornsilk;
 }
 #unreleased-button {
-  color:springgreen;
+  color: springgreen;
 }
 
 .loading {
@@ -722,7 +763,7 @@ export default {
 
   button {
     background-color: transparent;
-    background-image: url('assets/purple_button.png');
+    background-image: url("assets/purple_button.png");
     background-size: 100% 100%;
     border: none;
     /* color: white; */
@@ -730,7 +771,7 @@ export default {
     font-weight: 650;
   }
 
-/* let' get colour specific on why we disabled, sold vs unreleased
+  /* let' get colour specific on why we disabled, sold vs unreleased
   .disabled-btn {
     button {
       color: #333;
@@ -740,16 +781,15 @@ export default {
 */
 }
 
-
 .shop-description {
   a {
-    color: #7EF4F6;
+    color: #7ef4f6;
   }
 }
 
 #buy-boosters-btn {
   background-color: transparent;
-  background-image: url('assets/pink_button_wide.png');
+  background-image: url("assets/pink_button_wide.png");
   background-size: 100% 100%;
   border: none;
   color: #111;
@@ -806,7 +846,7 @@ export default {
 }
 
 .rocket-icon {
-  height:2.2em;
+  height: 2.2em;
   position: absolute;
   top: -6px;
   left: -22px;
@@ -839,7 +879,7 @@ export default {
   }
 
   .rocket-icon {
-    height:1.8em;
+    height: 1.8em;
     top: -6px;
     left: -4px;
   }

@@ -78,10 +78,7 @@
               :disabled="balance < 10000000100000000 || isBuyingBooster"
             >
               Buy <b-icon-lightning-fill /> Booster NFT Minting Credits @ 0.01
-              <img
-                src="https://zoombies.world/images/mr-icon.png"
-                class="mr-icon"
-              />
+              <img src="@/assets/movr_logo.png" class="mr-icon" />
             </b-button>
           </div>
         </div>
@@ -146,7 +143,7 @@
               class="disabled-btn"
             >
               <button id="sold-button" disabled class="btn btn-danger">
-                SOLD OUT!
+                SOLD OUT
               </button>
             </div>
 
@@ -208,10 +205,7 @@
                       ? (card.cost * 3).toFixed(3)
                       : card.cost
                   }}
-                  <img
-                    src="https://zoombies.world/images/mr-icon.png"
-                    class="mr-icon"
-                  />
+                  <img src="@/assets/movr_logo.png" class="mr-icon" />
                 </b-button>
                 <img
                   v-if="czxpBalance < parseInt(card.unlock_czxp)"
@@ -261,7 +255,7 @@
 <script>
 import { mapGetters } from "vuex";
 import debounce from "lodash/debounce";
-import { BRow, BCol, BButton, BSpinner } from "bootstrap-vue";
+import { BButton, BSpinner } from "bootstrap-vue";
 
 import OwnedCardContent from "@/components/OwnedCardContent.vue";
 import UniverseBalances from "@/components/UniverseBalances.vue";
@@ -277,8 +271,6 @@ export default {
     UniverseBalances,
     OwnerBalances,
     SortDropdown,
-    BRow,
-    BCol,
     BButton,
     BSpinner,
   },
@@ -675,24 +667,23 @@ export default {
 #sold-button-wrapper {
   position: relative;
   text-align: center;
+  width: 80%;
 }
 
-#sold-button-wrapper::before {
-  content: "";
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 10px solid #dc3545;
-}
-
-#sold-button {
-  color: cornsilk;
+#sold-button,
+#owned-button {
+  color: #7d012a;
+  background-image: url("~@/assets/red_button.png");
 }
 #unreleased-button {
-  color: springgreen;
+  color: #e60e00;
+  background-image: url("~@/assets/yellow_button.png");
+}
+
+#get-button,
+#buy-button {
+  color: #003523;
+  background-image: url("~@/assets/green_button.png");
 }
 
 .loading {
@@ -717,22 +708,6 @@ export default {
 .fade-enter,
 .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
-}
-/* add a little arrow for users to be sure which they're purchasing */
-#buy-get-button-wrapper::before,
-#owned-button-wrapper::before {
-  content: "";
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 10px solid rgba(177, 49, 254, 0.5);
-}
-
-#owned-button-wrapper::before {
-  border-bottom: 10px solid #17a2b8;
 }
 
 .shop-card-item {
@@ -763,12 +738,12 @@ export default {
 
   button {
     background-color: transparent;
-    background-image: url("assets/purple_button.png");
     background-size: 100% 100%;
     border: none;
     /* color: white; */
-    text-shadow: 1px 1px black;
     font-weight: 650;
+    width: 100%;
+    font-family: "Oswald", sans-serif;
   }
 
   /* let' get colour specific on why we disabled, sold vs unreleased
@@ -865,8 +840,7 @@ export default {
         button {
           padding: 3%;
           font-size: 12px;
-          width: 80%;
-          text-shadow: 1.5px 1.5px black;
+          width: 90%;
         }
 
         .disabled-btn {

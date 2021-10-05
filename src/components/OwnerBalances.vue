@@ -58,6 +58,7 @@ p {
 
 .czxp-logo {
   width: 20px;
+  height: 20px;
 }
 
 .row-col {

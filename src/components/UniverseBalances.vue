@@ -138,6 +138,7 @@ p {
 
 .czxp-logo {
   width: 20px;
+  height: 20px;
   margin-right: 2px;
 }
 

@@ -129,6 +129,7 @@ export default {
   margin-bottom: 10px;
 }
 .czxp-logo {
+  width: 30px;
   height: 30px;
 }
 .market-btn:hover {
@@ -234,7 +235,6 @@ h3 {
 
   .market {
     width: 550px;
-    height: 120px;
     justify-self: center;
 
     .market-btn {

@@ -1,5 +1,5 @@
 <template>
-  <div class="black-bg">
+  <div>
     <main role="main" class="container">
       <b-card bg-variant="dark" text-variant="white" border-variant="info">
         <b-card-text>
@@ -14,8 +14,8 @@
             class="img-responsive card-demo-group"
             src="@/assets/zoombies_card_types.png"
           />
-          <p>Zoombies is deployed on <h3 v-if="!this.onMainNet" class="text-danger">Moonbase Alpha Testnet</h3>
-            <img v-if="this.onMainNet" src="https://zoombies.world/images/moonriver-logo-500.png" style="max-width:7em" />
+          <p>Zoombies is deployed on <h3 v-if="!onMainNet" class="text-danger">Moonbase Alpha Testnet</h3>
+            <img v-if="onMainNet" src="https://zoombies.world/images/moonriver-logo-500.png" style="max-width:7em" />
           </p>
           <p>
             <h2>ZOOM Token Liquidity Sale Event !</h2>
@@ -40,8 +40,8 @@
               <br/>
               <b-row align-h="center">
                 <b-col sm="12" md="6" lg="4" class="text-right" style="padding-top:6px"><strong>Total to purchase:</strong> <span class="text-success">{{pendingPurchase}}</span></b-col>
-                <b-col sm="12" md="4" lg="2"><b-form-input v-model="totalCzxpToBuy" size="10" maxlength="9" placeholder="enter amount" @keyup="filterCzxpInput" class=""></b-form-input> ZOOM tokens</b-col>
-                <b-col sm="12" md="2" lg="4"><input type="submit" class="btn btn-primary" @click="buyCzxp" :disabled="!buyCzxpBtnEnabled">
+                <b-col sm="12" md="4" lg="2"><b-form-input v-model="totalCzxpToBuy" size="10" maxlength="9" placeholder="enter amount" class="" @keyup="filterCzxpInput"></b-form-input> ZOOM tokens</b-col>
+                <b-col sm="12" md="2" lg="4"><input type="submit" class="btn btn-primary" :disabled="!buyCzxpBtnEnabled" @click="buyCzxp">
                 </b-col>
               </b-row>
             </b-container>
@@ -169,7 +169,8 @@ export default {
     },
   },
   mounted() {
-    if(this.$store.state.web3.chainId == "0x505") {
+    console.log('chain:',this.$store.state.web3.chainId);
+    if(this.$store.state.web3.chainId == "1285" || window.location.host == 'movr.zoombies.world') {
       this.onMainNet = true;
     } else{
       this.onMainNet = false;
@@ -189,7 +190,7 @@ export default {
   },
   methods: {
     addZOOMtoMetaMask: async function() {
-      const tokenAddress = this.onMainNet ? '0x8e21404bAd3A1d2327cc6D2B2118f47911a1f316' :'0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4';
+      const tokenAddress = this.onMainNet ? '0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4' : '0x8e21404bAd3A1d2327cc6D2B2118f47911a1f316';
       const tokenSymbol = this.onMainNet ? 'ZOOM' : 'ZOOM-DEV';
       const tokenDecimals = 18;
       const tokenImage = 'https://zoombies.world/images/zoombies_coin.svg';
@@ -258,10 +259,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-.black-bg {
-  background-color: #000000;
-}
 
 .feature-panel {
   color: white;

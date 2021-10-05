@@ -480,7 +480,7 @@ export default {
   },
   methods: {
     addCZXPtoMetaMask: async function() {
-      const tokenAddress = this.onMainNet ? '0x8e21404bAd3A1d2327cc6D2B2118f47911a1f316' : '0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4';
+      const tokenAddress = this.onMainNet ? '0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4' : '0x8e21404bAd3A1d2327cc6D2B2118f47911a1f316';
       const tokenSymbol = this.onMainNet ? 'ZOOM' : 'ZOOM-DEV';
       const tokenDecimals = 18;
       const tokenImage = 'https://zoombies.world/images/zoombies_coin.svg';
@@ -516,8 +516,8 @@ export default {
 }
 
 .czxp-logo {
-  width: 22px;
-  margin-right: 0.2em;
+  width: 25px;
+  height: 25px;
 }
 
 .accordion-header {

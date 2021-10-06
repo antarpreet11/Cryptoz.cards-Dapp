@@ -128,31 +128,6 @@
         >
       </div>
     </b-modal>
-    <div class="wallet-info" v-if="isWalletConnected">
-      <img src="@/assets/metamask-face.png" class="header-icon" />
-      <span
-        v-b-tooltip.hover.bottom
-        :title="coinbase"
-      >
-        {{ coinbase.substr(0, 6) + "..." + coinbase.substr(38) }}
-      </span>
-      <div
-        id="wallet-balance"
-        v-b-tooltip.hover.bottom
-        :title="ethBalance"
-      >
-        <img
-          v-if="onMainNet"
-          src="https://zoombies.world/images/mr-icon.png"
-          class="header-icon"
-        />
-        <span
-          >{{
-            onMainNet ? ethBalance.toFixed(4) : ethBalance.toFixed(3) + " DEV"
-          }}
-        </span>
-      </div>
-    </div>
     <div class="app-menu-bar">
       <router-link to="/">
         <img
@@ -201,6 +176,39 @@
             Feedback
           </router-link>
         </li>
+        <div class="desktop-bonus">
+          <div
+            v-if="isWalletConnected && bonusReady && showSpinner == false"
+            class="bonusClass"
+            @click="GetBonus"
+          >
+            Claim 2 FREE Boosters!
+          </div>
+          <div v-else-if="isWalletConnected && showSpinner == true">
+            <b-spinner
+              style="width: 1.5rem; height: 1.5rem"
+              type="grow"
+              variant="light"
+            />
+            <transition>
+              <span class="spinner-text-style">
+                {{ transactionMessage }}</span
+              >
+            </transition>
+          </div>
+          <div
+            v-else-if="
+              isWalletConnected &&
+              !bonusReady &&
+              timeToBonus &&
+              showSpinner == false
+            "
+            class="bonusClassNo"
+          >
+            <span>Your Next Bonus: </span>
+            <strong class="time-to-bonus">{{ timeToBonus }}</strong>
+          </div>
+        </div>
       </ul>
       <div
         aria-label="hamburger menu"
@@ -208,6 +216,31 @@
         @click="toggleMobileDropdown"
       >
         <img src="@/assets/button_menu.svg" />
+      </div>
+    </div>
+    <div class="wallet-info" v-if="isWalletConnected">
+      <img src="@/assets/metamask-face.png" class="header-icon" />
+      <span
+        v-b-tooltip.hover.bottom
+        :title="coinbase"
+      >
+        {{ coinbase.substr(0, 6) + "..." + coinbase.substr(38) }}
+      </span>
+      <div
+        id="wallet-balance"
+        v-b-tooltip.hover.bottom
+        :title="ethBalance"
+      >
+        <img
+          v-if="onMainNet"
+          src="https://zoombies.world/images/mr-icon.png"
+          class="header-icon"
+        />
+        <span
+          >{{
+            onMainNet ? ethBalance.toFixed(4) : ethBalance.toFixed(3) + " DEV"
+          }}
+        </span>
       </div>
     </div>
     <b-button
@@ -219,38 +252,6 @@
     >
       Connect To {{ onMainNet ? "Moonriver" : "Moonbase" }}
     </b-button>
-    <div class="desktop-bonus">
-      <div
-        v-if="isWalletConnected && bonusReady && showSpinner == false"
-        class="bonusClass"
-        @click="GetBonus"
-      >
-        Claim 2 FREE Boosters!
-      </div>
-      <div v-else-if="isWalletConnected && showSpinner == true">
-        <b-spinner
-          style="width: 1.5rem; height: 1.5rem"
-          type="grow"
-          variant="light"
-        />
-        <transition>
-          <span class="spinner-text-style">
-            {{ transactionMessage }}</span
-          >
-        </transition>
-      </div>
-      <div
-        v-else-if="
-          isWalletConnected &&
-          !bonusReady &&
-          timeToBonus &&
-          showSpinner == false
-        "
-        class="bonusClassNo"
-      >
-        Your Next Bonus: <strong>{{ timeToBonus }}</strong>
-      </div>
-    </div>
     <div
       ref="mobileDropdown"
       :class="{'mobile-dropdown': true, 'dropdown-hidden': !isMobileDropdownOpen}"
@@ -289,7 +290,7 @@
         </div>
       </div>
       <ul>
-        <li>
+        <li class="mobile-bonus">
           <div
             v-if="isWalletConnected && bonusReady && showSpinner == false"
             class="bonusClass"
@@ -698,11 +699,14 @@ export default {
 
 .app-header {
   padding: 16px 0 0 0;
-  margin: 0px 6px 0 6px;
+  margin: 0 auto;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  width: 90%;
+  max-width: 1500px;
+  margin: 0 auto;
 }
 
 .wallet-info {
@@ -727,14 +731,15 @@ export default {
 .app-menu-bar {
   background-image: url("~@/assets/menu_bar.png");
   background-size: 100% 100%;
-  width: 100%;
   height: 70px;
   background-repeat: no-repeat;
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
+  padding-left: 160px;
   z-index: 2;
+  width: 100%;
 }
 
 .zoombie-logo {
@@ -751,12 +756,13 @@ export default {
 }
 
 .app-menu-bar-items {
-  margin-right: 5%;
   height: 100%;
+  width: 100%;
   display: flex;
   align-items: center;
   margin-bottom: 0;
   padding: 0;
+  position: relative;
 
   li {
     display: inline-block;
@@ -772,7 +778,7 @@ export default {
   }
 }
 
-@media screen and (max-width: 740px) {
+@media screen and (max-width: 1075px) {
   .app-header {
     display: flex;
     flex-direction: column;
@@ -795,7 +801,9 @@ export default {
   }
 
   .app-menu-bar {
+    // background-image: url("../assets/menu_bar_mobile.png");
     height: 60px;
+    justify-content: flex-end
   }
 
   .zoombie-logo {
@@ -821,11 +829,19 @@ export default {
 }
 
 .desktop-bonus {
+  max-width: 210px;
   margin-right: 32px;
+  position: absolute;
+  right: 0;
 
   .bonusClass {
     font-size: 18px;
+    font-weight: 500;
     color: #00ff00;
+  }
+
+  .bonusClassNo {
+    max-width: 150px;
   }
 }
 
@@ -1011,7 +1027,7 @@ OLD CSS
 }
 
 .router-link-active {
-  color: #ffffff;
+  text-decoration: underline;
 }
 
 .mm-header {
@@ -1132,13 +1148,14 @@ a {
   font-weight: bold;
   color: #dc3545;
 }
-.base-text {
-  color: #ffffff;
-}
 
 .czxp-logo {
   width: 25px;
   height: 25px;
   vertical-align: middle;
+}
+
+.time-to-bonus {
+  white-space: nowrap;
 }
 </style>

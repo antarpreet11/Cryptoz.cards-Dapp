@@ -613,13 +613,14 @@ export default {
 .mobile-dropdown {
   position: absolute;
   bottom: 7px;
-  z-index: 1;
+  z-index: 3;
   width: 90%;
   transform: translateY(100%);
   display: none;
   height: 350px;
   background-image: url('../assets/space_bg.svg');
-  background-size: 500px 600px;
+  background-size: cover;
+  background-repeat: no-repeat;
   background-position-x: right;
   background-position-y: bottom;
   border-bottom-left-radius: 20px;
@@ -738,7 +739,7 @@ export default {
   align-items: center;
   justify-content: flex-start;
   padding-left: 160px;
-  z-index: 2;
+  z-index: 4;
   width: 100%;
 }
 

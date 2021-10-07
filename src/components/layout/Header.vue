@@ -1,131 +1,5 @@
 <template>
-  <div id="app-header" class="headerComponent">
-    <b-navbar
-      border-variant="info"
-      type="warning"
-      toggleable="lg"
-      class="navbar navbar-expand-md navbar-dark fixed-top zoombies-purple-bg text-warning"
-    >
-      <router-link id="cryptoz-logo" class="navbar-brand" to="/">
-        <img class="logo-nav" src="./../assets/zoombies_head.svg" />
-        Zoombies
-      </router-link>
-      <b-navbar-toggle target="nav-collapse" />
-      <b-collapse id="nav-collapse" is-nav>
-        <b-navbar-nav id="cryptoz-nav">
-          <b-nav-item v-if="isWalletConnected" id="affiliate">
-            <b-link v-b-modal.sponsor-modal :class="classObject" href="#">
-              Affiliate
-            </b-link>
-          </b-nav-item>
-          <b-nav-item id="shop">
-            <router-link :class="classObject" to="/shop"> Shop </router-link>
-          </b-nav-item>
-          <b-nav-item id="crypt">
-            <router-link :class="classObject" to="/my-zoombies-nfts">
-              Your NFT Crypt
-            </router-link>
-          </b-nav-item>
-          <b-nav-item id="markets">
-            <router-link :class="classObject" to="/market">
-              Markets
-            </router-link>
-          </b-nav-item>
-          <b-nav-item id="view">
-            <router-link :class="classObject" to="/view/1"> View </router-link>
-          </b-nav-item>
-          <b-nav-item id="help">
-            <router-link :class="classObject" to="/help"> Help </router-link>
-          </b-nav-item>
-          <b-nav-item id="feedback">
-            <router-link :class="classObject" to="/feedback">
-              Feedback
-            </router-link>
-          </b-nav-item>
-          <!-- DISABLED FOR NOW
-          <b-nav-item>
-            <router-link :class="classObject" to="/data-indicators"
-              ><b-icon-bar-chart-line-fill
-            /></router-link>
-          </b-nav-item>
--->
-          <li v-if="isWalletConnected" id="wallet-nav">
-            <div
-              id="wallet-id"
-              v-b-tooltip.hover="{ customClass: 'tooltip-1' }"
-              :title="coinbase"
-            >
-              <img src="@/assets/metamask-face.png" class="header-icon" />
-              <span>{{
-                coinbase.substr(0, 6) + "..." + coinbase.substr(38)
-              }}</span>
-            </div>
-            <div
-              id="wallet-balance"
-              v-b-tooltip.hover="{ customClass: 'tooltip-2' }"
-              :title="ethBalance"
-            >
-              <img
-                v-if="onMainNet"
-                src="https://zoombies.world/images/mr-icon.png"
-                class="header-icon"
-              />
-              <span
-                >{{
-                  onMainNet
-                    ? ethBalance.toFixed(4)
-                    : ethBalance.toFixed(3) + " DEV"
-                }}
-              </span>
-            </div>
-          </li>
-
-          <li id="bonus-boosters">
-            <div
-              v-if="isWalletConnected && bonusReady && showSpinner == false"
-              class="bonusClass"
-              @click="GetBonus"
-            >
-              Claim 2 FREE Boosters!
-            </div>
-            <div v-else-if="isWalletConnected && showSpinner == true">
-              <b-spinner
-                style="width: 1.5rem; height: 1.5rem"
-                type="grow"
-                variant="light"
-              />
-              <transition>
-                <span class="spinner-text-style">
-                  {{ transactionMessage }}</span
-                >
-              </transition>
-            </div>
-            <div
-              v-else-if="
-                isWalletConnected &&
-                !bonusReady &&
-                timeToBonus &&
-                showSpinner == false
-              "
-              class="bonusClassNo"
-            >
-              Your Next Bonus:<br /><strong> {{ timeToBonus }}</strong>
-            </div>
-          </li>
-
-          <li id="connect-button">
-            <b-button
-              v-if="!isWalletConnected"
-              v-b-toggle.nav-collapse
-              variant="warning"
-              @click="$emit('connect')"
-            >
-              Connect To {{ onMainNet ? "Moonriver" : "Moonbase (testnet)" }}
-            </b-button>
-          </li>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
+  <div class="app-header">
     <b-modal
       v-if="isWalletConnected"
       id="sponsor-modal"
@@ -254,7 +128,210 @@
         >
       </div>
     </b-modal>
-    <p />
+    <div class="app-menu-bar">
+      <router-link to="/">
+        <img
+          class="zoombie-logo"
+          alt="Zoombies World Logo"
+          src="@/assets/zoombies_logo.svg"
+        />
+      </router-link>
+      <ul class="app-menu-bar-items">
+        <li>
+          <button
+            v-b-modal.sponsor-modal
+            class="header-item affiliate-header"
+            aria-label="Open affiliate modal"
+          >
+            Affiliate
+          </button>
+        </li>
+        <li>
+          <router-link class="header-item shop-header" to="/shop">
+            Shop
+          </router-link>
+        </li>
+        <li>
+          <router-link class="header-item aqua-header" to="/my-zoombies-nfts">
+            Your NFT Crypt
+          </router-link>
+        </li>
+        <li>
+          <router-link class="header-item aqua-header" to="/market">
+            Markets
+          </router-link>
+        </li>
+        <li>
+          <router-link class="header-item white-header" to="/view/1">
+            View
+          </router-link>
+        </li>
+        <li>
+          <router-link class="header-item white-header" to="/help">
+            Help
+          </router-link>
+        </li>
+        <li>
+          <router-link class="header-item white-header" to="/feedback">
+            Feedback
+          </router-link>
+        </li>
+        <div class="desktop-bonus">
+          <div
+            v-if="isWalletConnected && bonusReady && showSpinner == false"
+            class="bonusClass"
+            @click="GetBonus"
+          >
+            Claim 2 FREE Boosters!
+          </div>
+          <div v-else-if="isWalletConnected && showSpinner == true">
+            <b-spinner
+              style="width: 1.5rem; height: 1.5rem"
+              type="grow"
+              variant="light"
+            />
+            <transition>
+              <span class="spinner-text-style">
+                {{ transactionMessage }}</span
+              >
+            </transition>
+          </div>
+          <div
+            v-else-if="
+              isWalletConnected &&
+              !bonusReady &&
+              timeToBonus &&
+              showSpinner == false
+            "
+            class="bonusClassNo"
+          >
+            <span>Your Next Bonus: </span>
+            <strong class="time-to-bonus">{{ timeToBonus }}</strong>
+          </div>
+        </div>
+      </ul>
+      <div
+        aria-label="hamburger menu"
+        class="hamburger-menu"
+        @click="toggleMobileDropdown"
+      >
+        <img src="@/assets/button_menu.svg" />
+      </div>
+    </div>
+    <div v-if="isWalletConnected" class="wallet-info">
+      <img src="@/assets/metamask-face.png" class="header-icon" />
+      <span
+        v-b-tooltip.hover.bottom
+        :title="coinbase"
+      >
+        {{ coinbase.substr(0, 6) + "..." + coinbase.substr(38) }}
+      </span>
+      <div
+        id="wallet-balance"
+        v-b-tooltip.hover.bottom
+        :title="ethBalance"
+      >
+        <img
+          v-if="onMainNet"
+          src="https://zoombies.world/images/mr-icon.png"
+          class="header-icon"
+        />
+        <span
+          >{{
+            onMainNet ? ethBalance.toFixed(4) : ethBalance.toFixed(3) + " DEV"
+          }}
+        </span>
+      </div>
+    </div>
+    <b-button
+      v-if="!isWalletConnected"
+      v-b-toggle.nav-collapse
+      variant="warning"
+      class="desktop-connect-btn"
+      @click="$emit('connect')"
+    >
+      Connect To {{ onMainNet ? "Moonriver" : "Moonbase" }}
+    </b-button>
+    <div
+      ref="mobileDropdown"
+      :class="{'mobile-dropdown': true, 'dropdown-hidden': !isMobileDropdownOpen}"
+    >
+      <b-button
+        v-if="!isWalletConnected"
+        v-b-toggle.nav-collapse
+        variant="warning"
+        @click="$emit('connect')"
+      >
+        Connect To {{ onMainNet ? "Moonriver" : "Moonbase (testnet)" }}
+      </b-button>
+      <div v-if="isWalletConnected" class="mobile-wallet-info">
+        <img src="@/assets/metamask-face.png" class="header-icon" />
+        <span
+          v-b-tooltip.hover="{ customClass: 'tooltip-1' }"
+          :title="coinbase"
+        >
+          {{ coinbase.substr(0, 6) + "..." + coinbase.substr(38) }}
+        </span>
+        <div
+          id="wallet-balance"
+          v-b-tooltip.hover="{ customClass: 'tooltip-2' }"
+          :title="ethBalance"
+        >
+          <img
+            v-if="onMainNet"
+            src="https://zoombies.world/images/mr-icon.png"
+            class="header-icon"
+          />
+          <span
+            >{{
+              onMainNet ? ethBalance.toFixed(4) : ethBalance.toFixed(3) + " DEV"
+            }}
+          </span>
+        </div>
+      </div>
+      <ul>
+        <li class="mobile-bonus">
+          <div
+            v-if="isWalletConnected && bonusReady && showSpinner == false"
+            class="bonusClass"
+            @click="GetBonus"
+          >
+            Claim 2 FREE Boosters!
+          </div>
+          <div v-else-if="isWalletConnected && showSpinner == true">
+            <b-spinner
+              style="width: 1.5rem; height: 1.5rem"
+              type="grow"
+              variant="light"
+            />
+            <transition>
+              <span class="spinner-text-style">
+                {{ transactionMessage }}</span
+              >
+            </transition>
+          </div>
+          <div
+            v-else-if="
+              isWalletConnected &&
+              !bonusReady &&
+              timeToBonus &&
+              showSpinner == false
+            "
+            class="bonusClassNo"
+          >
+            Your Next Bonus: <strong>{{ timeToBonus }}</strong>
+          </div>
+        </li>
+        <li @click="toggleMobileDropdown"><button v-b-modal.sponsor-modal class="affiliate-btn aqua-header">Affiliate</button></li>
+        <li @click="toggleMobileDropdown"><router-link to="/shop" class="aqua-header">Shop</router-link></li>
+        <li @click="toggleMobileDropdown"><router-link to="/my-zoombies-nfts" class="aqua-header">Your NFT Crypt</router-link></li>
+        <li @click="toggleMobileDropdown"><router-link to="/market" class="aqua-header">Markets</router-link></li>
+        <li><img class="brain" src="@/components/assets/brain.svg" /></li>
+        <li @click="toggleMobileDropdown"><router-link to="/view/1" class="white-header">View</router-link></li>
+        <li @click="toggleMobileDropdown"><router-link to="/help" class="white-header">Help</router-link></li>
+        <li @click="toggleMobileDropdown"><router-link to="/feedback" class="white-header">Feedback</router-link></li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -264,13 +341,6 @@ import { isAddress } from "../../util/addressUtil";
 import moment from "moment";
 import dAppStates from "@/dAppStates";
 import {
-  BNavbar,
-  BNavbarToggle,
-  BCollapse,
-  BNavbarNav,
-  BNavItem,
-  BLink,
-  BButton,
   BModal,
   BJumbotron,
   BInputGroup,
@@ -278,19 +348,16 @@ import {
   BInputGroupAppend,
   BFormInvalidFeedback,
   BAlert,
+  BButton,
 } from "bootstrap-vue";
 
 const baseAddress = "0x0000000000000000000000000000000000000000";
+
 export default {
-  name: "AppHeader",
+  name: "Header",
+  emits: ["connect"],
+
   components: {
-    BNavbar,
-    BNavbarToggle,
-    BCollapse,
-    BNavbarNav,
-    BNavItem,
-    BLink,
-    BButton,
     BModal,
     BJumbotron,
     BInputGroup,
@@ -298,24 +365,7 @@ export default {
     BInputGroupAppend,
     BFormInvalidFeedback,
     BAlert,
-  },
-  emits: ["connect"],
-  data() {
-    return {
-      pendingTransaction: 0,
-      showSpinner: false,
-      notSameSponsorError: true,
-      transactionMessage: "Pending confirmation...",
-      showLogin: 1,
-      bonusReady: false,
-      timeToBonus: 0,
-      sponsorAddress: "",
-      shouldShowSponsor: true,
-      mySponsor: null,
-      queryHasSponsor: false,
-      showShareMyLink: false,
-      onMainNet: false,
-    };
+    BButton,
   },
   computed: {
     classObject: function () {
@@ -390,6 +440,24 @@ export default {
       return this.sponsorAddress.toLowerCase() === this.coinbase.toLowerCase();
     },
   },
+  data() {
+    return {
+      pendingTransaction: 0,
+      showSpinner: false,
+      notSameSponsorError: true,
+      transactionMessage: "Pending confirmation...",
+      showLogin: 1,
+      bonusReady: false,
+      timeToBonus: 0,
+      sponsorAddress: "",
+      shouldShowSponsor: true,
+      mySponsor: null,
+      queryHasSponsor: false,
+      showShareMyLink: false,
+      onMainNet: false,
+      isMobileDropdownOpen: false,
+    };
+  },
   watch: {
     isWalletConnected(value) {
       if (value) {
@@ -419,7 +487,7 @@ export default {
     },
   },
   mounted() {
-    if (window.location.host == 'movr.zoombies.world') {
+    if (window.location.host == "movr.zoombies.world") {
       this.onMainNet = true;
     } else {
       this.onMainNet = false;
@@ -427,6 +495,13 @@ export default {
     this.getDailyBonusTime();
   },
   methods: {
+    toggleMobileDropdown: function () {
+      if (this.isMobileDropdownOpen) {
+        this.isMobileDropdownOpen = false;
+      } else {
+        this.isMobileDropdownOpen = true;
+      }
+    },
     nextSponsorModalAction: function () {
       this.showShareMyLink = true;
     },
@@ -533,15 +608,279 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.zoombies-purple-bg {
-  background-color: #301748;
+// Dropdowns
+.mobile-dropdown {
+  position: absolute;
+  bottom: 7px;
+  z-index: 3;
+  width: 90%;
+  transform: translateY(100%);
+  display: none;
+  height: 350px;
+  background-image: url('../assets/space_bg.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position-x: right;
+  background-position-y: bottom;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border: 2px solid #888;
+  overflow: hidden;
+  text-align: center;
+  transition: all 0.5s ease;
+  padding: 20px;
+  
+  .mobile-wallet-info {
+    display: flex;
+    color: orange;
+    font-size: 14px;
+    margin: 10px 0;
+
+    .header-icon {
+      width: 24px;
+      height: 18px;
+    }
+  }
+
+  .bonusClassNo {
+    color: #f7162c;
+
+    strong {
+      font-weight: 500;
+    }
+  }
+
+  .affiliate-btn {
+    :hover {
+      text-decoration: underline;
+    }
+
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  ul {
+    margin-bottom: 0;
+  }
+
+  li {
+    padding: 2px 0;
+    display: block;
+
+    :not(.bonusClassNo):hover {
+      text-decoration: underline;
+    }
+  }
+
+  .brain {
+    width: 35px;
+    padding: 10px 0;
+  }
 }
 
-.navbar {
-  max-width: 100vw;
+.dropdown-hidden {
+  height: 0;
+  display: hidden;
+  border: none;
+  padding-top: 0;
+  padding-bottom: 0;
 }
+
+.desktop-connect-btn {
+  margin: 5px;
+  width: 200px;
+}
+
+.hamburger-menu {
+  cursor: pointer;
+  display: none;
+}
+
+.app-header {
+  padding: 16px 0 0 0;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 90%;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.wallet-info {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: #d48b15;
+  margin-bottom: 8px;
+  padding-right: 32px;
+}
+
+.header-icon {
+  height: 20px;
+  margin-right: 5px;
+}
+
+#wallet-balance {
+  margin-left: 16px;
+  color: #90ee90;
+}
+
+.app-menu-bar {
+  background-image: url("../assets/menu_bar.png");
+  background-size: 100% 100%;
+  height: 70px;
+  background-repeat: no-repeat;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 160px;
+  z-index: 4;
+  width: 100%;
+}
+
+.zoombie-logo {
+  height: 105px;
+  width: 105px;
+  position: absolute;
+  left: 3%;
+  top: 50%;
+  transform: translateY(-50%);
+
+  &:hover {
+    transform: translateY(-50%) scale(1.1);
+  }
+}
+
+.app-menu-bar-items {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+  padding: 0;
+  position: relative;
+
+  li {
+    display: inline-block;
+    margin-right: 12px;
+
+    &:hover {
+      transform: scale(1.1);
+
+      button {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1075px) {
+  .app-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: "Oswald", sans-serif;
+
+    ul {
+      padding-left: 0;
+
+      li {
+        margin: 0;
+        text-align: left;
+      }
+    }
+  }
+
+  .mobile-dropdown {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .app-menu-bar {
+    height: 60px;
+    justify-content: flex-end
+  }
+
+  .zoombie-logo {
+    height: 80px;
+    width: 80px;
+  }
+
+  .hamburger-menu {
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    img {
+      width: 40px;
+      height: 30px;
+      margin-right: 30px;
+    }
+  }
+
+  .desktop-connect-btn, .desktop-bonus, .app-menu-bar-items, .wallet-info {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .app-menu-bar {
+    background-image: url("../assets/menu_bar_mobile.png");
+  }
+}
+
+.desktop-bonus {
+  max-width: 210px;
+  margin-right: 32px;
+  position: absolute;
+  right: 0;
+
+  .bonusClass {
+    font-size: 18px;
+    font-weight: 500;
+    color: #00ff00;
+  }
+
+  .bonusClassNo {
+    max-width: 150px;
+  }
+}
+
+.affiliate-header {
+  color: $COLOR_PINK;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+.shop-header {
+  color: $COLOR_PURPLE;
+}
+
+.aqua-header {
+  color: $COLOR_AQUA;
+}
+
+.white-header {
+  color: white;
+}
+
+.header-item {
+  font-family: "Oswald", sans-serif;
+  font-size: 22px;
+}
+
+/*******************************
+OLD CSS
+**********************************/
 
 .button-wrapper {
   display: flex;
@@ -607,27 +946,6 @@ export default {
   }
 }
 
-#cryptoz-nav {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  position: relative;
-}
-
-#bonus-boosters {
-  min-width: 140px;
-  display: flex;
-  align-items: center;
-  grid-row: 1;
-}
-
-#bonus-boosters:empty {
-  height: 0;
-  min-width: 0;
-  width: 0;
-}
-
 #wallet-nav:empty {
   height: 0;
 }
@@ -662,46 +980,22 @@ export default {
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;
-  color: #00ff00;
+  color: $COLOR_PINK;
   margin-right: 0.8em;
   cursor: pointer;
   padding: 1px;
   border: 1px solid transparent;
 }
 
-.tooltip-1 {
-  top: 65px !important;
-}
-
-.tooltip-2 {
-  top: 45px !important;
-}
-
 @media screen and (max-width: 600px) {
-  #cryptoz-nav {
-    display: grid;
-    grid-template-rows: repeat(8, auto);
-  }
-
   .nav-item {
     height: 40px;
     display: flex;
     align-items: center;
   }
 
-  #bonus-boosters {
-    height: 50px;
-    justify-content: center;
-    margin: 0;
-  }
-
   .bonusClass {
-    text-align: center;
     margin-right: 0;
-  }
-
-  #connect-button {
-    margin: auto;
   }
 
   #shop {
@@ -739,7 +1033,7 @@ export default {
 }
 
 .router-link-active {
-  color: #ffffff;
+  text-decoration: underline;
 }
 
 .mm-header {
@@ -769,12 +1063,6 @@ a {
 /* BINANCE color #F0B90B */
 .bsc-link {
   color: #f0b90b;
-}
-
-a:hover {
-  color: #fff;
-  text-decoration: none;
-  transform: scale(1.1);
 }
 
 .fade-enter-active,
@@ -814,16 +1102,6 @@ a:hover {
 .flex-row {
   display: flex;
   flex-direction: row;
-}
-
-#connect-button {
-  margin-left: auto;
-  min-width: 190px;
-  grid-row: 3;
-}
-
-#connect-button:empty {
-  min-width: 0;
 }
 
 .eth-link,
@@ -876,12 +1154,14 @@ a:hover {
   font-weight: bold;
   color: #dc3545;
 }
-.base-text {
-  color: #ffffff;
-}
 
 .czxp-logo {
-  width: 20px;
+  width: 25px;
+  height: 25px;
   vertical-align: middle;
+}
+
+.time-to-bonus {
+  white-space: nowrap;
 }
 </style>

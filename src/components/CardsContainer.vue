@@ -6,10 +6,10 @@
           <div class="primary-actions">
             <b-button
               id="view-change-button"
+              v-b-tooltip.hover="tableButtonTooltip"
               variant="info"
               :disabled="!ownsCards"
               @click="() => toggleTableView()"
-              v-b-tooltip.hover="tableButtonTooltip"
             >
               {{ "View " + (isTableView ? "Gallery" : "Table") }}
             </b-button>
@@ -177,8 +177,8 @@
                 </span>
                 <span v-else>
                   <b-button
-                    variant="danger"
                     v-b-modal="'mass-sacrifice-modal'"
+                    variant="danger"
                     :disabled="Object.keys(cardsBeingSacrificed).length > 0"
                   >
                     ☠️ Sacrifice {{selectedCards.length}} Zoombies
@@ -308,7 +308,7 @@ export default {
     },
   },
   emits: ["cryptChanged"],
-  beforeDestroy() {
+  beforeUnmount() {
     this.observer.disconnect();
   },
   created() {
@@ -978,26 +978,26 @@ export default {
 
 .btn-epic {
   color: #fff;
-  background-color: #5745e5;
-  border-color: #5745e5;
+  background-color: #B92EE4;
+  border-color: #B92EE4;
 }
 
 .btn-rare {
   color: #fff;
-  background-color: #ca3c2c;
-  border-color: #ca3c2c;
+  background-color: #D5005A;
+  border-color: #D5005A;
 }
 
 .btn-uncommon {
   color: #fff;
-  background-color: #2ba4fa;
-  border-color: #2ba4fa;
+  background-color: #03C1E8;
+  border-color: #03C1E8;
 }
 
 .btn-common {
   color: #fff;
-  background-color: #545161;
-  border-color: #545161;
+  background-color: #585858;
+  border-color: #585858;
 }
 
 /* Desktop CSS */
@@ -1082,19 +1082,19 @@ export default {
 }
 
 .common {
-  color: rgb(84, 81, 97);
+  color: #585858;
 }
 
 .uncommon {
-  color: rgb(43, 164, 250);
+  color: #03C1E8;
 }
 
 .rare {
-  color: rgb(202, 60, 44);
+  color: #D5005A;
 }
 
 .epic {
-  color: rgb(87, 69, 229);
+  color: #B92EE4;
 }
 
 </style>

@@ -44,20 +44,20 @@
           v-model="wagerAmount"
           class="form-control"
           :state="isWagerValid"
-          @input="calculateProbability"
           required
           type="range"
           min="0"
           max="20000000"
           step="1"
+          @input="calculateProbability"
         />
         <b-form-input
           v-model="wagerAmount"
           class="form-control"
           :state="isWagerValid"
-          @input="calculateProbability"
           required
           type="number"
+          @input="calculateProbability"
         />
         <b-form-invalid-feedback v-if="isWagerValid">
           <div>
@@ -73,24 +73,24 @@
           <b-col>
                 <b-progress show-progress :max="pBarMax" height="30px" class="mb-3">
                   <b-progress-bar
+                    v-b-tooltip.hover="(wagerAmount == 0) ? `0.01% chance to pull an Epic` : `${pBarWagerValues[0].toFixed(2)/1}% chance to pull an Epic`"
                     class="p-bar-purple"
                     :value="(wagerAmount == 0) ? 1 : pBarWagerValues[0]"
-                    v-b-tooltip.hover="(wagerAmount == 0) ? `0.01% chance to pull an Epic` : `${pBarWagerValues[0].toFixed(2)/1}% chance to pull an Epic`"
                   ></b-progress-bar>
                   <b-progress-bar
+                    v-b-tooltip.hover="`${pBarWagerValues[1].toFixed(2)/1}% chance to pull a Rare`"
                     variant="danger"
                     :value="pBarWagerValues[1]"
-                    v-b-tooltip.hover="`${pBarWagerValues[1].toFixed(2)/1}% chance to pull a Rare`"
                   ></b-progress-bar>
                   <b-progress-bar
+                    v-b-tooltip.hover="`${pBarWagerValues[2].toFixed(2)/1}% chance to pull an Uncommon`"
                     variant="primary"
                     :value="pBarWagerValues[2]"
-                    v-b-tooltip.hover="`${pBarWagerValues[2].toFixed(2)/1}% chance to pull an Uncommon`"
                   ></b-progress-bar>
                   <b-progress-bar
+                    v-b-tooltip.hover="`${pBarWagerValues[3].toFixed(2)/1}% chance to pull a Common`"
                     variant="secondary"
                     :value="pBarWagerValues[3]"
-                    v-b-tooltip.hover="`${pBarWagerValues[3].toFixed(2)/1}% chance to pull a Common`"
                   ></b-progress-bar>
                 </b-progress>
             </b-col>
@@ -121,6 +121,43 @@
         </b-row>
         <span class="text-danger"><strong>NOTE:</strong></span> ZOOM is burned permanently when you wager
       </b-modal>
+      <b-modal
+      id="buy-boosters-modal"
+      title="Buy Booster Minting Credits @ 0.01 MOVR each"
+    >
+      <div class="booster-modal-content">
+        <p class="booster-modal-title">
+          Booster NFT cards will NEVER be sold in the shop
+        </p>
+        <p class="booster-modal-explain">
+          Enter the number of booster NFT minting credits you would like to
+          purchase:
+        </p>
+        <input
+          id="toWallet"
+          class="form-control"
+          type="text"
+          value="1"
+          required
+          @input="totalCreditsToBuy = $event.target.value"
+        />
+      </div>
+
+      <template #modal-footer>
+        <div class="booster-modal-footer">
+          <b-button class="mt-3" variant="danger" @click="buyBoosters">
+            Buy Credits
+          </b-button>
+          <b-button
+            class="mt-3"
+            variant="secondary"
+            @click="$bvModal.hide('buy-boosters-modal')"
+          >
+            Cancel
+          </b-button>
+        </div>
+      </template>
+    </b-modal>
 
       <b-modal
         id="open-probability-modal"
@@ -181,37 +218,44 @@
 
         <!-- Loads cards here -->
         <div v-if="isWalletConnected" class="action-buttons">
-          <div>
+          <div class="left-buttons">
             <b-button
               v-b-tooltip.hover="'Mint 1 random booster NFT'"
+              v-b-modal="'open-booster-modal'"
               class="mint-booster-btn btn btn-danger"
               :disabled="boostersOwned < 1"
-              v-b-modal="'open-booster-modal'"
-              >Mint <b-icon-lightning-fill /> Booster NFT
-            </b-button>
-          </div>
-          <div>
-            <b-button
-              v-b-tooltip.hover="'View probability of mint by rarity'"
-              class="btn" variant="info"
-              v-b-modal="'open-probability-modal'"
             >
-              <b-icon-pie-chart-fill />
+              <span class="booster-counter">
+                {{boostersOwned}}
+                <b-icon-lightning-fill />
+              </span>
+              Mint Booster NFT
+            </b-button>
+            <OwnerBalances />
+          </div>
+          <div class="right-buttons">
+            <b-button
+              id="buy-boosters-btn"
+              v-b-tooltip.hover="'Earn +500 ZOOM per credit'"
+              v-b-modal.buy-boosters-modal
+              class="buy-and-open-booster btn btn-danger"
+              :disabled="balance < 10000000100000000 || isBuyingBooster"
+            >
+              Buy <b-icon-lightning-fill /> Booster NFT Credits @ 0.01 Each
+              <img src="../assets/movr_logo.png" class="mr-icon" />
+            </b-button>
+            <b-button
+              v-b-tooltip.hover="'Mint 1 random booster NFT +500 ZOOM'"
+              class="buy-and-open-booster btn btn-dange"
+              :disabled="balance < 10000001000000000"
+              @click="buyAndOpenBooster"
+            >
+              Buy and Mint <b-icon-lightning-fill /> Booster NFT 0.01
+              <img src="../assets/movr_logo.png" class="mr-icon" />
             </b-button>
           </div>
-          <b-button
-            class="buy-and-open-booster btn btn-dange"
-            v-b-tooltip.hover="'Mint 1 random booster NFT +500 ZOOM'"
-            :disabled="balance < 10000001000000000"
-            @click="buyAndOpenBooster"
-          >
-            Buy and Mint <b-icon-lightning-fill /> Booster NFT 0.01
-            <img src="https://zoombies.world/images/mr-icon.png" class="mr-icon" />
-          </b-button>
         </div>
         <br />
-
-        <OwnerBalances />
         <div class="cards-wrapper">
           <cards-container
             :is-others-crypt="false"
@@ -267,26 +311,25 @@ export default {
       pBarDefaultValues: [1,4.999,29.999,64.999],
       pBarWagerValues: [1,4.99,29.9,64.9],
       pBarMax: 100,
+      isBuyingBooster: false,
+      totalCreditsToBuy: 1,
     };
   },
   computed: {
-    throttle() {
-      return this.$store.state.throttle;
-    },
     balance() {
       return this.$store.state.web3.balance;
     },
     coinbase() {
       return this.$store.state.web3.coinbase;
     },
+    boostersOwned() {
+      return this.$store.state.boostersOwned.toLocaleString();
+    },
     CryptozInstance() {
       return this.$store.state.contractInstance.cryptoz;
     },
     isWalletConnected() {
       return this.$store.state.dAppState === dAppStates.WALLET_CONNECTED;
-    },
-    boostersOwned() {
-      return this.$store.state.boostersOwned;
     },
     isWagerValid() {
       const wagerAmount = parseInt(this.wagerAmount);
@@ -333,26 +376,36 @@ export default {
     },
   },
   methods: {
-    checkThrottleStatus() {
-      if (!this.throttle) {
-        return true
-      }
-      const nowSec = Date.now() / 1000
-      const lastMintTime = localStorage.getItem('lastMintTime')
+    buyBoosters: function () {
+      this.$bvModal.hide("buy-boosters-modal");
+      this.isBuyingBooster = true;
 
-      if (!lastMintTime) return true
-      if (parseInt(lastMintTime) + 60 < nowSec) {
-        return true
-      }
-      showErrorToast(this, "The Moonriver network is currently being upgraded. Try minting again in a minute.");
-      return false
+      this.showTransactionModal();
+
+      var totalBoostersCost =
+        10000000000000000 * parseInt(this.totalCreditsToBuy);
+      this.CryptozInstance.methods
+        .buyBoosterCredits(parseInt(this.totalCreditsToBuy))
+        .send(
+          { from: this.coinbase, value: totalBoostersCost },
+          (err, txHash) => {
+            this.hideTransactionModal();
+          }
+        )
+        .catch((err) => {
+          if (err.code !== 4001) {
+            showErrorToast(this, "Failed to mint card");
+          }
+        })
+        .finally(() => {
+          this.isBuyingBooster = false;
+        });
     },
     setLastMintTime() {
       const nowSec = Date.now() / 1000
       localStorage.setItem('lastMintTime', nowSec)
     },
     buyAndOpenBooster: async function () {
-      if (!this.checkThrottleStatus()) return
       try {
         this.$store.dispatch("setIsTransactionPending", true);
         this.setLastMintTime()
@@ -383,7 +436,6 @@ export default {
       }
     },
     openBooster: async function () {
-      if (!this.checkThrottleStatus()) return
       this.setLastMintTime()
       try {
         this.$store.dispatch("setIsTransactionPending", true);
@@ -406,6 +458,12 @@ export default {
         console.error(err);
         showErrorToast(this, "Failed to open booster");
       }
+    },
+    showTransactionModal() {
+      this.$store.dispatch("setIsTransactionPending", true);
+    },
+    hideTransactionModal() {
+      this.$store.dispatch("setIsTransactionPending", false);
     },
     calculateProbability: function () {
 
@@ -442,9 +500,9 @@ button {
 
 .action-buttons {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 
   @media screen and (min-width: 685px) {
     flex-direction: row;
@@ -458,6 +516,27 @@ button {
         margin: 16px 6px;
         min-width: fit-content;
       }
+    }
+  }
+}
+
+.left-buttons {
+  display: flex;
+
+  .booster-counter {
+    position: relative;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid black;
+    padding: 0 2px 0 4px;
+    color: black;
+    margin-right: 15px;
+
+    svg {
+      position: absolute;
+      right: 0;
+      top: 7%;
+      transform: translateX(65%);
     }
   }
 }
@@ -575,6 +654,7 @@ button {
 
 .mr-icon {
   height: 20px;
+  margin-left: 5px;
 }
 
 .b-progress-bar-purple{

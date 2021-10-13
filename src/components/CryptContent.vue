@@ -504,8 +504,12 @@ button {
   align-items: center;
   justify-content: space-between;
 
-  button:hover {
-    transform: scale(1.05);
+  button {
+    height: 50px;
+
+    &:hover {
+      transform: scale(1.05);
+    }
   }
 
   @media screen and (min-width: 685px) {
@@ -515,32 +519,47 @@ button {
 
   div {
     margin: 6px;
-    button {
-      @media screen and (min-width: 685px) {
-        margin: 16px 6px;
-        min-width: fit-content;
+  }
+
+  .left-buttons {
+    display: flex;
+    align-items: center;
+
+    .booster-counter {
+      position: relative;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid black;
+      padding: 0 2px 0 4px;
+      color: black;
+      margin-right: 15px;
+
+      svg {
+        position: absolute;
+        right: 0;
+        top: 7%;
+        transform: translateX(65%);
       }
+    }
+  }
+
+  .right-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    
+    button {
+      margin: 2px 0;
     }
   }
 }
 
-.left-buttons {
-  display: flex;
+@media screen and (max-width: 950px) {
+  .action-buttons {
+    flex-direction: column;
 
-  .booster-counter {
-    position: relative;
-    border-radius: 50%;
-    background: white;
-    border: 2px solid black;
-    padding: 0 2px 0 4px;
-    color: black;
-    margin-right: 15px;
-
-    svg {
-      position: absolute;
-      right: 0;
-      top: 7%;
-      transform: translateX(65%);
+    .left-buttons {
+      flex-direction: column;
     }
   }
 }

@@ -504,6 +504,10 @@ button {
   align-items: center;
   justify-content: space-between;
 
+  button:hover {
+    transform: scale(1.05);
+  }
+
   @media screen and (min-width: 685px) {
     flex-direction: row;
     justify-content: space-between;

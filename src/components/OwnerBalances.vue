@@ -1,9 +1,5 @@
 <template>
   <div v-if="isWalletConnected" id="container" class="row-col">
-    <p>
-      <strong>Your <b-icon-lightning-fill /> Booster credits:</strong>
-      {{ boosters_owned }}
-    </p>
     <p><strong>Your Zoombies NFTs:</strong> {{ cards_owned }}</p>
     <p>
       <strong
@@ -46,7 +42,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
 #container {
   margin: 20px 0;
 }
@@ -54,6 +50,12 @@ export default {
 p {
   padding-left: 10px;
   margin-bottom: 0;
+  color: pink;
+
+  strong {
+    color: aqua;
+    font-weight: 400;
+  }
 }
 
 .czxp-logo {
@@ -69,8 +71,7 @@ p {
 
 @media screen and (min-width: 600px) {
   .row-col {
-    flex-direction: row;
-    justify-content: space-between;
+    align-items: flex-start;
   }
 }
 </style>

@@ -32,6 +32,13 @@
       in shop and boosters
     </p>
     <p>
+      <b-button
+        v-b-tooltip.hover="'View probability of mint by rarity'"
+        v-b-modal="'open-probability-modal'" class="btn"
+        variant="info"
+      >
+        <b-icon-pie-chart-fill />
+      </b-button>
       <strong>
         <number
           ref="nftSupply"
@@ -47,7 +54,7 @@
   </div>
 </template>
 <script>
-import { UniverseBalances } from "vuex";
+import { BButton } from "bootstrap-vue";
 
 export default {
   name: "UniverseBalances",
@@ -60,6 +67,9 @@ export default {
       newNftSupply: null,
       prevNftSupply: null,
     }
+  },
+  components: {
+    BButton
   },
   methods: {
     formatNumber(number) {
@@ -134,6 +144,10 @@ export default {
 p {
   padding-left: 10px;
   margin-bottom: 0;
+}
+
+.btn {
+  margin-right: 5px;
 }
 
 .czxp-logo {

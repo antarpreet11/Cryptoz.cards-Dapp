@@ -47,13 +47,14 @@
             <span>{{ cost }}</span>
           </div>
           <div class="card-txt-black">
-            <span class="attribute-name font-weight-bold">Earn ZOOM:</span>
+            <span class="attribute-name font-weight-bold">Mint Reward:</span>
             <span>{{ parseInt(buy_czxp).toLocaleString() }}</span>
           </div>
           <div class="card-txt-black">
             <span class="attribute-name font-weight-bold">Sacrifice ZOOM:</span>
             <span>{{ parseInt(sacrifice_czxp).toLocaleString() }}</span>
           </div>
+          <img src="./assets/moonriver.svg" class="mr-logo" />
         </div>
       </div>
     </div>

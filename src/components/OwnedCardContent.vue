@@ -54,7 +54,9 @@
             <span class="attribute-name font-weight-bold">Sacrifice ZOOM:</span>
             <span>{{ parseInt(sacrifice_czxp).toLocaleString() }}</span>
           </div>
-          <img src="./assets/moonriver.svg" class="mr-logo" />
+          <p class="text-center">
+            <img src="./assets/moonriver.svg" class="mr-logo" />
+          </p>
         </div>
       </div>
     </div>
@@ -389,4 +391,20 @@ export default {
 .card-booster-shop-icon {
   color: #000000
 }
+
+@media screen and (max-width: 576px) {
+  .mr-logo {
+    max-width:50%;
+    position:relative;
+    top:2.7rem;
+  }
+}
+@media screen and (min-width: 768px) {  
+  .mr-logo {
+    max-width:50%;
+    position:relative;
+    top:4.2rem;
+  }
+}
+
 </style>

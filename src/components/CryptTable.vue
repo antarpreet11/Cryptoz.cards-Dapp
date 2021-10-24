@@ -1,6 +1,7 @@
 <template>
   <div>
     <b-table
+      ref="cryptTable"
       :items="displayCards"
       :fields="tableFields"
       small
@@ -8,16 +9,32 @@
       responsive
       :selectable="!isOthersCrypt"
       select-mode="multi"
-      ref="cryptTable"
       @row-selected="onRowSelected"
     >
       <template #cell(name)="row">
         <div class="flex">
-          <input v-if="!isOthersCrypt" type="checkbox" v-bind:checked="isRowSelected(row.index)" @change="onChangeSelection(row.index)" />
-          <div class="cell" :ref="'tableRow' + row.item.id" :data-id="row.item.id">
-            <img :src="row.item.image" :class="`cell mr-4 ${row.item.rarity}`" />
+          <input
+            v-if="!isOthersCrypt"
+            type="checkbox"
+            :checked="isRowSelected(row.index)"
+            @change="onChangeSelection(row.index)"
+          />
+          <div
+            :ref="'tableRow' + row.item.id"
+            class="cell"
+            :data-id="row.item.id"
+          >
+            <img
+              :src="row.item.image"
+              :class="`cell mr-4 ${row.item.rarity}`"
+            />
             {{ row.item.name }}
           </div>
+        </div>
+      </template>
+      <template #cell(minted_from)="row">
+        <div class="cell">
+          <b>{{ row.item.in_store === "Booster" ? "Booster" : "Shop" }}</b> 
         </div>
       </template>
       <template #cell(card_level)="row">
@@ -104,52 +121,54 @@ export default {
     },
     observer: {
       type: IntersectionObserver,
-      default: null
-    }
+      default: null,
+    },
   },
   mounted() {
-    this.observeRefs()
+    this.observeRefs();
   },
   watch: {
     displayCards(val, oldVal) {
       if (val.length !== oldVal.length) {
-        this.observeRefs()
+        this.observeRefs();
       }
-    }
+    },
   },
   methods: {
-    sacrificeCards: function(id) {
+    sacrificeCards: function (id) {
       this.$emit("sacrificeCards", id);
     },
-    openGiftModal: function(id) {
+    openGiftModal: function (id) {
       this.$emit("giftCard", id);
     },
-    loadMore: function() {
+    loadMore: function () {
       this.$emit("loadMore");
     },
-    isRowSelected: function(index) {
-      return this.$refs.cryptTable && this.$refs.cryptTable.isRowSelected(index);
+    isRowSelected: function (index) {
+      return (
+        this.$refs.cryptTable && this.$refs.cryptTable.isRowSelected(index)
+      );
     },
-    onRowSelected: function(items) {
-      this.$store.dispatch('crypt/setSelectedCards', items)
+    onRowSelected: function (items) {
+      this.$store.dispatch("crypt/setSelectedCards", items);
     },
-    onChangeSelection: function(index) {
+    onChangeSelection: function (index) {
       if (this.isRowSelected(index)) {
-        this.$refs.cryptTable.unselectRow(index)
+        this.$refs.cryptTable.unselectRow(index);
       } else {
-        this.$refs.cryptTable.selectRow(index)
+        this.$refs.cryptTable.selectRow(index);
       }
     },
-    observeRefs: function() {
+    observeRefs: function () {
       this.$nextTick(() => {
-        Object.keys(this.$refs).forEach(refId => {
-          const ref = this.$refs[refId]
-          if (refId.includes('tableRow') && this.observer && ref) {
-            this.observer.observe(ref)
+        Object.keys(this.$refs).forEach((refId) => {
+          const ref = this.$refs[refId];
+          if (refId.includes("tableRow") && this.observer && ref) {
+            this.observer.observe(ref);
           }
-        })
-      })
-    }
+        });
+      });
+    },
   },
 };
 </script>

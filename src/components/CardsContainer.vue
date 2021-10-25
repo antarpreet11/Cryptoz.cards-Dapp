@@ -435,6 +435,7 @@ export default {
       if (this.isOthersCrypt) {
         return [
           "name",
+          "minted_from",
           "card_level",
           "edition_number",
           "unlock_zoom",
@@ -443,6 +444,7 @@ export default {
       } else {
         return [
           "name",
+          "minted_from",
           "card_level",
           "edition_number",
           "unlock_zoom",

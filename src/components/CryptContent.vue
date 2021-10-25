@@ -277,11 +277,8 @@ import {
   BRow,
   BCol,
   BButton,
-  BImg,
-  BContainer,
   BProgress,
   BProgressBar,
-  BAlert
 } from "bootstrap-vue";
 import { showErrorToast } from "../util/showToast";
 import dAppStates from "@/dAppStates";
@@ -298,11 +295,8 @@ export default {
     BRow,
     BCol,
     BButton,
-    BImg,
-    BContainer,
     BProgress,
     BProgressBar,
-    BAlert
   },
   data() {
     return {

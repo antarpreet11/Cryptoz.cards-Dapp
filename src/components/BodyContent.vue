@@ -19,6 +19,7 @@
           </p>
           <p>
             <h2>ZOOM Token Liquidity Sale Event !</h2>
+            <h2 class="text-warning">Ends Nov 1, 2021 - 18:00-UTC</h2>
             <p><span class="text-danger">NOTE:</span> the ZOOM ERC20 token in a game utility token for the Zoombies NFT World, <router-link to="/help">please read and understand the mint and burn operations of this token</router-link> before purchase.<br />
               <br/>Holding a sufficient ZOOM token balance will unlock some FREE cards and reduce the minting costs of some Shop NFTs. ZOOM tokens can also be burned to increase the chance of pulling higher rarity cards when minting booster NFTs. Future utility will include ZOOM tokens as a form of health points.
             <div class="btn btn-primary" @click="addZOOMtoMetaMask">Add ZOOM asset to Metamask</div></p>

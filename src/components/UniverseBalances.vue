@@ -33,6 +33,7 @@
     </p>
     <p>
       <b-button
+        v-if="isInOwnCrypt"
         v-b-tooltip.hover="'View probability of mint by rarity'"
         v-b-modal="'open-probability-modal'" class="btn"
         variant="info"
@@ -58,6 +59,12 @@ import { BButton } from "bootstrap-vue";
 
 export default {
   name: "UniverseBalances",
+  props: {
+    isInOwnCrypt: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       newZoomBalance: null,

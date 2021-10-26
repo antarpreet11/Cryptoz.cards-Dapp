@@ -206,7 +206,7 @@
       </b-modal>
 
       <div>
-        <UniverseBalances />
+        <UniverseBalances :is-in-own-crypt="true" />
 
         <h1>Your NFT Crypt</h1>
         <p>

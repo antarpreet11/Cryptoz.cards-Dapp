@@ -1190,6 +1190,15 @@ a {
 
 .badge-icon {
   max-width: 2rem;
-  filter: drop-shadow(1px 1px 4px #ffffff);
+  animation: glow 3s infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    filter: drop-shadow(1px 1px 0px #ffffff);
+  }
+  to {
+    filter: drop-shadow(1px 1px 4px #ffffff);
+  }
 }
 </style>

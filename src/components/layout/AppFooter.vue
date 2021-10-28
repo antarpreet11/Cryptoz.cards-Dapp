@@ -1,5 +1,15 @@
 <template>
   <div class="hello">
+    <b-modal id="discord" centered size="lg" ok-only title="YAY! Join the Zoombies Herders">
+      <h3>VIPS, Airdrops, perks, trade talk, game development announcements all start here for the Zoombies Community</h3>
+      <div class="row">
+        <div class="col"></div>
+          <div class="col">
+            <iframe src="https://discord.com/widget?id=890574612377772082&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+          </div>
+        <div class="col"></div>
+      </div>
+    </b-modal>
     <!-- Footer -->
     <footer class="page-footer font-small blue pt-4">
       <!-- Footer Links -->
@@ -67,12 +77,7 @@
                 </a>
               </li>
               <li>
-                <a
-                  :class="classObject"
-                  href="https://discord.com/channels/890574612377772082/896128275921920011"
-                  target="_blank"
-                  >Discord Community</a
-                >
+                <div v-b-modal.discord>Discord Community</div>
               </li>
               <li>
                 <a

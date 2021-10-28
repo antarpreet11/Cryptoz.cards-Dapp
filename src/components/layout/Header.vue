@@ -219,12 +219,22 @@
       </div>
     </div>
     <div v-if="isWalletConnected" class="wallet-info">
-      <img src="@/assets/metamask-face.png" class="header-icon" />
+
+      <div v-if="ZoomContribution == 20000000000000000000">
+        <img src="https://zoombies.world/images/gold_vip.svg" class="badge-icon" />
+      </div>
+      <div v-else-if="ZoomContribution >= 1000000000000000000">
+        <img src="https://zoombies.world/images/silver_vip.svg" class="badge-icon" />
+      </div>
+      <div v-else>
+        <img src="@/assets/metamask-face.png" class="header-icon" />
+      </div>
+
       <span
         v-b-tooltip.hover.bottom
         :title="coinbase"
       >
-        {{ coinbase.substr(0, 6) + "..." + coinbase.substr(38) }}
+        &nbsp;{{ coinbase.substr(0, 6) + "..." + coinbase.substr(38) }}
       </span>
       <div
         id="wallet-balance"
@@ -379,6 +389,9 @@ export default {
       return "eth-link";
       //  }
     },
+    CzxpInstance() {
+      return this.$store.state.contractInstance.czxp;
+    },
     CryptozInstance() {
       return this.$store.state.contractInstance.cryptoz;
     },
@@ -397,6 +410,12 @@ export default {
     },
     coinbase() {
       return this.$store.state.web3.coinbase;
+    },
+    ZoomContribution() {
+      return this.$store.state.zoomContribution;
+    },
+    czxp_balance() {
+      return this.$store.state.czxpBalance;
     },
     currentEvent() {
       return this.$store.state.lastChainEvent;
@@ -477,6 +496,7 @@ export default {
       this.getDailyBonusTime();
       if (value) {
         this.checkSponsor(value);
+        this.getZoomContributionStatus();
       }
     },
     $route(to) {
@@ -604,6 +624,9 @@ export default {
     GetTimeString: function (_timeStamp) {
       return moment(_timeStamp).format("MMM D, h:mm a");
     },
+    getZoomContributionStatus: async function () {
+      this.$store.state.zoomContribution = parseInt(await this.CzxpInstance.methods.contributions(this.coinbase).call());
+    },
   },
 };
 </script>
@@ -630,7 +653,7 @@ export default {
   text-align: center;
   transition: all 0.5s ease;
   padding: 20px;
-  
+
   .mobile-wallet-info {
     display: flex;
     color: orange;
@@ -1163,5 +1186,10 @@ a {
 
 .time-to-bonus {
   white-space: nowrap;
+}
+
+.badge-icon {
+  max-width: 2rem;
+  filter: drop-shadow(1px 1px 4px #ffffff);
 }
 </style>

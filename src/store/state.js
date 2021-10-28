@@ -14,6 +14,7 @@ let state = {
   //Component states
   ownerBalances: 0,
   universeBalances: 0,
+  zoomContribution: 0,
 
   // wallet balances
   boostersOwned: 0,

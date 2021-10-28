@@ -306,6 +306,7 @@ export default {
       });
     },
     updateSale: async function () {
+      console.log('Update sale data..');
       //console.log(await this.CzxpInstance.methods.totalSupply().call());
       this.zoomWalletsRemaining = 1000 - await this.CzxpInstance.methods.totalContributors().call();
       this.zoomSold = parseInt(await this.CzxpInstance.methods.totalZoomPurchased().call()/1000000000000000000).toLocaleString();
@@ -313,6 +314,12 @@ export default {
       this.movrCost = 0;
       //console.log("contr.total:",await this.CzxpInstance.methods.contributions(this.coinbase).call());
       this.myPurchaseTotal = parseInt(await this.CzxpInstance.methods.contributions(this.coinbase).call());
+      console.log();
+      this.$store.state.zoomContribution = this.myPurchaseTotal;
+    },
+    updateBadge : async function() {
+      console.log('ggogogogo');
+
     },
     filterCzxpInput: function () {
       this.totalCzxpToBuy = this.totalCzxpToBuy.replace(/[^\d]/g, "");

@@ -1,14 +1,31 @@
 <template>
   <div class="hello">
-    <b-modal id="discord" centered size="lg" ok-only title="YAY! Join the Zoombies Herders">
+    <b-modal id="discord"
+             centered
+             size="lg"
+             ok-only
+             modal-ok="Close"
+             title="YAY! Connect with other Zoombies Herders"
+             header-bg-variant="dark"
+             header-text-variant="white"
+             footer-bg-variant="dark"
+             footer-text-variant="white"
+    >
       <h3>VIPS, Airdrops, perks, trade talk, game development announcements all start here for the Zoombies Community</h3>
       <div class="row">
         <div class="col"></div>
           <div class="col">
             <iframe src="https://discord.com/widget?id=890574612377772082&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+            Press Connect
           </div>
         <div class="col"></div>
       </div>
+      <template #modal-footer="{ ok }">
+  <!-- Emulate built in modal footer ok and cancel button actions -->
+  <b-button size="sm" variant="danger" @click="ok()">
+    CLOSE
+  </b-button>
+</template>
     </b-modal>
     <!-- Footer -->
     <footer class="page-footer font-small blue pt-4">
@@ -141,8 +158,18 @@
 <script>
 import { NETWORKS } from "../../util/constants/networks";
 import dAppStates from "@/dAppStates";
+import {
+  BModal,
+  BButton,
+} from "bootstrap-vue";
 
 export default {
+
+  components: {
+    BModal,
+    BButton,
+  },
+
   name: "AppFooter",
   props: [],
   data() {

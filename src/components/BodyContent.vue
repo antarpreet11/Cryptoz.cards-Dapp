@@ -27,7 +27,7 @@
           </p>
           <p>
             <h2>ZOOM <img src="https://zoombies.world/images/zoombies_coin.svg" style="max-width:2.6rem;" class="align-middle" /> VIP Token Liquidity Sale Event !</h2>
-            <h2 class="text-warning">Ends Nov 1, 2021 - 18:00-UTC</h2>
+            <h2 class="text-warning">Promo ends Nov 1, 2021 - 18:00-UTC</h2>
             <h1><span id="countdown" class="text-warning">loading..</span></h1>
             <p><span class="text-danger">NOTE:</span> The ZOOM ERC20 token is the economic game utility token for the Zoombies NFT World. <router-link to="/help">Please read and understand the mint and burn operations of this token</router-link> before purchase.<br />
 

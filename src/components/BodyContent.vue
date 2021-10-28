@@ -26,21 +26,21 @@
             <img v-if="onMainNet" src="https://zoombies.world/images/moonriver-logo-500.png" style="max-width:7em" />
           </p>
           <p>
-            <h2>ZOOM Token Liquidity Sale Event !</h2>
+            <h2>ZOOM <img src="https://zoombies.world/images/zoombies_coin.svg" style="max-width:2.6rem;" class="align-middle" /> Token Liquidity Sale Event !</h2>
             <h2 class="text-warning">Ends Nov 1, 2021 - 18:00-UTC</h2>
             <h1><span id="countdown" class="text-warning">loading..</span></h1>
-            <p><span class="text-danger">NOTE:</span> the ZOOM ERC20 token in a game utility token for the Zoombies NFT World, <router-link to="/help">please read and understand the mint and burn operations of this token</router-link> before purchase.<br />
+            <p><span class="text-danger">NOTE:</span> The ZOOM ERC20 token is the economic game utility token for the Zoombies NFT World. <router-link to="/help">Please read and understand the mint and burn operations of this token</router-link> before purchase.<br />
 
 
               <div class="vip-details">
-                <h2>VIP benefits:</h2>
+                <h2 class="align-middle">ZOOM <img src="https://zoombies.world/images/zoombies_coin.svg" style="max-width:2.6rem;" class="align-middle" /> VIP benefits:</h2>
                 <p>Early adopters land bonus and VIP benefits:</p>
 
                   <p><img src="https://zoombies.world/images/gold_vip.svg" class="badge-icon" /> <span class="font-weight-bold">GOLD VIP - Bought the max of 200 Million ZOOM<span class="text-danger">**</span>:</span>
                     <ul>
                       <li>1 Tax Exempt Island land NFT pre-sale minting - choose your island land before the public sale<span class="text-danger">*</span></li>
                       <li>Claim your land for free, without burning ZOOM<span class="text-danger">*</span></li>
-                      <li>Additional founder GOLD VIP benefits to come</li>
+                      <li>Additional founder GOLD VIP ZOOM economy benefits to come</li>
                     </ul>
                   </p>
 
@@ -48,7 +48,7 @@
                   <ul>
                     <li>1 Farm land NFT pre-sale minting - choose your farm land before the public*</li>
                     <li>Claim your land for free, without burning ZOOM<span class="text-danger">*</span></li>
-                    <li>Additional founder VIP benefits to come</li>
+                    <li>Additional founder VIP ZOOM economy benefits to come</li>
                   </ul>
                 </p>
 
@@ -79,12 +79,12 @@
               <br/>
               <b-row align-h="center">
                 <b-col sm="12" md="6" lg="4" class="text-right" style="padding-top:6px"><strong>Total to purchase:</strong> <span class="text-success">{{pendingPurchase}}</span></b-col>
-                <b-col sm="12" md="4" lg="2"><b-form-input v-model="totalCzxpToBuy" size="10" maxlength="9" placeholder="enter amount" class="" @keyup="filterCzxpInput"></b-form-input> ZOOM tokens</b-col>
+                <b-col sm="12" md="4" lg="2"><b-form-input v-model="totalCzxpToBuy" size="10" maxlength="9" placeholder="enter amount" class="" @keyup="filterCzxpInput"></b-form-input> <img src="https://zoombies.world/images/zoombies_coin.svg" style="max-width:1.6rem;" class="align-middle" /> ZOOM tokens</b-col>
                 <b-col sm="12" md="2" lg="4">
                   <input type="submit" class="btn btn-primary" :disabled="!buyCzxpBtnEnabled" @click="buyCzxp">
                 </b-col>
                 <b-col>
-                  <div class="btn btn-primary" @click="addZOOMtoMetaMask">Add ZOOM asset to Metamask</div>
+                  <div class="btn btn-primary" @click="addZOOMtoMetaMask">Add <img src="https://zoombies.world/images/zoombies_coin.svg" style="max-width:2.6rem;" class="align-middle" /> asset to Metamask</div>
                 </b-col>
               </b-row>
             </b-container>
@@ -106,7 +106,7 @@
             markets, game engines, exchanges, DeFi and other future inventions.
           </p>
           <p>The most profitable strategy is to <strong>grow your Affiliate network early</strong> and earn ZOOM tokens for Free :).<br/>
-             Click the <strong>Affiliate link in the header</strong> to Share and earn</p>
+             <strong class="text-success">Click the Affiliate link in the header</strong> to Share and earn</p>
           <div>
             <h2>Get Started</h2>
             <span

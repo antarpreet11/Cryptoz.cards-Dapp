@@ -69,17 +69,17 @@
               <li>
                 <a
                   :class="classObject"
-                  href="https://t.me/zoombiesnews"
+                  href="https://discord.com/channels/890574612377772082/896128275921920011"
                   target="_blank"
-                  >Telegram Announcements</a
+                  >Discord Community</a
                 >
               </li>
               <li>
                 <a
                   :class="classObject"
-                  href="https://t.me/zoombiesworld"
+                  href="https://t.me/zoombiesnews"
                   target="_blank"
-                  >Zoombies Telegram Group</a
+                  >Telegram Announcements</a
                 >
               </li>
             </ul>

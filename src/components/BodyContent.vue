@@ -1,5 +1,13 @@
 <template>
   <div>
+    <b-modal id="modal-1" size="xl" ok-only title="Zoombies World - VIP benefits">
+      <p class="my-4">
+        <img v-b-modal.modal-1 width="100%" height="100%"
+             class="img-responsive"
+             src="https://zoombies.world/images/early_adopters_token_sale.png"
+        />
+      </p>
+    </b-modal>
     <main role="main" class="container">
       <b-card bg-variant="dark" text-variant="white" border-variant="info">
         <b-card-text>
@@ -10,19 +18,49 @@
             and community
           </h1>
           <br/>
-          <img
+          <img v-b-modal.modal-1
             class="img-responsive card-demo-group"
-            src="@/assets/zoombies_card_types.png"
+            src="https://zoombies.world/images/early_adopters_token_sale.png"
           />
-          <p>Zoombies is deployed on <h3 v-if="!onMainNet" class="text-danger">Moonbase Alpha Testnet</h3>
+          <p>Zoombies is deployed on <span v-if="!onMainNet" class="text-danger">Moonbase Alpha Testnet</span>
             <img v-if="onMainNet" src="https://zoombies.world/images/moonriver-logo-500.png" style="max-width:7em" />
           </p>
           <p>
-            <h2>ZOOM Token Liquidity Sale Event !</h2>
-            <h2 class="text-warning">Ends Nov 1, 2021 - 18:00-UTC</h2>
-            <p><span class="text-danger">NOTE:</span> the ZOOM ERC20 token in a game utility token for the Zoombies NFT World, <router-link to="/help">please read and understand the mint and burn operations of this token</router-link> before purchase.<br />
-              <br/>Holding a sufficient ZOOM token balance will unlock some FREE cards and reduce the minting costs of some Shop NFTs. ZOOM tokens can also be burned to increase the chance of pulling higher rarity cards when minting booster NFTs. Future utility will include ZOOM tokens as a form of health points.
-            <div class="btn btn-primary" @click="addZOOMtoMetaMask">Add ZOOM asset to Metamask</div></p>
+            <h2>ZOOM <img src="https://zoombies.world/images/zoombies_coin.svg" style="max-width:2.6rem;" class="align-middle" /> VIP Token Liquidity Sale Event !</h2>
+            <h2 class="text-warning">Promo ends Nov 1, 2021 - 18:00-UTC</h2>
+            <h1><span id="countdown" class="text-warning">loading..</span></h1>
+            <p><span class="text-danger">NOTE:</span> The ZOOM ERC20 token is the economic game utility token for the Zoombies NFT World. <router-link to="/help">Please read and understand the mint and burn operations of this token</router-link> before purchase.<br />
+
+
+              <div class="vip-details">
+                <h2 class="align-middle">ZOOM <img src="https://zoombies.world/images/zoombies_coin.svg" style="max-width:2.6rem;" class="align-middle" /> VIP benefits:</h2>
+                <p>Early adopters land bonus and VIP benefits:</p>
+
+                  <p><img src="https://zoombies.world/images/gold_vip.svg" class="badge-icon" /> <span class="font-weight-bold">GOLD VIP - Bought the max of 200 Million ZOOM<span class="text-danger">**</span>:</span>
+                    <ul>
+                      <li>1 Tax Exempt Island land NFT pre-sale minting - choose your island land before the public sale<span class="text-danger">*</span></li>
+                      <li>Claim your land for free, without burning ZOOM<span class="text-danger">*</span></li>
+                      <li>Additional founder GOLD VIP ZOOM economy benefits to come</li>
+                    </ul>
+                  </p>
+
+                  <p><img src="https://zoombies.world/images/silver_vip.svg" class="badge-icon" /> <span class="font-weight-bold">VIP - Bought at least 10 Million ZOOM<span class="text-danger">**</span>:</span>
+                  <ul>
+                    <li>1 Farm land NFT pre-sale minting - choose your farm land before the public*</li>
+                    <li>Claim your land for free, without burning ZOOM<span class="text-danger">*</span></li>
+                    <li>Additional founder VIP ZOOM economy benefits to come</li>
+                  </ul>
+                </p>
+
+                  <p><span class="text-danger">*</span>Land must be claimed before the close of the pre-sale VIP minting claim deadline.
+                  <br /><span class="text-danger">**</span>ZOOM must have been purchased from this official page before November 1, 2021 at 18:00-UTC</p>
+
+              </div>
+
+
+
+              Holding a sufficient ZOOM token balance will unlock some FREE cards and reduce the minting costs of some Shop NFTs. ZOOM tokens can also be burned to increase the chance of pulling higher rarity cards when minting booster NFTs. Future utility will include ZOOM tokens as a form of health points.
+            </p>
               <br/>
             <b-container fluid>
               <b-row>
@@ -41,8 +79,12 @@
               <br/>
               <b-row align-h="center">
                 <b-col sm="12" md="6" lg="4" class="text-right" style="padding-top:6px"><strong>Total to purchase:</strong> <span class="text-success">{{pendingPurchase}}</span></b-col>
-                <b-col sm="12" md="4" lg="2"><b-form-input v-model="totalCzxpToBuy" size="10" maxlength="9" placeholder="enter amount" class="" @keyup="filterCzxpInput"></b-form-input> ZOOM tokens</b-col>
-                <b-col sm="12" md="2" lg="4"><input type="submit" class="btn btn-primary" :disabled="!buyCzxpBtnEnabled" @click="buyCzxp">
+                <b-col sm="12" md="4" lg="2"><b-form-input v-model="totalCzxpToBuy" size="10" maxlength="9" placeholder="enter amount" class="" @keyup="filterCzxpInput"></b-form-input> <img src="https://zoombies.world/images/zoombies_coin.svg" style="max-width:1.6rem;" class="align-middle" /> ZOOM tokens</b-col>
+                <b-col sm="12" md="2" lg="4">
+                  <input type="submit" class="btn btn-primary" :disabled="!buyCzxpBtnEnabled" @click="buyCzxp">
+                </b-col>
+                <b-col>
+                  <div class="btn btn-primary" @click="addZOOMtoMetaMask">Add <img src="https://zoombies.world/images/zoombies_coin.svg" style="max-width:2.6rem;" class="align-middle" /> asset to Metamask</div>
                 </b-col>
               </b-row>
             </b-container>
@@ -64,7 +106,7 @@
             markets, game engines, exchanges, DeFi and other future inventions.
           </p>
           <p>The most profitable strategy is to <strong>grow your Affiliate network early</strong> and earn ZOOM tokens for Free :).<br/>
-             Click the <strong>Affiliate link in the header</strong> to Share and earn</p>
+             <strong class="text-success">Click the Affiliate link in the header</strong> to Share and earn</p>
           <div>
             <h2>Get Started</h2>
             <span
@@ -169,8 +211,11 @@ export default {
       return parseInt(this.myPurchaseTotal/100000000000).toLocaleString();
     },
   },
+  beforeDestroy() {
+    clearInterval(window.countdownTimer);
+  },
   mounted() {
-    console.log('chain:',this.$store.state.web3.chainId);
+    //console.log('chain:',this.$store.state.web3.chainId);
     if(this.$store.state.web3.chainId == "1285" || window.location.host == 'movr.zoombies.world') {
       this.onMainNet = true;
     } else{
@@ -180,6 +225,36 @@ export default {
     if (this.ZoombiesInstance) {
       this.updateSale();
     }
+
+    // Set the date we're counting down to
+    var countDownDate = new Date(Date.UTC(2021,10,1,18,0,0)).getTime();
+
+    // Update the count down every 1 second
+    window.countdownTimer = setInterval(function() {
+
+    // Get today's date and time
+    var now = new Date().getTime();
+
+    // Find the distance between now and the count down date
+    var distance = countDownDate - now;
+
+    // Time calculations for days, hours, minutes and seconds
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    // Display the result in the element with id="demo"
+    document.getElementById("countdown").innerHTML = days + "d " + hours + "h "
+    + minutes + "m " + seconds + "s ";
+
+    // If the count down is finished, write some text
+    if (distance < 0) {
+      clearInterval(countdownTimer);
+      document.getElementById("countdown").innerHTML = "Refresh every minute for LIVE..";
+    }
+    }, 1000);
+
   },
   watch: {
    ZoombiesInstance(newVal) {
@@ -231,6 +306,7 @@ export default {
       });
     },
     updateSale: async function () {
+      console.log('Update sale data..');
       //console.log(await this.CzxpInstance.methods.totalSupply().call());
       this.zoomWalletsRemaining = 1000 - await this.CzxpInstance.methods.totalContributors().call();
       this.zoomSold = parseInt(await this.CzxpInstance.methods.totalZoomPurchased().call()/1000000000000000000).toLocaleString();
@@ -238,6 +314,12 @@ export default {
       this.movrCost = 0;
       //console.log("contr.total:",await this.CzxpInstance.methods.contributions(this.coinbase).call());
       this.myPurchaseTotal = parseInt(await this.CzxpInstance.methods.contributions(this.coinbase).call());
+      console.log();
+      this.$store.state.zoomContribution = this.myPurchaseTotal;
+    },
+    updateBadge : async function() {
+      console.log('ggogogogo');
+
     },
     filterCzxpInput: function () {
       this.totalCzxpToBuy = this.totalCzxpToBuy.replace(/[^\d]/g, "");
@@ -275,7 +357,10 @@ export default {
   top: -2em;
 }
 
-
+.badge-icon {
+  max-width: 3rem;
+  filter: drop-shadow(1px 1px 4px #ffffff);
+}
 
 
 </style>

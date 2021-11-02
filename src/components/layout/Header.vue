@@ -275,12 +275,22 @@
         Connect To {{ onMainNet ? "Moonriver" : "Moonbase (testnet)" }}
       </b-button>
       <div v-if="isWalletConnected" class="mobile-wallet-info">
-        <img src="@/assets/metamask-face.png" class="header-icon" />
+
+        <div v-if="ZoomContribution == 20000000000000000000">
+          <img src="https://zoombies.world/images/gold_vip.svg" class="badge-icon" />
+        </div>
+        <div v-else-if="ZoomContribution >= 1000000000000000000">
+          <img src="https://zoombies.world/images/silver_vip.svg" class="badge-icon" />
+        </div>
+        <div v-else>
+          <img src="@/assets/metamask-face.png" class="header-icon" />
+        </div>
+
         <span
           v-b-tooltip.hover="{ customClass: 'tooltip-1' }"
           :title="coinbase"
         >
-          {{ coinbase.substr(0, 6) + "..." + coinbase.substr(38) }}
+          &nbsp;{{ coinbase.substr(0, 6) + "..." + coinbase.substr(38) }}
         </span>
         <div
           id="wallet-balance"

@@ -253,6 +253,7 @@ export default {
       this.movrCost = 0;
       //console.log("contr.total:",await this.CzxpInstance.methods.contributions(this.coinbase).call());
       this.myPurchaseTotal = parseInt(await this.CzxpInstance.methods.contributions(this.coinbase).call());
+
       this.$store.state.zoomContribution = this.myPurchaseTotal;
     },
     updateBadge : async function() {

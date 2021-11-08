@@ -15,19 +15,35 @@
               </b-row>
               <b-row  class="mt-5">
                 <b-col>
-                  <span class="zoombies-font h1">300,000</span><br/>
+                  <span class="zoombies-font h1">
+                    <number
+                      ref="nftSupply"
+                      :from="fromNftSupply"
+                      :to="toNftSupply"
+                      :format="formatNumber"
+                      :duration="3.5"
+                    />
+                  </span><br/>
                   <span class="text-pink h5">ZOOMBIE NFTS MINTED</span>
                 </b-col>
               </b-row>
               <b-row class="mt-4">
                 <b-col>
-                  <span class="zoombies-font h1">34,000,000,000</span><br/>
+                  <span class="zoombies-font h1">
+                    <number
+                      ref="zoomBal"
+                      :from="fromZoomBalance"
+                      :to="toZoomBalance"
+                      :format="formatNumber"
+                      :duration="3.5"
+                    />
+                  </span><br/>
                   <span class="text-aqua h5">ZOOM <b-img-lazy src="https://zoombies.world/images/zoombies_coin.svg" class="coin-logo"></b-img-lazy> TOKENS IN ZWORLD</span>
                 </b-col>
               </b-row>
               <b-row class="mt-4">
                 <b-col>
-                  <span class="zoombies-font h1">13,443</span><br/>
+                  <span class="zoombies-font h1">??</span><br/>
                   <span class="text-purple h5">PLAYERS</span>
                 </b-col>
               </b-row>
@@ -110,6 +126,24 @@ export default {
     ZoombiesInstance() {
       return this.$store.state.contractInstance.cryptoz;
     },
+    zoomBalance() {
+      return this.$store.state.totalCzxpSupply/1000000000000000000;
+    },
+    fromZoomBalance() {
+      return this.prevZoomBalance || this.zoomBalance
+    },
+    toZoomBalance() {
+      return this.newZoomBalance || this.zoomBalance
+    },
+    nftSupply() {
+      return this.$store.state.totalCryptozSupply;
+    },
+    fromNftSupply() {
+      return this.prevNftSupply || this.nftSupply
+    },
+    toNftSupply() {
+      return this.newNftSupply || this.nftSupply
+    },
     pendingPurchase() {
       return this.movrCost + " MOVR =";
     },
@@ -137,8 +171,32 @@ export default {
        //this.updateSale();
      }
    },
+   zoomBalance(newVal, oldVal) {
+     this.newZoomBalance = newVal
+     this.prevZoomBalance = oldVal
+     if (oldVal > 0) {
+       this.pulsateText(this.$refs.zoomBal)
+     }
+   },
+   nftSupply(newVal, oldVal) {
+     this.newNftSupply = newVal
+     this.prevNftSupply = oldVal
+     if (oldVal > 0) {
+       this.pulsateText(this.$refs.nftSupply)
+     }
+   },
   },
   methods: {
+    formatNumber(number) {
+      return parseInt(number.toFixed(0)).toLocaleString()
+    },
+    pulsateText(ref) {
+      ref.$el.classList.value = ref.$el.classList.value + 'pulsate'
+      ref.play()
+      setTimeout(() => {
+        ref.$el.classList.value = ''
+      }, 500)
+    },
     addZOOMtoMetaMask: async function() {
       const tokenAddress = this.onMainNet ? '0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4' : '0x8e21404bAd3A1d2327cc6D2B2118f47911a1f316';
       const tokenSymbol = this.onMainNet ? 'ZOOM' : 'ZOOM-DEV';
@@ -242,6 +300,24 @@ export default {
 
 .coin-logo {
   max-width: 2rem;
+}
+
+.pulsate {
+  display: inline-block;
+  transform: scale(1);
+  animation: pulsate 0.5s ease-out;
+}
+
+@keyframes pulsate {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 </style>

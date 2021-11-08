@@ -6,29 +6,41 @@
         <b-row align-v="center">
           <b-col cols="4">
 
-            <b-row>
-              <b-col class="">
-                  <b-button size="lg" variant="outline-info">EARN FREE ZOOM</b-button>
-              </b-col>
-            </b-row>
-            <b-row  class="mt-5">
-              <b-col>
-                <span class="zoombies-font">300,000</span><br/>
-                <span class="text-pink">ZOOMBIE NFTS MINTED</span>
-              </b-col>
-            </b-row>
-            <b-row class="mt-5">
-              <b-col>
-                <span class="zoombies-font">34,000,000,000</span><br/>
-                <span class="text-aqua">ZOOM TOKENS IN ZWORLD</span>
-              </b-col>
-            </b-row>
-            <b-row class="mt-5">
-              <b-col>
-                <span class="zoombies-font">13,443</span><br/>
-                <span class="text-purple">PLAYERS</span>
-              </b-col>
-            </b-row>
+
+            <div v-if="coinbase">
+              <b-row>
+                <b-col class="">
+                    <b-button v-b-modal.sponsor-modal size="lg" variant="info" class="btn-font">EARN FREE ZOOM</b-button>
+                </b-col>
+              </b-row>
+              <b-row  class="mt-5">
+                <b-col>
+                  <span class="zoombies-font h1">300,000</span><br/>
+                  <span class="text-pink h5">ZOOMBIE NFTS MINTED</span>
+                </b-col>
+              </b-row>
+              <b-row class="mt-4">
+                <b-col>
+                  <span class="zoombies-font h1">34,000,000,000</span><br/>
+                  <span class="text-aqua h5">ZOOM <b-img-lazy src="https://zoombies.world/images/zoombies_coin.svg" class="coin-logo"></b-img-lazy> TOKENS IN ZWORLD</span>
+                </b-col>
+              </b-row>
+              <b-row class="mt-4">
+                <b-col>
+                  <span class="zoombies-font h1">13,443</span><br/>
+                  <span class="text-purple h5">PLAYERS</span>
+                </b-col>
+              </b-row>
+            </div>
+            <div v-else>
+              <h2>
+                <p>In order to Connect and participate on the blockchain:</p>
+                 You must have a valid Web3 wallet installed<br/><br/>
+                 <a href="https://metamask.io/" target="_blank">
+                  <b-button variant="danger" size="lg">Install Metamask</b-button>
+                 </a>
+              </h2>
+            </div>
 
           </b-col>
           <!-- Right side -->
@@ -224,5 +236,12 @@ export default {
   filter: drop-shadow(1px 1px 4px #ffffff);
 }
 
+.btn-font {
+  font-size: 2.25rem;
+}
+
+.coin-logo {
+  max-width: 2rem;
+}
 
 </style>

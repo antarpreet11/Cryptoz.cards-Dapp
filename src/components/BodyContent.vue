@@ -1,122 +1,43 @@
 <template>
   <div>
-    <b-modal id="modal-1" size="xl" ok-only title="Zoombies World - VIP benefits">
-      <p class="my-4">
-        <img v-b-modal.modal-1 width="100%" height="100%"
-             class="img-responsive"
-             src="https://zoombies.world/images/early_adopters_token_sale.png"
-        />
-      </p>
-    </b-modal>
     <main role="main" class="container">
-      <b-card bg-variant="dark" text-variant="white" border-variant="info">
-        <b-card-text>
-          <br/>
-          <br/>
-          <h1>
-            Zoombies is the play-to-earn NFT collectibles trade game built on scarcity, rarity
-            and community
-          </h1>
-          <br/>
-          <img v-b-modal.modal-1
-            class="img-responsive card-demo-group"
-            src="https://zoombies.world/images/early_adopters_token_sale.png"
-          />
-          <p>Zoombies is deployed on <span v-if="!onMainNet" class="text-danger">Moonbase Alpha Testnet</span>
-            <img v-if="onMainNet" src="https://zoombies.world/images/moonriver-logo-500.png" style="max-width:7em" />
-          </p>
-          <p>
-            <h2>ZOOM <img src="https://zoombies.world/images/zoombies_coin.svg" style="max-width:2.6rem;" class="align-middle" /> VIP Token Liquidity Sale Event !<br/> Closed!</h2>
-            <h2 class="text-warning">Promo ended Nov 1, 2021 - 18:00-UTC</h2>
-            <p><span class="text-danger">NOTE:</span> The ZOOM ERC20 token is the economic game utility token for the Zoombies NFT World. <router-link to="/help">Please read and understand the mint and burn operations of this token</router-link> before purchase.<br />
 
+      <b-container fluid class="text-center">
+        <b-row align-v="center">
+          <b-col cols="4">
 
-              <div class="vip-details">
-                <h2 class="align-middle">ZOOM <img src="https://zoombies.world/images/zoombies_coin.svg" style="max-width:2.6rem;" class="align-middle" /> VIP benefits:</h2>
-                <p>Early adopters land bonus and VIP benefits:</p>
+            <b-row>
+              <b-col class="">
+                  <b-button size="lg" variant="outline-info">EARN FREE ZOOM</b-button>
+              </b-col>
+            </b-row>
+            <b-row  class="mt-5">
+              <b-col>
+                <span class="zoombies-font">300,000</span><br/>
+                <span class="text-pink">ZOOMBIE NFTS MINTED</span>
+              </b-col>
+            </b-row>
+            <b-row class="mt-5">
+              <b-col>
+                <span class="zoombies-font">34,000,000,000</span><br/>
+                <span class="text-aqua">ZOOM TOKENS IN ZWORLD</span>
+              </b-col>
+            </b-row>
+            <b-row class="mt-5">
+              <b-col>
+                <span class="zoombies-font">13,443</span><br/>
+                <span class="text-purple">PLAYERS</span>
+              </b-col>
+            </b-row>
 
-                  <p><img src="https://zoombies.world/images/gold_vip.svg" class="badge-icon" /> <span class="font-weight-bold">GOLD VIP - Bought the max of 200 Million ZOOM<span class="text-danger">**</span>:</span>
-                    <ul>
-                      <li>1 Tax Exempt Island land NFT pre-sale minting - choose your island land before the public sale<span class="text-danger">*</span></li>
-                      <li>Claim your land for free, without burning ZOOM<span class="text-danger">*</span></li>
-                      <li>Additional founder GOLD VIP ZOOM economy benefits to come</li>
-                    </ul>
-                  </p>
+          </b-col>
+          <!-- Right side -->
+          <b-col cols="8">
+            <b-img-lazy src="https://zoombies.world/images/app_home_welcome.png" fluid alt="Welcome to Zoombies banner" style="max-width:100%"></b-img-lazy>
+          </b-col>
+        </b-row>
+      </b-container>
 
-                  <p><img src="https://zoombies.world/images/silver_vip.svg" class="badge-icon" /> <span class="font-weight-bold">VIP - Bought at least 10 Million ZOOM<span class="text-danger">**</span>:</span>
-                  <ul>
-                    <li>1 Farm land NFT pre-sale minting - choose your farm land before the public*</li>
-                    <li>Claim your land for free, without burning ZOOM<span class="text-danger">*</span></li>
-                    <li>Additional founder VIP ZOOM economy benefits to come</li>
-                  </ul>
-                </p>
-
-                  <p><span class="text-danger">*</span>Land must be claimed before the close of the pre-sale VIP minting claim deadline.
-                  <br /><span class="text-danger">**</span>ZOOM must have been purchased from this official page before November 1, 2021 at 18:00-UTC</p>
-
-              </div>
-
-
-
-              Holding a sufficient ZOOM token balance will unlock some FREE cards and reduce the minting costs of some Shop NFTs. ZOOM tokens can also be burned to increase the chance of pulling higher rarity cards when minting booster NFTs. Future utility will include ZOOM tokens as a form of health points.
-            </p>
-              <br/>
-
-            <h2 class="text-success">Thank you community and early contributor VIP holders ! We look forward to adding value to the ZOOM economy</h2>
-          <br/>
-            <hr />
-          </p>
-
-          <h2>Time to have some fun !</h2>
-          <p>
-            The goal is to collect the rare and unique undead NFT cards, earn or
-            trade ERC-20 ZOOM tokens to unlock FREE shop minting and reduced shop pricing.</p>
-          <p>Each minted NFT Zoombies card is a unique token on the Moonriver blockchain.
-            Collectors can buy, sell, and exchange both their Zoombies NFT
-            cards and ZOOM tokens through any standards compliant wallets,
-            markets, game engines, exchanges, DeFi and other future inventions.
-          </p>
-          <p>The most profitable strategy is to <strong>grow your Affiliate network early</strong> and earn ZOOM tokens for Free :).<br/>
-             <strong class="text-success">Click the Affiliate link in the header</strong> to Share and earn</p>
-          <div>
-            <h2>Get Started</h2>
-            <span
-              >To interact with Zoombies you will need to
-              <a
-                href="https://docs.moonbeam.network/getting-started/moonriver/integrate-metamask/"
-                target="_blank"
-                >install Metamask configured for Moonriver</a
-              >
-              and have a small amount of MOVR in your wallet.</span
-            >
-          </div>
-          <p>
-            NFT token collecting and trading is an exciting and new opportunity
-            for classic and modern collectors alike. What makes this platform
-            unique compared to other online digital asset based games or systems
-            are:
-          </p>
-          <ul>
-            <li>
-              Zoombies NFT Card functions and data are a set of Smart Contracts
-              that run independantly of the creators. There is no OFF switch. The
-              Zoombies NFT World will live forever on Moonriver.
-            </li>
-            <li>
-              The developers can Not tamper or change the Card types once they are
-              loaded. i.e: no re-minting scarce NFTs
-            </li>
-            <li>
-              The NFTs are truly unique, owned and transferable between wallets
-              manaully or automated through NFT auction marketplaces.
-            </li>
-          </ul>
-          <p>
-            <router-link to="/help"> Visit the Help section </router-link> of the
-            website to read more
-          </p>
-        </b-card-text>
-      </b-card>
     </main>
 
   </div>
@@ -130,6 +51,7 @@ import {
   BContainer,
   BRow,
   BCol,
+  BImgLazy,
   BFormInput
 } from "bootstrap-vue";
 export default {
@@ -141,6 +63,7 @@ export default {
     BContainer,
     BRow,
     BCol,
+    BImgLazy,
     BFormInput
   },
   data() {
@@ -191,7 +114,7 @@ export default {
     }
 
     if (this.ZoombiesInstance) {
-      this.updateSale();
+      //this.updateSale();
     }
 
   },
@@ -199,7 +122,7 @@ export default {
    ZoombiesInstance(newVal) {
      console.log({newVal})
      if (newVal) {
-       this.updateSale();
+       //this.updateSale();
      }
    },
   },
@@ -272,7 +195,7 @@ export default {
   watch: {
     ZoombiesInstance(newVal) {
       if (newVal) {
-        this.updateSale();
+        //this.updateSale();
       }
     },
   }

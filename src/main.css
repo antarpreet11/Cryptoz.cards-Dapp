@@ -8,3 +8,20 @@
   justify-content: center;
   align-items: center;
 }
+
+.text-pink {
+  color: #F566E2;
+}
+.text-purple {
+  color: #B131FE;
+}
+.text-aqua {
+  color: #7EF4F6;
+}
+.text-grey {
+  color: #CCCCCC;
+}
+
+.zoombies-font {
+  font-family: "Oswald", sans-serif;
+}

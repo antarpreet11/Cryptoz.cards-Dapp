@@ -26,9 +26,8 @@
             <img v-if="onMainNet" src="https://zoombies.world/images/moonriver-logo-500.png" style="max-width:7em" />
           </p>
           <p>
-            <h2>ZOOM <img src="https://zoombies.world/images/zoombies_coin.svg" style="max-width:2.6rem;" class="align-middle" /> VIP Token Liquidity Sale Event !</h2>
-            <h2 class="text-warning">Promo ends Nov 1, 2021 - 18:00-UTC</h2>
-            <h1><span id="countdown" class="text-warning">loading..</span></h1>
+            <h2>ZOOM <img src="https://zoombies.world/images/zoombies_coin.svg" style="max-width:2.6rem;" class="align-middle" /> VIP Token Liquidity Sale Event !<br/> Closed!</h2>
+            <h2 class="text-warning">Promo ended Nov 1, 2021 - 18:00-UTC</h2>
             <p><span class="text-danger">NOTE:</span> The ZOOM ERC20 token is the economic game utility token for the Zoombies NFT World. <router-link to="/help">Please read and understand the mint and burn operations of this token</router-link> before purchase.<br />
 
 
@@ -62,36 +61,8 @@
               Holding a sufficient ZOOM token balance will unlock some FREE cards and reduce the minting costs of some Shop NFTs. ZOOM tokens can also be burned to increase the chance of pulling higher rarity cards when minting booster NFTs. Future utility will include ZOOM tokens as a form of health points.
             </p>
               <br/>
-            <b-container fluid>
-              <b-row>
-                <b-col sm="12" md="3" lg="3"><strong>Max. 1000 wallets</strong></b-col>
-                <b-col sm="12" md="3" lg="3"><strong>Hard Cap: 200 Billion ZOOM</strong></b-col>
-                <b-col sm="12" md="3" lg="3"><strong>1 ZOOM = 0.0000001 MOVR</strong></b-col>
-                <b-col sm="12" md="3" lg="3"><strong>Min/Max purchase: 1/20 MOVR</strong></b-col>
-              </b-row>
-              <br/>
-              <b-row>
-                <b-col class="text-warning">{{zoomWalletsRemaining}} slots remaining</b-col>
-                <b-col class="text-warning">{{zoomSold}} sold in World</b-col>
-                <b-col class="text-success">Your Purchases: {{myPurchaseTotalLabel}}</b-col>
-                <b-col></b-col>
-              </b-row>
-              <br/>
-              <b-row align-h="center">
-                <b-col sm="12" md="6" lg="4" class="text-right" style="padding-top:6px"><strong>Total to purchase:</strong> <span class="text-success">{{pendingPurchase}}</span></b-col>
-                <b-col sm="12" md="4" lg="2"><b-form-input v-model="totalCzxpToBuy" size="10" maxlength="9" placeholder="enter amount" class="" @keyup="filterCzxpInput"></b-form-input> <img src="https://zoombies.world/images/zoombies_coin.svg" style="max-width:1.6rem;" class="align-middle" /> ZOOM tokens</b-col>
-                <b-col sm="12" md="2" lg="4">
-                  <input type="submit" class="btn btn-primary" :disabled="!buyCzxpBtnEnabled" @click="buyCzxp">
-                </b-col>
-                <b-col>
-                  <div class="btn btn-primary" @click="addZOOMtoMetaMask">Add <img src="https://zoombies.world/images/zoombies_coin.svg" style="max-width:2.6rem;" class="align-middle" /> asset to Metamask</div>
-                </b-col>
-              </b-row>
-            </b-container>
-            <br/><br/><br/>
-            <span class="text-warning">Zombies will provision up to a maximum of 2 Billion Zoom to a MOVR-ZOOM swap pool upon sale of equivalent MOVR.</span>
-            <br/>
-            <span class="text-success">Thank you community, you have met this requirement!</span> we have launched the ZOOM token <router-link to="/market">pool on SushiSwap</router-link>.
+
+            <h2 class="text-success">Thank you community and early contributor VIP holders ! We look forward to adding value to the ZOOM economy</h2>
           <br/>
             <hr />
           </p>
@@ -211,9 +182,6 @@ export default {
       return parseInt(this.myPurchaseTotal/100000000000).toLocaleString();
     },
   },
-  beforeDestroy() {
-    clearInterval(window.countdownTimer);
-  },
   mounted() {
     //console.log('chain:',this.$store.state.web3.chainId);
     if(this.$store.state.web3.chainId == "1285" || window.location.host == 'movr.zoombies.world') {
@@ -225,35 +193,6 @@ export default {
     if (this.ZoombiesInstance) {
       this.updateSale();
     }
-
-    // Set the date we're counting down to
-    var countDownDate = new Date(Date.UTC(2021,10,1,18,0,0)).getTime();
-
-    // Update the count down every 1 second
-    window.countdownTimer = setInterval(function() {
-
-    // Get today's date and time
-    var now = new Date().getTime();
-
-    // Find the distance between now and the count down date
-    var distance = countDownDate - now;
-
-    // Time calculations for days, hours, minutes and seconds
-    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    // Display the result in the element with id="demo"
-    document.getElementById("countdown").innerHTML = days + "d " + hours + "h "
-    + minutes + "m " + seconds + "s ";
-
-    // If the count down is finished, write some text
-    if (distance < 0) {
-      clearInterval(countdownTimer);
-      document.getElementById("countdown").innerHTML = "Refresh every minute for LIVE..";
-    }
-    }, 1000);
 
   },
   watch: {
@@ -314,7 +253,7 @@ export default {
       this.movrCost = 0;
       //console.log("contr.total:",await this.CzxpInstance.methods.contributions(this.coinbase).call());
       this.myPurchaseTotal = parseInt(await this.CzxpInstance.methods.contributions(this.coinbase).call());
-      console.log();
+
       this.$store.state.zoomContribution = this.myPurchaseTotal;
     },
     updateBadge : async function() {

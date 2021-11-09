@@ -43,8 +43,8 @@
               </b-row>
               <b-row class="mt-4">
                 <b-col>
-                  <span class="zoombies-font h1">??</span><br/>
-                  <span class="text-purple h5">PLAYERS</span>
+                  <span class="zoombies-font h1">36,366</span><br/>
+                  <span class="text-purple h5">ZOOMBIE HERDERS</span>
                 </b-col>
               </b-row>
             </div>

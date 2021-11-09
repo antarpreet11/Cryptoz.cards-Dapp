@@ -4,17 +4,16 @@
 
       <b-container fluid class="text-center">
         <b-row align-v="center">
-          <b-col cols="4">
+          <b-col>
 
 
             <div v-if="coinbase">
-              <b-row>
-                <b-col class="">
+                <b-col sm="12" md="12">
                     <b-button v-b-modal.sponsor-modal size="lg" variant="info" class="btn-font">EARN FREE ZOOM</b-button>
                 </b-col>
-              </b-row>
-              <b-row  class="mt-5">
-                <b-col>
+
+
+                <b-col class="mt-5" sm="12" md="12">
                   <span class="zoombies-font h1">
                     <number
                       ref="nftSupply"
@@ -26,9 +25,8 @@
                   </span><br/>
                   <span class="text-pink h5">ZOOMBIE NFTS MINTED</span>
                 </b-col>
-              </b-row>
-              <b-row class="mt-4">
-                <b-col>
+
+                <b-col class="mt-4" sm="12" md="12">
                   <span class="zoombies-font h1">
                     <number
                       ref="zoomBal"
@@ -38,16 +36,18 @@
                       :duration="3.5"
                     />
                   </span><br/>
-                  <span class="text-aqua h5">ZOOM <b-img-lazy src="https://zoombies.world/images/zoombies_coin.svg" class="coin-logo"></b-img-lazy> TOKENS IN ZWORLD</span>
+                  <span class="text-aqua h5">
+                    ZOOM <b-img-lazy src="https://zoombies.world/images/zoombies_coin.svg" class="coin-logo"></b-img-lazy> TOKENS IN ZWORLD
+                  </span>
                 </b-col>
-              </b-row>
-              <b-row class="mt-4">
-                <b-col>
+
+                <b-col class="mt-4" sm="12" md="12">
                   <span class="zoombies-font h1">36,366</span><br/>
                   <span class="text-purple h5">ZOOMBIE HERDERS</span>
                 </b-col>
-              </b-row>
+
             </div>
+
             <div v-else>
               <h2>
                 <p>In order to Connect and participate on the blockchain:</p>
@@ -60,7 +60,7 @@
 
           </b-col>
           <!-- Right side -->
-          <b-col cols="8">
+          <b-col class="mt-5" md="12" sm="12" lg="8">
             <b-img-lazy src="https://zoombies.world/images/app_home_welcome.png" fluid alt="Welcome to Zoombies banner" style="max-width:100%"></b-img-lazy>
           </b-col>
         </b-row>
@@ -318,6 +318,10 @@ export default {
   100% {
     transform: scale(1);
   }
+}
+
+.totals {
+  display: table;
 }
 
 </style>

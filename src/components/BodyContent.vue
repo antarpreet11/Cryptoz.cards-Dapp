@@ -3,7 +3,7 @@
     <main role="main" class="container">
 
       <b-container fluid class="text-center">
-        <b-row align-v="center">
+        <b-row>
           <b-col>
 
 
@@ -295,7 +295,7 @@ export default {
 }
 
 .btn-font {
-  font-size: 2.25rem;
+  font-size: 2rem;
 }
 
 .coin-logo {

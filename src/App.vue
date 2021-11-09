@@ -23,7 +23,7 @@
       <router-view class="app-body" />
     </transition>
     <CzxpRewardEffect />
-    <AppFooter />
+    <AppFooter class="footer" />
     <transaction-modal />
   </div>
 </template>
@@ -34,6 +34,17 @@
   overflow-x: hidden;
   background-image: url('components/assets/space_bg.svg');
   background-size: cover;
+}
+
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+  .footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+  }
 }
 
 /* unvisited link */

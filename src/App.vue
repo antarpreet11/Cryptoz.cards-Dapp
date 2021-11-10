@@ -23,7 +23,7 @@
       <router-view class="app-body" />
     </transition>
     <CzxpRewardEffect />
-    <AppFooter class="footer" />
+    <AppFooter />
     <transaction-modal />
   </div>
 </template>

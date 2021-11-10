@@ -36,6 +36,17 @@
   background-size: cover;
 }
 
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+  .footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+  }
+}
+
 /* unvisited link */
 a:link {
   color: #ffa7c4;

@@ -1,122 +1,71 @@
 <template>
   <div>
-    <b-modal id="modal-1" size="xl" ok-only title="Zoombies World - VIP benefits">
-      <p class="my-4">
-        <img v-b-modal.modal-1 width="100%" height="100%"
-             class="img-responsive"
-             src="https://zoombies.world/images/early_adopters_token_sale.png"
-        />
-      </p>
-    </b-modal>
     <main role="main" class="container">
-      <b-card bg-variant="dark" text-variant="white" border-variant="info">
-        <b-card-text>
-          <br/>
-          <br/>
-          <h1>
-            Zoombies is the play-to-earn NFT collectibles trade game built on scarcity, rarity
-            and community
-          </h1>
-          <br/>
-          <img v-b-modal.modal-1
-            class="img-responsive card-demo-group"
-            src="https://zoombies.world/images/early_adopters_token_sale.png"
-          />
-          <p>Zoombies is deployed on <span v-if="!onMainNet" class="text-danger">Moonbase Alpha Testnet</span>
-            <img v-if="onMainNet" src="https://zoombies.world/images/moonriver-logo-500.png" style="max-width:7em" />
-          </p>
-          <p>
-            <h2>ZOOM <img src="https://zoombies.world/images/zoombies_coin.svg" style="max-width:2.6rem;" class="align-middle" /> VIP Token Liquidity Sale Event !<br/> Closed!</h2>
-            <h2 class="text-warning">Promo ended Nov 1, 2021 - 18:00-UTC</h2>
-            <p><span class="text-danger">NOTE:</span> The ZOOM ERC20 token is the economic game utility token for the Zoombies NFT World. <router-link to="/help">Please read and understand the mint and burn operations of this token</router-link> before purchase.<br />
+
+      <b-container fluid class="text-center">
+        <b-row>
+          <b-col>
 
 
-              <div class="vip-details">
-                <h2 class="align-middle">ZOOM <img src="https://zoombies.world/images/zoombies_coin.svg" style="max-width:2.6rem;" class="align-middle" /> VIP benefits:</h2>
-                <p>Early adopters land bonus and VIP benefits:</p>
-
-                  <p><img src="https://zoombies.world/images/gold_vip.svg" class="badge-icon" /> <span class="font-weight-bold">GOLD VIP - Bought the max of 200 Million ZOOM<span class="text-danger">**</span>:</span>
-                    <ul>
-                      <li>1 Tax Exempt Island land NFT pre-sale minting - choose your island land before the public sale<span class="text-danger">*</span></li>
-                      <li>Claim your land for free, without burning ZOOM<span class="text-danger">*</span></li>
-                      <li>Additional founder GOLD VIP ZOOM economy benefits to come</li>
-                    </ul>
-                  </p>
-
-                  <p><img src="https://zoombies.world/images/silver_vip.svg" class="badge-icon" /> <span class="font-weight-bold">VIP - Bought at least 10 Million ZOOM<span class="text-danger">**</span>:</span>
-                  <ul>
-                    <li>1 Farm land NFT pre-sale minting - choose your farm land before the public*</li>
-                    <li>Claim your land for free, without burning ZOOM<span class="text-danger">*</span></li>
-                    <li>Additional founder VIP ZOOM economy benefits to come</li>
-                  </ul>
-                </p>
-
-                  <p><span class="text-danger">*</span>Land must be claimed before the close of the pre-sale VIP minting claim deadline.
-                  <br /><span class="text-danger">**</span>ZOOM must have been purchased from this official page before November 1, 2021 at 18:00-UTC</p>
-
-              </div>
+            <div v-if="coinbase">
+                <b-col sm="12" md="12">
+                    <b-button v-b-modal.sponsor-modal size="lg" variant="info" class="btn-font">EARN FREE ZOOM</b-button>
+                </b-col>
 
 
+                <b-col class="mt-5" sm="12" md="12">
+                  <span class="zoombies-font h1">
+                    <number
+                      ref="nftSupply"
+                      :from="fromNftSupply"
+                      :to="toNftSupply"
+                      :format="formatNumber"
+                      :duration="3.5"
+                    />
+                  </span><br/>
+                  <span class="text-pink h5">ZOOMBIE NFTS MINTED</span>
+                </b-col>
 
-              Holding a sufficient ZOOM token balance will unlock some FREE cards and reduce the minting costs of some Shop NFTs. ZOOM tokens can also be burned to increase the chance of pulling higher rarity cards when minting booster NFTs. Future utility will include ZOOM tokens as a form of health points.
-            </p>
-              <br/>
+                <b-col class="mt-4" sm="12" md="12">
+                  <span class="zoombies-font h1">
+                    <number
+                      ref="zoomBal"
+                      :from="fromZoomBalance"
+                      :to="toZoomBalance"
+                      :format="formatNumber"
+                      :duration="3.5"
+                    />
+                  </span><br/>
+                  <span class="text-aqua h5">
+                    ZOOM <b-img-lazy src="https://zoombies.world/images/zoombies_coin.svg" class="coin-logo"></b-img-lazy> TOKENS IN ZWORLD
+                  </span>
+                </b-col>
 
-            <h2 class="text-success">Thank you community and early contributor VIP holders ! We look forward to adding value to the ZOOM economy</h2>
-          <br/>
-            <hr />
-          </p>
+                <b-col class="mt-4" sm="12" md="12">
+                  <span class="zoombies-font h1">36,366</span><br/>
+                  <span class="text-purple h5">ZOOMBIE HERDERS</span>
+                </b-col>
 
-          <h2>Time to have some fun !</h2>
-          <p>
-            The goal is to collect the rare and unique undead NFT cards, earn or
-            trade ERC-20 ZOOM tokens to unlock FREE shop minting and reduced shop pricing.</p>
-          <p>Each minted NFT Zoombies card is a unique token on the Moonriver blockchain.
-            Collectors can buy, sell, and exchange both their Zoombies NFT
-            cards and ZOOM tokens through any standards compliant wallets,
-            markets, game engines, exchanges, DeFi and other future inventions.
-          </p>
-          <p>The most profitable strategy is to <strong>grow your Affiliate network early</strong> and earn ZOOM tokens for Free :).<br/>
-             <strong class="text-success">Click the Affiliate link in the header</strong> to Share and earn</p>
-          <div>
-            <h2>Get Started</h2>
-            <span
-              >To interact with Zoombies you will need to
-              <a
-                href="https://docs.moonbeam.network/getting-started/moonriver/integrate-metamask/"
-                target="_blank"
-                >install Metamask configured for Moonriver</a
-              >
-              and have a small amount of MOVR in your wallet.</span
-            >
-          </div>
-          <p>
-            NFT token collecting and trading is an exciting and new opportunity
-            for classic and modern collectors alike. What makes this platform
-            unique compared to other online digital asset based games or systems
-            are:
-          </p>
-          <ul>
-            <li>
-              Zoombies NFT Card functions and data are a set of Smart Contracts
-              that run independantly of the creators. There is no OFF switch. The
-              Zoombies NFT World will live forever on Moonriver.
-            </li>
-            <li>
-              The developers can Not tamper or change the Card types once they are
-              loaded. i.e: no re-minting scarce NFTs
-            </li>
-            <li>
-              The NFTs are truly unique, owned and transferable between wallets
-              manaully or automated through NFT auction marketplaces.
-            </li>
-          </ul>
-          <p>
-            <router-link to="/help"> Visit the Help section </router-link> of the
-            website to read more
-          </p>
-        </b-card-text>
-      </b-card>
+            </div>
+
+            <div v-else>
+              <h2>
+                <p>In order to Connect and participate on the blockchain:</p>
+                 You must have a valid Web3 wallet installed<br/><br/>
+                 <a href="https://metamask.io/" target="_blank">
+                  <b-button variant="danger" size="lg">Install Metamask</b-button>
+                 </a>
+              </h2>
+            </div>
+
+          </b-col>
+          <!-- Right side -->
+          <b-col class="mt-5" md="12" sm="12" lg="8">
+            <b-img-lazy src="https://zoombies.world/images/app_home_welcome.png" fluid alt="Welcome to Zoombies banner" style="max-width:100%"></b-img-lazy>
+          </b-col>
+        </b-row>
+      </b-container>
+
     </main>
 
   </div>
@@ -130,6 +79,7 @@ import {
   BContainer,
   BRow,
   BCol,
+  BImgLazy,
   BFormInput
 } from "bootstrap-vue";
 export default {
@@ -141,6 +91,7 @@ export default {
     BContainer,
     BRow,
     BCol,
+    BImgLazy,
     BFormInput
   },
   data() {
@@ -175,6 +126,24 @@ export default {
     ZoombiesInstance() {
       return this.$store.state.contractInstance.cryptoz;
     },
+    zoomBalance() {
+      return this.$store.state.totalCzxpSupply/1000000000000000000;
+    },
+    fromZoomBalance() {
+      return this.prevZoomBalance || this.zoomBalance
+    },
+    toZoomBalance() {
+      return this.newZoomBalance || this.zoomBalance
+    },
+    nftSupply() {
+      return this.$store.state.totalCryptozSupply;
+    },
+    fromNftSupply() {
+      return this.prevNftSupply || this.nftSupply
+    },
+    toNftSupply() {
+      return this.newNftSupply || this.nftSupply
+    },
     pendingPurchase() {
       return this.movrCost + " MOVR =";
     },
@@ -191,7 +160,7 @@ export default {
     }
 
     if (this.ZoombiesInstance) {
-      this.updateSale();
+      //this.updateSale();
     }
 
   },
@@ -199,11 +168,35 @@ export default {
    ZoombiesInstance(newVal) {
      console.log({newVal})
      if (newVal) {
-       this.updateSale();
+       //this.updateSale();
+     }
+   },
+   zoomBalance(newVal, oldVal) {
+     this.newZoomBalance = newVal
+     this.prevZoomBalance = oldVal
+     if (oldVal > 0) {
+       this.pulsateText(this.$refs.zoomBal)
+     }
+   },
+   nftSupply(newVal, oldVal) {
+     this.newNftSupply = newVal
+     this.prevNftSupply = oldVal
+     if (oldVal > 0) {
+       this.pulsateText(this.$refs.nftSupply)
      }
    },
   },
   methods: {
+    formatNumber(number) {
+      return parseInt(number.toFixed(0)).toLocaleString()
+    },
+    pulsateText(ref) {
+      ref.$el.classList.value = ref.$el.classList.value + 'pulsate'
+      ref.play()
+      setTimeout(() => {
+        ref.$el.classList.value = ''
+      }, 500)
+    },
     addZOOMtoMetaMask: async function() {
       const tokenAddress = this.onMainNet ? '0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4' : '0x8e21404bAd3A1d2327cc6D2B2118f47911a1f316';
       const tokenSymbol = this.onMainNet ? 'ZOOM' : 'ZOOM-DEV';
@@ -272,7 +265,7 @@ export default {
   watch: {
     ZoombiesInstance(newVal) {
       if (newVal) {
-        this.updateSale();
+        //this.updateSale();
       }
     },
   }
@@ -301,5 +294,34 @@ export default {
   filter: drop-shadow(1px 1px 4px #ffffff);
 }
 
+.btn-font {
+  font-size: 2rem;
+}
+
+.coin-logo {
+  max-width: 2rem;
+}
+
+.pulsate {
+  display: inline-block;
+  transform: scale(1);
+  animation: pulsate 0.5s ease-out;
+}
+
+@keyframes pulsate {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.totals {
+  display: table;
+}
 
 </style>

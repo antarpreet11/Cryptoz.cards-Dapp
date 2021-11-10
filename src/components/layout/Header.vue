@@ -1,11 +1,16 @@
 <template>
   <div class="app-header">
     <b-modal
+      
       v-if="isWalletConnected"
       id="sponsor-modal"
-      size="lg"
-      title="Sponsor Link"
+      size="xl"
+      title="Share your affiliate link and earn"
       hide-footer
+      header-bg-variant="dark"
+      header-text-variant="light"
+      body-bg-variant="dark"
+      body-text-variant="dark"
     >
       <b-jumbotron class="jumbo" :lead="sponsorTitle">
         <p>

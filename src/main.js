@@ -22,9 +22,9 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 if (process.env.NODE_ENV == "development") {
-  LogRocket.init("jf4zzm/cryptoz-testbsc");
+  //LogRocket.init("jf4zzm/cryptoz-testbsc");
 } else {
-  LogRocket.init("jf4zzm/the-cryptoz-nft-universe");
+  //LogRocket.init("jf4zzm/the-cryptoz-nft-universe");
 }
 
 // Vue.use(BootstrapVue)

@@ -42,7 +42,7 @@
                 </b-col>
 
                 <b-col class="mt-4" sm="12" md="12">
-                  <span class="zoombies-font h1">36,366</span><br/>
+                  <span class="zoombies-font h1">36,406</span><br/>
                   <span class="text-purple h5">ZOOMBIE HERDERS</span>
                 </b-col>
 

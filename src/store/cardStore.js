@@ -18,6 +18,7 @@ typeIdsOnChain.push(366,367,368,369,370,371,372,373,374,375,376,377,378,379,380,
 typeIdsOnChain.push(410,412,413,415,418,419,421,422,423,424,425,428);
 typeIdsOnChain.push(429,430,431,432,433,434,435,436,437,438);
 typeIdsOnChain.push(439,440,441,442,444,445);
+typeIdsOnChain.push(450,451,452,453,454,455,459,461,462,463);
 
 const DEFAULT_CARD_STATE = {
   allShopCards: [],

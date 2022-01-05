@@ -60,6 +60,29 @@
             <b-card class="market" no-body>
               <a
                 class="market-btn"
+                href="https://moonlit.finance/farm?farmPool=ZOOM_MOVR"
+                target="_blank"
+              >
+                <div class="market-info">
+                  <div class="">
+                    <img
+                      src="https://moonlit.finance/_nuxt/img/moonriver_logo.c54c2cc.svg"
+                      align="absmiddle"
+                    />
+                  </div>
+                  <div class="market-detail">
+                    <h2>Moonlit Finance - ZOOM-MOVR Yield Farm</h2>
+                    <p>
+                      Stake your Moonlit Liquidity Provider MLP tokens to earn reward token such as MLIT
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </b-card>
+            <br/><br/><br/>
+            <b-card class="market" no-body>
+              <a
+                class="market-btn"
                 href="https://app.sushi.com/swap?inputCurrency=&outputCurrency=0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4"
                 target="_blank"
               >
@@ -71,7 +94,7 @@
                     />
                   </div>
                   <div class="market-detail">
-                    <h2>SushiSwap - ZOOM-MOVR pool</h2>
+                    <h2>SushiSwap - ZOOM-MOVR swap pool</h2>
                     <p>
                       Sushi is the home of DeFi. Our community is building a comprehensive, decentralized trading platform for the future of finance. Join us!
                     </p>
@@ -132,19 +155,26 @@ export default {
   width: 30px;
   height: 30px;
 }
+
+a.market-btn {
+  color: #fff;
+  background-color: #304f4f;
+}
+
 .market-btn:hover {
   color: #000;
-  background-color: #ccc;
+  background-color: #304f4f;
   padding: 10px;
   max-height: fit-content;
   text-decoration: none;
-  border: 1px solid black;
+  border: 1px solid #7df2f4;
 }
 a:hover {
   text-decoration: none;
 }
 .market-btn {
   color: #000;
+  background-color: #304f4f;
   padding: 10px;
   text-decoration: none;
   max-height: fit-content;

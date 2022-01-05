@@ -1,6 +1,6 @@
 <template>
   <div>
-    <main role="main" class="container">
+    <main role="main" class="">
       <!--
         brown       - 585858
         light blue  - 03c1e8
@@ -8,19 +8,55 @@
         purple      - b92ee4
     -->
 
-
-      <h2>Zoombies World Card Type Collection</h2>
-      <p>View the complete set of available card across the entire Zoombies World</p>
+      <div class="container">
+        <h2>Zoombies World Card Type Collection</h2>
+        <p>View the complete set of available card across the entire Zoombies World</p>
+      </div>
 
       <div>
-        <b-dropdown id="dropdown-1" text="Dropdown Button" class="m-md-2">
-          <b-dropdown-item>First Action</b-dropdown-item>
-          <b-dropdown-item>Second Action</b-dropdown-item>
-          <b-dropdown-item>Third Action</b-dropdown-item>
-          <b-dropdown-divider></b-dropdown-divider>
-          <b-dropdown-item active>Active action</b-dropdown-item>
-          <b-dropdown-item disabled>Disabled action</b-dropdown-item>
-        </b-dropdown>
+
+          <b-tabs pills card vertical>
+            <b-tab title="Classic 1" active><b-card-text>Tab contents 1</b-card-text></b-tab>
+            <b-tab title="Fairy Tale 1"><b-card-text>Tab contents 2</b-card-text></b-tab>
+            <b-tab title="Summer Camp"><b-card-text>Tab contents 3</b-card-text></b-tab>
+            <b-tab title="Classic 1"><b-card-text>Tab contents 1</b-card-text></b-tab>
+            <b-tab title="Fairy Tale 1"><b-card-text>Tab contents 2</b-card-text></b-tab>
+            <b-tab title="Summer Camp"><b-card-text>Tab contents 3</b-card-text></b-tab>
+            <b-tab title="Classic 1"><b-card-text>Tab contents 1</b-card-text></b-tab>
+            <b-tab title="Fairy Tale 1"><b-card-text>Tab contents 2</b-card-text></b-tab>
+            <b-tab title="Summer Camp"><b-card-text>Tab contents 3</b-card-text></b-tab>
+            <b-tab title="Classic 1"><b-card-text>Tab contents 1</b-card-text></b-tab>
+            <b-tab title="Fairy Tale 1"><b-card-text>Tab contents 2</b-card-text></b-tab>
+            <b-tab title="Summer Camp"><b-card-text>Tab contents 3</b-card-text></b-tab>
+            <b-tab title="Classic 1"><b-card-text>Tab contents 1</b-card-text></b-tab>
+            <b-tab title="Fairy Tale 1"><b-card-text>Tab contents 2</b-card-text></b-tab>
+            <b-tab title="Summer Camp"><b-card-text>Tab contents 3</b-card-text></b-tab>
+            <b-tab title="Classic 1"><b-card-text>Tab contents 1</b-card-text></b-tab>
+            <b-tab title="Fairy Tale 1"><b-card-text>Tab contents 2</b-card-text></b-tab>
+            <b-tab title="Summer Camp"><b-card-text>Tab contents 3</b-card-text></b-tab>
+            <b-tab title="Classic 1"><b-card-text>Tab contents 1</b-card-text></b-tab>
+            <b-tab title="Fairy Tale 1"><b-card-text>Tab contents 2</b-card-text></b-tab>
+            <b-tab title="Summer Camp"><b-card-text>Tab contents 3</b-card-text></b-tab>
+            <b-tab title="Classic 1"><b-card-text>Tab contents 1</b-card-text></b-tab>
+            <b-tab title="Fairy Tale 1"><b-card-text>Tab contents 2</b-card-text></b-tab>
+            <b-tab title="Summer Camp"><b-card-text>Tab contents 3</b-card-text></b-tab>
+            <b-tab title="Classic 1"><b-card-text>Tab contents 1</b-card-text></b-tab>
+            <b-tab title="Fairy Tale 1"><b-card-text>Tab contents 2</b-card-text></b-tab>
+            <b-tab title="Summer Camp"><b-card-text>Tab contents 3</b-card-text></b-tab>
+            <b-tab title="Classic 1"><b-card-text>Tab contents 1</b-card-text></b-tab>
+            <b-tab title="Fairy Tale 1"><b-card-text>Tab contents 2</b-card-text></b-tab>
+            <b-tab title="Summer Camp"><b-card-text>Tab contents 3</b-card-text></b-tab>
+            <b-tab title="Classic 1"><b-card-text>Tab contents 1</b-card-text></b-tab>
+            <b-tab title="Fairy Tale 1"><b-card-text>Tab contents 2</b-card-text></b-tab>
+            <b-tab title="Summer Camp"><b-card-text>Tab contents 3</b-card-text></b-tab>
+            <b-tab title="Classic 1"><b-card-text>Tab contents 1</b-card-text></b-tab>
+            <b-tab title="Fairy Tale 1"><b-card-text>Tab contents 2</b-card-text></b-tab>
+            <b-tab title="Summer Camp"><b-card-text>Tab contents 3</b-card-text></b-tab>
+            <b-tab title="Classic 1"><b-card-text>Tab contents 1</b-card-text></b-tab>
+            <b-tab title="Fairy Tale 1"><b-card-text>Tab contents 2</b-card-text></b-tab>
+            <b-tab title="Summer Camp"><b-card-text>Tab contents 3</b-card-text></b-tab>
+          </b-tabs>
+
       </div>
 
 
@@ -33,6 +69,9 @@ import {
   BDropdown,
   BDropdownItem,
   BCard,
+  BCardText,
+  BTab,
+  BTabs,
   BCardHeader,
   BButton,
   BCollapse,
@@ -47,6 +86,9 @@ export default {
     BDropdown,
     BDropdownItem,
     BCard,
+    BCardText,
+    BTab,
+    BTabs,
     BCardHeader,
     BButton,
     BCollapse,

@@ -18,6 +18,30 @@
             <b-card class="market" no-body>
               <a
                 class="market-btn"
+                href="https://moonbeans.io/#/collections/zoombies"
+                target="_blank"
+              >
+                <div class="market-info">
+                  <div class="">
+                    <img
+                     class="markets-logo"
+                      src="https://moonbeans.io/images/logo/logo.png"
+                      align="absmiddle"
+                    />
+                  </div>
+                  <div class="market-detail">
+                    <h2>Moonbeans - MOVR NFT Marketplace</h2>
+                    <p>
+                      Moonbeans provides a detailed and user friendly Zoombies search, buy and sell experience.
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </b-card>
+            <br/><br/><br/>
+            <b-card class="market" no-body>
+              <a
+                class="market-btn"
                 href="https://cheapswap.cc"
                 target="_blank"
               >

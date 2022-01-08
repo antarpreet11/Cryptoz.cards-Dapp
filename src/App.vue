@@ -148,7 +148,7 @@ const ethChainParam = isLocal
         symbol: "DEV",
         decimals: 18,
       },
-      rpcUrls: ["https://rpc.testnet.moonbeam.network"],
+      rpcUrls: ["https://moonbeam-alpha.api.onfinality.io/public"],
       blockExplorerUrls: [
         "https://moonbase-blockscout.testnet.moonbeam.network/",
       ],

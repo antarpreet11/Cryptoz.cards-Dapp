@@ -1,4 +1,4 @@
-import getCardType from "../util/getCardType";
+import {getCardType} from "../util/cardUtil";
 import { dynamicSort, getRarity, soldOutSort } from "../helpers";
 
 const typeIdsOnChain = [];

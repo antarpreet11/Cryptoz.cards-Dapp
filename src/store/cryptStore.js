@@ -1,4 +1,4 @@
-import getCardType from "../util/getCardType";
+import { getCardType } from "../util/cardUtil";
 import { dynamicSort, getRarity } from "../helpers";
 import { RARITY_CLASSES } from "./cardStore";
 import _ from "lodash";

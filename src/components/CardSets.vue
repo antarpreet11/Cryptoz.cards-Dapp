@@ -18,7 +18,13 @@
     </div>
     <div v-else>
       <div v-if="cardSets" class="card-set-tablist-wrapper">
-        <b-tabs :nav-class="cardSetTabClass" pills card vertical>
+        <b-tabs
+          active-nav-item-class="font-weight-bold info"
+          :nav-class="cardSetTabClass"
+          pills
+          card
+          vertical
+        >
           <b-tab
             v-for="cardset in cardSets"
             :key="cardset.id"
@@ -214,14 +220,12 @@ export default {
 }
 
 .card-set-tab {
-  background-color: white !important;
+  background-color: #1d1d1d !important;
   border-radius: 5px !important;
-  max-height: 800px;
-  overflow: auto;
   flex-wrap: nowrap !important;
 
   a:link {
-    color: black;
+    color: white;
   }
 }
 
@@ -273,7 +277,7 @@ export default {
   display: flex;
   padding-left: 8px;
   flex-direction: column;
-  max-height: 1000px;
+
   overflow-y: auto;
   overflow-x: hidden;
 

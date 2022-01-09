@@ -114,7 +114,7 @@ export default {
         if (this.edition_total === '0') {
           return 'Unlimited'
         } else {
-          return `Total editions: ${this.edition_total}`
+          return `Edition Total: ${this.edition_total}`
         }
       }
 
@@ -412,7 +412,7 @@ flip-.container.flipped {
     top:2.7rem;
   }
 }
-@media screen and (min-width: 768px) {  
+@media screen and (min-width: 768px) {
   .mr-logo {
     max-width:50%;
     position:relative;

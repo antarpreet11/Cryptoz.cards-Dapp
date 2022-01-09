@@ -7,9 +7,10 @@
         purple      - b92ee4
     -->
     <div class="card-set-header">
-      <h2>Zoombies World Card Type Collection</h2>
+      <h2>Zoombies World Inhabitants and item types catalog</h2>
       <p>
-        View the complete set of available card across the entire Zoombies World
+        Zoombies unlike other NFT collections are a unique world of strange and wonderful People, Creatures, Plants and Objects.
+        Cards are grouped into sets and may contain any combination of rarity, store and booster, limited and unlimited edition minting.
       </p>
     </div>
 

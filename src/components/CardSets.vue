@@ -44,6 +44,8 @@
                   :image="getCardImageUrl(card.svg)"
                   :level="card.card_level"
                   :cset="card.card_set"
+                  :is_plat="card.rarity === '2'"
+                  :used_in_cardsets="true"
                 >
                 </owned-card-content>
               </div>
@@ -56,24 +58,26 @@
         </b-form-select>
         <div class="mobile-cards-wrapper">
           <owned-card-content
-            v-for="(card) in getCurrentlySelectedCardSet.cards"
-              :id="parseInt(card.id)"
-                :key="card.id"
-                :buy_czxp="card.buy_czxp"
-                :is_single_card_view="false"
-                :cost="card.cost"
-                :edition_total="card.edition_total"
-                :in_store="card.in_store === '0' ? 'Booster' : 'Store'"
-                :name="card.name"
-                :sacrifice_czxp="card.sacrifice_czxp"
-                :type_id="card.type_id"
-                :unlock_czxp="card.unlock_czxp"
-                :card_class="getCardClass(card.rarity)"
-                :image="getCardImageUrl(card.svg)"
-                :level="card.card_level"
-                :cset="card.card_set"
-              >
-              </owned-card-content>
+            v-for="card in getCurrentlySelectedCardSet.cards"
+            :id="parseInt(card.id)"
+            :key="card.id"
+            :buy_czxp="card.buy_czxp"
+            :is_single_card_view="false"
+            :cost="card.cost"
+            :edition_total="card.edition_total"
+            :in_store="card.in_store === '0' ? 'Booster' : 'Store'"
+            :name="card.name"
+            :sacrifice_czxp="card.sacrifice_czxp"
+            :type_id="card.type_id"
+            :unlock_czxp="card.unlock_czxp"
+            :card_class="getCardClass(card.rarity)"
+            :image="getCardImageUrl(card.svg)"
+            :level="card.card_level"
+            :cset="card.card_set"
+            :is_plat="card.rarity === '2'"
+            :used_in_cardsets="true"
+          >
+          </owned-card-content>
         </div>
       </div>
     </div>
@@ -81,11 +85,7 @@
 </template>
 
 <script>
-import {
-  BTab,
-  BTabs,
-  BFormSelect,
-} from "bootstrap-vue";
+import { BTab, BTabs, BFormSelect } from "bootstrap-vue";
 import { getCardSets } from "../util/cardUtil";
 import { v4 as uuidv4 } from "uuid";
 import OwnedCardContent from "./OwnedCardContent.vue";

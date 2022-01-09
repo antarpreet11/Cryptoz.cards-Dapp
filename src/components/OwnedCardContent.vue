@@ -12,7 +12,10 @@
         <div class="image-container">
           <img class="card-img" :src="image" />
         </div>
-        <div class="card-edition">
+        <div :class="{
+          'card-edition': true,
+          'plat-edition': is_plat
+        }">
           <span>{{ edition_label }}</span>
         </div>
         <div class="card-name">{{ name }}<br />{{ cset }}</div>
@@ -38,7 +41,7 @@
       </div>
       <div class="back card-bg card-bg-back-bsc">
         <div class="back-container">
-          <div v-if="!!id"  class="card-txt-black font-weight-bold" title="Copy link to token" @click="onCopyLink">
+          <div v-if="!!id && !used_in_cardsets"  class="card-txt-black font-weight-bold" title="Copy link to token" @click="onCopyLink">
             <h5 id="share">Token #{{id}} <b-icon-link-45deg ></b-icon-link-45deg></h5>
           </div>
           <div class="card-txt-black">
@@ -87,7 +90,8 @@ export default {
     "is_single_card_view",
     "index",
     "observer",
-    "used_in_cardset"
+    "is_plat",
+    "used_in_cardsets"
   ],
   components: {
     BIconLink45deg,
@@ -249,6 +253,10 @@ export default {
   right: 10%;
   color: #ddd;
   font-weight: 700;
+}
+
+.plat-edition {
+  color: black
 }
 
 .card-name {

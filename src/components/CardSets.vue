@@ -20,7 +20,7 @@
       <div v-if="cardSets" class="card-set-tablist-wrapper">
         <b-tabs :nav-class="cardSetTabClass" pills card vertical>
           <b-tab
-            v-for="cardset in cardSets"
+            v-for="cardset in sortedCardSets"
             :key="cardset.id"
             :title="cardset.cardSetName"
           >
@@ -114,13 +114,35 @@ export default {
   computed: {
     cardSetOptions: function () {
       if (this.cardSets) {
-        return this.cardSets.map((cardset, index) => ({
-          text: cardset.cardSetName,
+        const sortedCardsets = this.cardSets.map(cardset => cardset.cardSetName).sort();
+
+        const cardSetNames = sortedCardsets.map((cardset, index) => ({
+          text: cardset,
           value: index,
-        }));
+        }))
+
+        return cardSetNames;
       }
 
       return [];
+    },
+    sortedCardSets: function () {
+      if (this.cardSets) {
+        const sortedCardSet = this.cardSets;
+        
+
+        return sortedCardSet.sort((a, b) => {
+          if (a.cardSetName < b.cardSetName) {
+            return -1;
+          } else if (a.cardSetName > b.cardSetName) {
+            return 1;
+          }
+
+          return 0;
+        })
+      }
+
+      return []
     },
     getCurrentlySelectedCardSet: function () {
       if (this.mobileSelectedTab !== null && this.cardSets !== null) {

@@ -1,30 +1,32 @@
 <template>
   <div
-    id="card-container"
-    :class="{ fullsize: isFullSize }"
+    :class="{ fullsize: isFullSize, 'card-container': true }"
     :data-index="index"
     @mouseover="isFlipped = true"
     @mouseleave="isFlipped = false"
   >
-    <div id="flip-container" :class="{ flipped: isFlipped }">
+    <div :class="{ flipped: isFlipped, 'flip-container': true }">
       <!-- front content -->
       <div :class="[card_class, 'front']">
         <!--img class="card-img" :src="'static/assets/' + url" /-->
-        <div id="image-container">
+        <div class="image-container">
           <img class="card-img" :src="image" />
         </div>
-        <div id="card-edition">
+        <div :class="{
+          'card-edition': true,
+          'plat-edition': is_plat
+        }">
           <span>{{ edition_label }}</span>
         </div>
-        <div id="card-name">{{ name }}<br />{{ cset }}</div>
-        <div id="bottom-text">
+        <div class="card-name">{{ name }}<br />{{ cset }}</div>
+        <div class="bottom-text">
           {{ parseInt(unlock_czxp).toLocaleString() }}
         </div>
-        <div id="bottom-right-corner">
+        <div class="bottom-right-corner">
           {{ level }}
         </div>
         <div class="card-booster-shop card-booster-shop-circle" />
-        <div id="top-right-corner" :style="{ backgroundColor: activeColor }">
+        <div class="top-right-corner" :style="{ backgroundColor: activeColor }">
           <b-icon-lightning-fill
             v-if="in_store == 'Booster'"
             class="card-booster-shop-icon"
@@ -39,8 +41,8 @@
       </div>
       <div class="back card-bg card-bg-back-bsc">
         <div class="back-container">
-          <div v-if="!!id"  class="card-txt-black font-weight-bold" title="Copy link to token" @click="onCopyLink">
-            <h5 id="share">Token #{{id}} <b-icon-link-45deg /></b-icon-link-45deg></h5>
+          <div v-if="!!id && !used_in_cardsets"  class="card-txt-black font-weight-bold" title="Copy link to token" @click="onCopyLink">
+            <h5 id="share">Token #{{id}} <b-icon-link-45deg ></b-icon-link-45deg></h5>
           </div>
           <div class="card-txt-black">
             <span class="attribute-name font-weight-bold">Cost:</span>
@@ -64,9 +66,8 @@
 </template>
 
 <script>
-import { BButton, BIcon, BIconLink45deg } from 'bootstrap-vue'
+import { BIconLink45deg } from 'bootstrap-vue'
 import { showSuccessToast } from "../util/showToast";
-import debounce from "lodash/debounce";
 
 export default {
   name: "OwnedCardContent",
@@ -89,11 +90,11 @@ export default {
     "is_single_card_view",
     "index",
     "observer",
+    "is_plat",
+    "used_in_cardsets"
   ],
   components: {
-    BButton,
     BIconLink45deg,
-    BIcon,
   },
   data() {
     return {
@@ -109,6 +110,14 @@ export default {
       }
     },
     edition_label() {
+      if (!this.edition_current) {
+        if (this.edition_total === '0') {
+          return 'Unlimited'
+        } else {
+          return `Edition Total: ${this.edition_total}`
+        }
+      }
+
       if (!this.card_owned) {
         return this.edition_current + "/" + this.edition_total;
       } else {
@@ -194,7 +203,7 @@ export default {
   padding: 20px;
 }
 
-#image-container {
+.image-container {
   position: absolute;
   top: 15%;
   left: 10%;
@@ -209,7 +218,7 @@ export default {
   width: 80%;
 }
 
-#top-right-corner {
+.top-right-corner {
   position: absolute;
   top: 4%;
   right: 0;
@@ -222,7 +231,7 @@ export default {
   align-items: center;
 }
 
-#bottom-right-corner {
+.bottom-right-corner {
   position: absolute;
   bottom: 1.5%;
   right: 0;
@@ -236,7 +245,7 @@ export default {
   color: #fff;
 }
 
-#card-edition {
+.card-edition {
   position: absolute;
   top: 62%;
   bottom: 32%;
@@ -246,7 +255,11 @@ export default {
   font-weight: 700;
 }
 
-#card-name {
+.plat-edition {
+  color: black
+}
+
+.card-name {
   font-weight: bold;
   position: absolute;
   left: 5%;
@@ -260,7 +273,7 @@ export default {
   align-items: center;
 }
 
-#bottom-text {
+.bottom-text {
   position: absolute;
   color: #fff;
   font-weight: bold;
@@ -300,7 +313,7 @@ export default {
 
 /* entire container, keeps perspective */
 
-#card-container {
+.card-container {
   margin: 0;
   height: 410px;
   width: 260px;
@@ -311,7 +324,7 @@ export default {
 }
 
 @media screen and (max-width: 1000px) {
-  #card-container {
+  .card-container {
     height: calc(0.55 * 410px);
     width: calc(0.55 * 260px);
     font-size: 10px;
@@ -330,17 +343,17 @@ export default {
 }
 
 /* flip the pane when hovered */
-#flip-container.flipped {
+flip-.container.flipped {
   transform: rotateY(180deg);
 }
 
-#flip-container {
+.flip-container {
   transition: transform 0.6s;
   transform-style: preserve-3d;
 
   position: relative;
 }
-#flip-container,
+.flip-container,
 .front,
 .back {
   width: 100%;
@@ -348,7 +361,7 @@ export default {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  #card-container:hover #flip-container.flipped {
+  .card-container:hover .flip-container.flipped {
     transform: rotateY(180deg);
   }
 }
@@ -399,7 +412,7 @@ export default {
     top:2.7rem;
   }
 }
-@media screen and (min-width: 768px) {  
+@media screen and (min-width: 768px) {
   .mr-logo {
     max-width:50%;
     position:relative;

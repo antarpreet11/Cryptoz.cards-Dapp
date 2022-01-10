@@ -314,6 +314,39 @@ const router = new Router({
         ],
       },
     },
+    {
+      path: "/card-sets",
+      name: "CardSets",
+      component: lazyLoadComponents("CardSets"),
+      meta: {
+        title:
+          "Zoombies World - Card Type Sets - Complete the card sets",
+        metaTags: [
+          {
+            name: "description",
+            content:
+              "Browse the complete set of available cards types in Zoombies World",
+          },
+          {
+            property: "og:url",
+            content: "https://movr.zoombies.world/card-sets",
+          },
+          {
+            property: "og:type",
+            content: "website",
+          },
+          {
+            property: "og:title",
+            content:
+              "Zoombies World - Card Type Sets - Complete the card sets",
+          },
+          {
+            property: "og:image",
+            content: "https://movr.zoombies.world/assets/zoombies_logo.svg",
+          },
+        ],
+      },
+    },
   ],
   scrollBehavior() {
     return { x: 0, y: 0 };

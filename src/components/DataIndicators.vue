@@ -62,7 +62,7 @@
 
 <script>
 
-const statsBaseUrl = 'https://cryptoz.cards/services/endpoints'
+const statsBaseUrl = 'https://zoombies.world/services/endpoints'
 
 import {
   BCard,

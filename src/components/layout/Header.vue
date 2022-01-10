@@ -1,7 +1,6 @@
 <template>
   <div class="app-header">
     <b-modal
-      
       v-if="isWalletConnected"
       id="sponsor-modal"
       size="xl"
@@ -181,6 +180,11 @@
             Feedback
           </router-link>
         </li>
+        <li>
+          <router-link class="header-item white-header" to="/card-sets">
+            Card Sets
+          </router-link>
+        </li>
         <div class="desktop-bonus">
           <div
             v-if="isWalletConnected && bonusReady && showSpinner == false"
@@ -196,9 +200,7 @@
               variant="light"
             />
             <transition>
-              <span class="spinner-text-style">
-                {{ transactionMessage }}</span
-              >
+              <span class="spinner-text-style"> {{ transactionMessage }}</span>
             </transition>
           </div>
           <div
@@ -224,28 +226,26 @@
       </div>
     </div>
     <div v-if="isWalletConnected" class="wallet-info">
-
       <div v-if="ZoomContribution == 20000000000000000000">
-        <img src="https://zoombies.world/images/gold_vip.svg" class="badge-icon" />
+        <img
+          src="https://zoombies.world/images/gold_vip.svg"
+          class="badge-icon"
+        />
       </div>
       <div v-else-if="ZoomContribution >= 1000000000000000000">
-        <img src="https://zoombies.world/images/silver_vip.svg" class="badge-icon" />
+        <img
+          src="https://zoombies.world/images/silver_vip.svg"
+          class="badge-icon"
+        />
       </div>
       <div v-else>
         <img src="@/assets/metamask-face.png" class="header-icon" />
       </div>
 
-      <span
-        v-b-tooltip.hover.bottom
-        :title="coinbase"
-      >
+      <span v-b-tooltip.hover.bottom :title="coinbase">
         &nbsp;{{ coinbase.substr(0, 6) + "..." + coinbase.substr(38) }}
       </span>
-      <div
-        id="wallet-balance"
-        v-b-tooltip.hover.bottom
-        :title="ethBalance"
-      >
+      <div id="wallet-balance" v-b-tooltip.hover.bottom :title="ethBalance">
         <img
           v-if="onMainNet"
           src="https://zoombies.world/images/mr-icon.png"
@@ -269,7 +269,10 @@
     </b-button>
     <div
       ref="mobileDropdown"
-      :class="{'mobile-dropdown': true, 'dropdown-hidden': !isMobileDropdownOpen}"
+      :class="{
+        'mobile-dropdown': true,
+        'dropdown-hidden': !isMobileDropdownOpen,
+      }"
     >
       <b-button
         v-if="!isWalletConnected"
@@ -280,12 +283,17 @@
         Connect To {{ onMainNet ? "Moonriver" : "Moonbase (testnet)" }}
       </b-button>
       <div v-if="isWalletConnected" class="mobile-wallet-info">
-
         <div v-if="ZoomContribution == 20000000000000000000">
-          <img src="https://zoombies.world/images/gold_vip.svg" class="badge-icon" />
+          <img
+            src="https://zoombies.world/images/gold_vip.svg"
+            class="badge-icon"
+          />
         </div>
         <div v-else-if="ZoomContribution >= 1000000000000000000">
-          <img src="https://zoombies.world/images/silver_vip.svg" class="badge-icon" />
+          <img
+            src="https://zoombies.world/images/silver_vip.svg"
+            class="badge-icon"
+          />
         </div>
         <div v-else>
           <img src="@/assets/metamask-face.png" class="header-icon" />
@@ -330,9 +338,7 @@
               variant="light"
             />
             <transition>
-              <span class="spinner-text-style">
-                {{ transactionMessage }}</span
-              >
+              <span class="spinner-text-style"> {{ transactionMessage }}</span>
             </transition>
           </div>
           <div
@@ -347,14 +353,39 @@
             Your Next Bonus: <strong>{{ timeToBonus }}</strong>
           </div>
         </li>
-        <li @click="toggleMobileDropdown"><button v-b-modal.sponsor-modal class="affiliate-btn aqua-header">Affiliate</button></li>
-        <li @click="toggleMobileDropdown"><router-link to="/shop" class="aqua-header">Shop</router-link></li>
-        <li @click="toggleMobileDropdown"><router-link to="/my-zoombies-nfts" class="aqua-header">Your NFT Crypt</router-link></li>
-        <li @click="toggleMobileDropdown"><router-link to="/market" class="aqua-header">Markets</router-link></li>
+        <li @click="toggleMobileDropdown">
+          <button v-b-modal.sponsor-modal class="affiliate-btn aqua-header">
+            Affiliate
+          </button>
+        </li>
+        <li @click="toggleMobileDropdown">
+          <router-link to="/shop" class="aqua-header">Shop</router-link>
+        </li>
+        <li @click="toggleMobileDropdown">
+          <router-link to="/my-zoombies-nfts" class="aqua-header"
+            >Your NFT Crypt</router-link
+          >
+        </li>
+        <li @click="toggleMobileDropdown">
+          <router-link to="/market" class="aqua-header">Markets</router-link>
+        </li>
         <li><img class="brain" src="@/components/assets/brain.svg" /></li>
-        <li @click="toggleMobileDropdown"><router-link to="/view/1" class="white-header">View</router-link></li>
-        <li @click="toggleMobileDropdown"><router-link to="/help" class="white-header">Help</router-link></li>
-        <li @click="toggleMobileDropdown"><router-link to="/feedback" class="white-header">Feedback</router-link></li>
+        <li @click="toggleMobileDropdown">
+          <router-link to="/view/1" class="white-header">View</router-link>
+        </li>
+        <li @click="toggleMobileDropdown">
+          <router-link to="/help" class="white-header">Help</router-link>
+        </li>
+        <li @click="toggleMobileDropdown">
+          <router-link to="/feedback" class="white-header"
+            >Feedback</router-link
+          >
+        </li>
+        <li @click="toggleMobileDropdown">
+          <router-link to="/card-sets" class="white-header"
+            >Card sets</router-link
+          >
+        </li>
       </ul>
     </div>
   </div>
@@ -640,7 +671,9 @@ export default {
       return moment(_timeStamp).format("MMM D, h:mm a");
     },
     getZoomContributionStatus: async function () {
-      this.$store.state.zoomContribution = parseInt(await this.CzxpInstance.methods.contributions(this.coinbase).call());
+      this.$store.state.zoomContribution = parseInt(
+        await this.CzxpInstance.methods.contributions(this.coinbase).call()
+      );
     },
   },
 };
@@ -655,8 +688,8 @@ export default {
   width: 90%;
   transform: translateY(100%);
   display: none;
-  height: 350px;
-  background-image: url('../assets/space_bg.svg');
+  height: 400px;
+  background-image: url("../assets/space_bg.svg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position-x: right;
@@ -841,7 +874,7 @@ export default {
 
   .app-menu-bar {
     height: 60px;
-    justify-content: flex-end
+    justify-content: flex-end;
   }
 
   .zoombie-logo {
@@ -861,7 +894,10 @@ export default {
     }
   }
 
-  .desktop-connect-btn, .desktop-bonus, .app-menu-bar-items, .wallet-info {
+  .desktop-connect-btn,
+  .desktop-bonus,
+  .app-menu-bar-items,
+  .wallet-info {
     display: none;
   }
 }
@@ -913,7 +949,7 @@ export default {
 
 .header-item {
   font-family: "Oswald", sans-serif;
-  font-size: 22px;
+  font-size: 18px;
 }
 
 /*******************************

@@ -14,59 +14,94 @@
               marketplaces:<br/>
             </h5>
             Zoombies NFT Contract - 0x08716e418e68564C96b68192E985762740728018
-            <br/><br/><br/>
-            <b-card class="market" no-body>
-              <a
-                class="market-btn"
-                href="https://moonbeans.io/#/collections/zoombies"
-                target="_blank"
-              >
-                <div class="market-info">
-                  <div class="">
-                    <img
-                     class="markets-logo"
-                      src="https://moonbeans.io/images/logo/logo.png"
-                      align="absmiddle"
-                    />
-                  </div>
-                  <div class="market-detail">
-                    <h2>Moonbeans - MOVR NFT Marketplace</h2>
-                    <p>
-                      Moonbeans provides a detailed and user friendly Zoombies search, buy and sell experience.
-                    </p>
-                  </div>
-                </div>
-              </a>
-            </b-card>
-            <br/><br/><br/>
-            <b-card class="market" no-body>
-              <a
-                class="market-btn"
-                href="https://cheapswap.cc"
-                target="_blank"
-              >
-                <div class="market-info">
-                  <div class="">
-                    <img
-                     class="markets-logo"
-                      src="https://s.cheapswap.cc/52/img/logo.svg"
-                      align="absmiddle"
-                    />
-                  </div>
-                  <div class="market-detail">
-                    <h2>Cheapswap - ZOOM-MOVR-ZoombiesNFT Swap</h2>
-                    <p>
-                      Swap any combo of MOVR, ERC20, ERC721 and ERC1155 tokens on Moonriver.<br/>
-                      This service takes 0.1% fee of swapped MOVR and ERC20 tokens. NFTs are swapped for free.
-                    </p>
-                  </div>
-                </div>
-              </a>
-            </b-card>
-            <br/><br/><br/>
+            <br/><br/>
 
+            <b-row>
+              <b-col>
+                <b-card class="market" no-body>
+                  <a
+                    class="market-btn"
+                    href="https://tofunft.com/collection/zoombies/items"
+                    target="_blank"
+                  >
+                    <div class="market-info">
+                      <div class="">
+                        <img
+                         class="markets-logo"
+                          src="https://docs.tofunft.com/images/logos/light_round.svg"
+                          align="absmiddle"
+                        />
+                      </div>
+                      <div class="market-detail">
+                        <h2>tofuNFT - MOVR NFT Marketplace</h2>
+                        <p>
+                          tofuNFT is a fully featured decentralized marketplace for buying, selling and trading NFTs, created by SCV.Finance, and deployed on multiple blockchains.
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </b-card>
+              </b-col>
+              <b-col>
+                <b-card class="market" no-body>
+                  <a
+                    class="market-btn"
+                    href="https://moonbeans.io/#/collections/zoombies"
+                    target="_blank"
+                  >
+                    <div class="market-info">
+                      <div class="">
+                        <img
+                         class="markets-logo"
+                          src="https://moonbeans.io/images/logo/logo.png"
+                          align="absmiddle"
+                        />
+                      </div>
+                      <div class="market-detail">
+                        <h2>Moonbeans - MOVR NFT Marketplace</h2>
+                        <p>
+                          Moonbeans provides a detailed and user friendly Zoombies search, buy and sell experience.
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </b-card>
+              </b-col>
+            </b-row>
 
+            <b-row>
+              <b-col sm="12">
+                <b-card class="market" no-body>
+                  <a
+                    class="market-btn"
+                    href="https://cheapswap.cc"
+                    target="_blank"
+                  >
+                    <div class="market-info">
+                      <div class="">
+                        <img
+                         class="markets-logo"
+                          src="https://s.cheapswap.cc/52/img/logo.svg"
+                          align="absmiddle"
+                        />
+                      </div>
+                      <div class="market-detail">
+                        <h2>Cheapswap - ZOOM-MOVR-ZoombiesNFT Swap</h2>
+                        <p>
+                          Swap any combo of MOVR, ERC20, ERC721 and ERC1155 tokens on Moonriver.<br/>
+                          This service takes 0.1% fee of swapped MOVR and ERC20 tokens. NFTs are swapped for free.
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </b-card>
+              </b-col>
+              <b-col></b-col>
+            </b-row>
+            <br/>
           </b-tab>
+
+
           <b-tab title="ZOOM Token">
             <h3>
             ZOOM
@@ -80,55 +115,60 @@
               The ERC-20 compliant ZOOM Moonriver tokens are supported on the following token exchanges:<br/>
             </h5>
             ZOOM token Contract - 0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4
-            <br/><br/><br/>
-            <b-card class="market" no-body>
-              <a
-                class="market-btn"
-                href="https://moonlit.finance/farm?farmPool=ZOOM_MOVR"
-                target="_blank"
-              >
-                <div class="market-info">
-                  <div class="">
-                    <img
-                      src="https://moonlit.finance/_nuxt/img/moonriver_logo.c54c2cc.svg"
-                      align="absmiddle"
-                    />
-                  </div>
-                  <div class="market-detail">
-                    <h2>Moonlit Finance - ZOOM-MOVR Yield Farm</h2>
-                    <p>
-                      Stake your Moonlit Liquidity Provider MLP tokens to earn reward token such as MLIT
-                    </p>
-                  </div>
-                </div>
-              </a>
-            </b-card>
-            <br/><br/><br/>
-            <b-card class="market" no-body>
-              <a
-                class="market-btn"
-                href="https://app.sushi.com/swap?inputCurrency=&outputCurrency=0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4"
-                target="_blank"
-              >
-                <div class="market-info">
-                  <div class="">
-                    <img
-                      src="https://app.sushi.com/_next/image?url=%2Flogo.png&w=32&q=75"
-                      align="absmiddle"
-                    />
-                  </div>
-                  <div class="market-detail">
-                    <h2>SushiSwap - ZOOM-MOVR swap pool</h2>
-                    <p>
-                      Sushi is the home of DeFi. Our community is building a comprehensive, decentralized trading platform for the future of finance. Join us!
-                    </p>
-                  </div>
-                </div>
-              </a>
-            </b-card>
-            <br/><br/><br/>
+            <br/><br/>
 
+            <b-row>
+              <b-col sm="12" lg="6">
+                <b-card class="market" no-body>
+                  <a
+                    class="market-btn"
+                    href="https://moonlit.finance/farm?farmPool=ZOOM_MOVR"
+                    target="_blank"
+                  >
+                    <div class="market-info">
+                      <div class="">
+                        <img
+                          src="https://moonlit.finance/_nuxt/img/moonriver_logo.c54c2cc.svg"
+                          align="absmiddle"
+                        />
+                      </div>
+                      <div class="market-detail">
+                        <h2>Moonlit Finance - ZOOM-MOVR Yield Farm</h2>
+                        <p>
+                          Stake your Moonlit Liquidity Provider MLP tokens to earn reward token such as MLIT
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </b-card>
+              </b-col>
+              <b-col sm="12" lg="6">
+                <b-card class="market" no-body>
+                  <a
+                    class="market-btn"
+                    href="https://app.sushi.com/swap?inputCurrency=&outputCurrency=0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4"
+                    target="_blank"
+                  >
+                    <div class="market-info">
+                      <div class="">
+                        <img
+                          src="https://app.sushi.com/_next/image?url=%2Flogo.png&w=32&q=75"
+                          align="absmiddle"
+                        />
+                      </div>
+                      <div class="market-detail">
+                        <h2>SushiSwap - ZOOM-MOVR swap pool</h2>
+                        <p>
+                          Sushi is the home of DeFi. Our community is building a comprehensive, decentralized trading platform for the future of finance. Join us!
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </b-card>
+              </b-col>
+            </b-row>
 
+            <br/>
           </b-tab>
         </b-tabs>
       </b-card>
@@ -147,7 +187,7 @@
 </template>
 
 <script>
-import { BCard, BTabs, BTab } from "bootstrap-vue";
+import { BCard, BTabs, BTab, BRow, BCol } from "bootstrap-vue";
 
 export default {
   name: "MarketContent",
@@ -155,6 +195,8 @@ export default {
     BCard,
     BTab,
     BTabs,
+    BRow,
+    BCol
   },
   data() {
     return {
@@ -188,10 +230,11 @@ a.market-btn {
 .market-btn:hover {
   color: #000;
   background-color: #304f4f;
-  padding: 10px;
+  padding: 8px;
   max-height: fit-content;
   text-decoration: none;
   border: 1px solid #7df2f4;
+  font-size: 18px;
 }
 a:hover {
   text-decoration: none;

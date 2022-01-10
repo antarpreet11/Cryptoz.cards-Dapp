@@ -42,7 +42,7 @@
                   :is_single_card_view="false"
                   :cost="card.cost"
                   :edition_total="card.edition_total"
-                  :in_store="card.in_store === '0' ? 'Booster' : 'Store'"
+                  :in_store="card.in_store === '0' ? 'Store' : 'Booster'"
                   :name="card.name"
                   :sacrifice_czxp="card.sacrifice_czxp"
                   :type_id="card.type_id"
@@ -72,7 +72,7 @@
             :is_single_card_view="false"
             :cost="card.cost"
             :edition_total="card.edition_total"
-            :in_store="card.in_store === '0' ? 'Booster' : 'Store'"
+            :in_store="card.in_store === '0' ? 'Store' : 'Booster'"
             :name="card.name"
             :sacrifice_czxp="card.sacrifice_czxp"
             :type_id="card.type_id"
@@ -136,7 +136,7 @@ export default {
     sortedCardSets: function () {
       if (this.cardSets) {
         const sortedCardSet = this.cardSets;
-        
+
 
         return sortedCardSet.sort((a, b) => {
           if (a.cardSetName < b.cardSetName) {

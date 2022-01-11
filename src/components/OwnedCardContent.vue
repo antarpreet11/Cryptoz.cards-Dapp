@@ -110,7 +110,7 @@ export default {
       }
     },
     edition_label() {
-      if (!this.edition_current) {
+      if (this.used_in_cardsets) {
         if (this.edition_total === '0') {
           return 'Unlimited'
         } else {

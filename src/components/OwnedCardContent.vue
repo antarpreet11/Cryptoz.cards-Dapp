@@ -12,10 +12,12 @@
         <div class="image-container">
           <img class="card-img" :src="image" />
         </div>
-        <div :class="{
-          'card-edition': true,
-          'plat-edition': is_plat
-        }">
+        <div
+          :class="{
+            'card-edition': true,
+            'plat-edition': is_plat,
+          }"
+        >
           <span>{{ edition_label }}</span>
         </div>
         <div class="card-name">{{ name }}<br />{{ cset }}</div>
@@ -41,8 +43,15 @@
       </div>
       <div class="back card-bg card-bg-back-bsc">
         <div class="back-container">
-          <div v-if="!!id && !used_in_cardsets"  class="card-txt-black font-weight-bold" title="Copy link to token" @click="onCopyLink">
-            <h5 id="share">Token #{{id}} <b-icon-link-45deg ></b-icon-link-45deg></h5>
+          <div
+            v-if="!!id && !used_in_cardsets"
+            class="card-txt-black font-weight-bold"
+            title="Copy link to token"
+            @click="onCopyLink"
+          >
+            <h5 id="share">
+              Token #{{ id }} <b-icon-link-45deg></b-icon-link-45deg>
+            </h5>
           </div>
           <div class="card-txt-black">
             <span class="attribute-name font-weight-bold">Cost:</span>
@@ -66,7 +75,7 @@
 </template>
 
 <script>
-import { BIconLink45deg } from 'bootstrap-vue'
+import { BIconLink45deg } from "bootstrap-vue";
 import { showSuccessToast } from "../util/showToast";
 
 export default {
@@ -91,7 +100,7 @@ export default {
     "index",
     "observer",
     "is_plat",
-    "used_in_cardsets"
+    "used_in_cardsets",
   ],
   components: {
     BIconLink45deg,
@@ -111,10 +120,10 @@ export default {
     },
     edition_label() {
       if (this.used_in_cardsets) {
-        if (this.edition_total === '0') {
-          return 'Unlimited'
+        if (this.edition_total === "0") {
+          return "Unlimited";
         } else {
-          return `Edition Total: ${this.edition_total}`
+          return `Edition Total: ${this.edition_total}`;
         }
       }
 
@@ -151,7 +160,7 @@ export default {
       return `${url}/view/${tokenId}`;
     },
     onCopyLink() {
-      navigator.clipboard.writeText(this.getTokenLink(this.id))
+      navigator.clipboard.writeText(this.getTokenLink(this.id));
       showSuccessToast(this, "Link to Token copied to clipboard");
     },
   },
@@ -256,7 +265,7 @@ export default {
 }
 
 .plat-edition {
-  color: black
+  color: black;
 }
 
 .card-name {
@@ -331,7 +340,7 @@ export default {
   }
 
   #share {
-    font-size: 12px!important;
+    font-size: 12px !important;
     margin: 0;
   }
 
@@ -343,7 +352,7 @@ export default {
 }
 
 /* flip the pane when hovered */
-flip-.container.flipped {
+.flipped {
   transform: rotateY(180deg);
 }
 
@@ -361,7 +370,7 @@ flip-.container.flipped {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .card-container:hover .flip-container.flipped {
+  .card-container:hover .flipped {
     transform: rotateY(180deg);
   }
 }
@@ -397,27 +406,33 @@ flip-.container.flipped {
   cursor: pointer;
 
   &:hover {
-    color: #0645AD;
+    color: #0645ad;
   }
 }
 
 .card-booster-shop-icon {
-  color: #000000
+  color: #000000;
 }
 
-@media screen and (max-width: 576px) {
+@media screen and (max-width: 768px) {
   .mr-logo {
-    max-width:50%;
-    position:relative;
-    top:2.7rem;
+    max-width: 50%;
+    position: relative;
+    top: 25px;
   }
 }
 @media screen and (min-width: 768px) {
   .mr-logo {
-    max-width:50%;
-    position:relative;
-    top:4.2rem;
+    max-width: 50%;
+    position: relative;
+    top: 24px;
   }
 }
-
+@media screen and (min-width: 1024px) {
+  .mr-logo {
+    max-width: 50%;
+    position: relative;
+    top: 32px;
+  }
+}
 </style>

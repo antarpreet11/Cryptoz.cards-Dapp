@@ -21,6 +21,31 @@
                 <b-card class="market" no-body>
                   <a
                     class="market-btn"
+                    href="https://raregems.io/moonriver/zoombies?for_sale=1"
+                    target="_blank"
+                  >
+                    <div class="market-info">
+                      <div class="">
+                        <img
+                         class="markets-logo"
+                          src="https://s.raregems.io/45/img/diamond.svg"
+                          align="absmiddle"
+                        />
+                      </div>
+                      <div class="market-detail">
+                        <h2>RareGems NFT Market</h2>
+                        <p>
+                          Offers a very Zoombies NFT collection specific search and filter experience
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </b-card>
+              </b-col>
+              <b-col>
+                <b-card class="market" no-body>
+                  <a
+                    class="market-btn"
                     href="https://tofunft.com/collection/zoombies/items"
                     target="_blank"
                   >
@@ -42,6 +67,9 @@
                   </a>
                 </b-card>
               </b-col>
+            </b-row>
+
+            <b-row>
               <b-col>
                 <b-card class="market" no-body>
                   <a
@@ -67,10 +95,7 @@
                   </a>
                 </b-card>
               </b-col>
-            </b-row>
-
-            <b-row>
-              <b-col sm="12">
+              <b-col>
                 <b-card class="market" no-body>
                   <a
                     class="market-btn"
@@ -96,7 +121,6 @@
                   </a>
                 </b-card>
               </b-col>
-              <b-col></b-col>
             </b-row>
             <br/>
           </b-tab>

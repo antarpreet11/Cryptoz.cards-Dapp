@@ -45,28 +45,8 @@
 </template>
 
 <script>
-import {
-  BCard,
-  BCardHeader,
-  BButton,
-  BCollapse,
-  BCardBody,
-  BFormInput,
-  BIcon,
-  BJumbotron
-} from "bootstrap-vue";
 export default {
   name: "Feedback",
-  components: {
-    BCard,
-    BCardHeader,
-    BButton,
-    BCollapse,
-    BCardBody,
-    BFormInput,
-    BJumbotron,
-    BIcon
-  },
   props: ["query"],
   data() {
     return {

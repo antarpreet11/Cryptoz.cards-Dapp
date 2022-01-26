@@ -55,6 +55,8 @@ import "./main.css";
 import zoombiesContractJSON from "./contracts/Zoombies.json";
 import zoomTokenContractJSON from "./contracts/ZoomToken.json";
 
+import { setupEventWatcher, ZoombiesContract, ZoomContract } from './util/watcherUtil'
+
 const isLocal =
   process.env.NODE_ENV === "development" ||
   window.location.host !== "movr.zoombies.world";
@@ -207,7 +209,13 @@ export default {
 
     if (!provider) {
       this.$bvModal.show("no-web3-modal");
+    } else {
+      setupEventWatcher(this.$store)
     }
+  },
+  unmounted() {
+    ZoomContract.provider.removeAllListeners();
+    ZoombiesContract.provider.removeAllListeners();
   },
   methods: {
     configureMoonriver: async function () {

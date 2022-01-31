@@ -1,19 +1,18 @@
 <template>
   <div class="events-container">
     <div class="clear-button-wrapper">
-      <b-button :disabled="getEventCount === 0">Clear all events</b-button>
+      <b-button :disabled="getEventCount === 0" @click="() => clearEvents()"
+        >Clear all events</b-button
+      >
     </div>
     <p v-if="getEventCount === 0">No events yet.</p>
     <div class="events-wrapper">
       <event-notification
-        v-for="event in fakeEvents"
+        v-for="event in getEvents"
         :key="event.type"
         :eventType="event.type"
         :eventData="event.data"
       ></event-notification>
-      <!-- <div v-for="event in fakeEvents" :key="event.type" class="">
-        
-      </div> -->
     </div>
   </div>
 </template>

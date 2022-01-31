@@ -1,4 +1,6 @@
-const DEFAULT_EVENT_STATE = [];
+const DEFAULT_EVENT_STATE = {
+  events: [],
+};
 
 export const EVENT_MUTATIONS = {
   ADD_EVENTS: "ADD_EVENTS",
@@ -9,11 +11,11 @@ const eventStore = {
   namespaced: true,
   state: DEFAULT_EVENT_STATE,
   mutations: {
-    [EVENT_MUTATIONS.ADD_EVENTS](state, payload) {
-      state.push(payload);
-    },
     [EVENT_MUTATIONS.CLEAR_EVENTS](state) {
-      state = DEFAULT_EVENT_STATE;
+      state.events = [];
+    },
+    [EVENT_MUTATIONS.ADD_EVENTS](state, payload) {
+      state.events = [...state.events, payload];
     },
   },
   actions: {
@@ -26,11 +28,11 @@ const eventStore = {
   },
   getters: {
     getEventCount: (state) => {
-      return state.length;
+      return state.events.length;
     },
     getEvents: (state) => {
-      return state;
-    }
+      return state.events;
+    },
   },
 };
 

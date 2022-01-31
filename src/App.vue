@@ -1,5 +1,22 @@
 <template>
   <div id="app">
+    <b-button
+      v-b-toggle.events-sidebar
+      class="sidebar-button"
+      variant="dark"
+      size="sm"
+    >
+      <b-icon-chevron-compact-right font-scale="2" variant="light" />
+    </b-button>
+    <b-sidebar
+      id="events-sidebar"
+      title="Events"
+      bg-variant="dark"
+      text-variant="light"
+      backdrop
+    >
+      <realtime-events></realtime-events>
+    </b-sidebar>
     <Header @connect="handleConnect" />
     <b-modal id="no-web3-modal" hide-footer>
       <template #modal-title> Web3 Not Detected! </template>
@@ -28,7 +45,6 @@
   </div>
 </template>
 
-
 <script>
 import detectEthereumProvider from "@metamask/detect-provider";
 import axios from "axios";
@@ -41,6 +57,8 @@ import TransactionModal from "./components/TransactionModal.vue";
 import dAppStates from "@/dAppStates";
 import { MessageBus } from "@/messageBus";
 import CzxpRewardEffect from "./components/layout/CzxpRewardEffect";
+import { BIconChevronCompactRight, BButton, BSidebar } from "bootstrap-vue";
+import RealtimeEvents from "@/components/RealtimeEvents.vue";
 
 // import BurnerConnectProvider from "@burner-wallet/burner-connect-provider";
 // import WalletConnectProvider from "@walletconnect/web3-provider";
@@ -55,7 +73,11 @@ import "./main.css";
 import zoombiesContractJSON from "./contracts/Zoombies.json";
 import zoomTokenContractJSON from "./contracts/ZoomToken.json";
 
-import { setupEventWatcher, ZoombiesContract, ZoomContract } from './util/watcherUtil'
+import {
+  setupEventWatcher,
+  ZoombiesContract,
+  ZoomContract,
+} from "./util/watcherUtil";
 
 const isLocal =
   process.env.NODE_ENV === "development" ||
@@ -132,6 +154,10 @@ export default {
     AppFooter,
     TransactionModal,
     CzxpRewardEffect,
+    BIconChevronCompactRight,
+    BButton,
+    BSidebar,
+    RealtimeEvents,
   },
   data() {
     return {
@@ -210,7 +236,7 @@ export default {
     if (!provider) {
       this.$bvModal.show("no-web3-modal");
     } else {
-      setupEventWatcher(this.$store)
+      setupEventWatcher(this.$store);
     }
   },
   unmounted() {
@@ -348,15 +374,14 @@ export default {
 };
 </script>
 
-
 <style lang="scss">
 #app {
   height: 100vh;
   overflow-x: hidden;
-  background-image: url('components/assets/space_bg.svg');
+  background-image: url("components/assets/space_bg.svg");
   background-size: cover;
+  position: relative;
 }
-
 
 // Large devices (desktops, 992px and up)
 @media (min-width: 992px) {
@@ -396,7 +421,7 @@ a:active {
     color: black;
 
     &.active {
-      background: #7EF4F6;
+      background: #7ef4f6;
     }
   }
 }
@@ -427,5 +452,18 @@ a:active {
 a {
   padding: 2px;
   color: #f0b90b;
+}
+
+.sidebar-button {
+  height: 100px;
+  width: 30px;
+  top: 50%;
+  position: fixed;
+  background-color: darkgray;
+
+  &:hover {
+    height: 110px;
+    width: 35px;
+  }
 }
 </style>

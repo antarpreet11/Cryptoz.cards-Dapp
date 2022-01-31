@@ -12,7 +12,8 @@
         ZOOM {{ " " }}
         <img
           class="czxp-logo"
-          src="https://zoombies.world/images/zoombies_coin.svg"
+          src="@/assets/zoomTokenCoin.svg"
+          alt="zoom coin"
         />
         tokens
       </strong>

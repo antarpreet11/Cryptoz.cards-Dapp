@@ -71,7 +71,8 @@
           Automatically earn ZOOM
           <img
             class="czxp-logo"
-            src="https://zoombies.world/images/zoombies_coin.svg"
+            src="@/assets/zoomTokenCoin.svg"
+            alt="zoom coin"
             align="middle"
           />
           Token rewards from your affiliate network
@@ -226,20 +227,6 @@
       </div>
     </div>
     <div v-if="isWalletConnected" class="wallet-info">
-      <div class="events-drawer-button">
-        <b-button v-b-toggle.events-sidebar variant="outline-info" size="sm"
-          >Events</b-button
-        >
-        <b-sidebar
-          id="events-sidebar"
-          title="Events"
-          bg-variant="dark"
-          text-variant="light"
-          backdrop
-        >
-          <realtime-events></realtime-events>
-        </b-sidebar>
-      </div>
       <div v-if="ZoomContribution == 20000000000000000000">
         <img
           src="https://zoombies.world/images/gold_vip.svg"
@@ -419,9 +406,7 @@ import {
   BFormInvalidFeedback,
   BAlert,
   BButton,
-  BSidebar,
 } from "bootstrap-vue";
-import RealtimeEvents from '../RealtimeEvents.vue';
 
 const baseAddress = "0x0000000000000000000000000000000000000000";
 
@@ -438,8 +423,6 @@ export default {
     BFormInvalidFeedback,
     BAlert,
     BButton,
-    BSidebar,
-    RealtimeEvents
   },
   computed: {
     classObject: function () {

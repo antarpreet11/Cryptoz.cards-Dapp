@@ -7,7 +7,12 @@
       'bounce-bonus-text': true
     }"
   >
-    {{czxpAward > 0 ? '+' : ''}}{{czxpAward}} <img class="bounce-coin-size" src="https://zoombies.world/images/zoombies_coin.svg" />
+    {{ czxpAward > 0 ? "+" : "" }}{{ czxpAward }}
+    <img
+      class="bounce-coin-size"
+      src="@/assets/zoomTokenCoin.svg"
+      alt="zoom coin"
+    />
   </div>
 </template>
 

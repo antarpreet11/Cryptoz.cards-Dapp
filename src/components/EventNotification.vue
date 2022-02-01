@@ -3,7 +3,9 @@
     <h1 v-if="getEventTypeText">{{ getEventTypeText }}</h1>
     <div v-if="eventType === getEventTypes.zoomMint">
       <p>
-        {{ createDottedAddress(zoomMinted.toAddress) }}
+        <router-link :to="computeWalletLink(zoomMinted.toAddress)">
+          {{ createDottedAddress(zoomMinted.toAddress) }}
+        </router-link>
         <span class="zoom-minted-text">received</span>
         {{ zoomMinted.zoomAmount }}
         <img
@@ -15,7 +17,9 @@
     </div>
     <div v-else-if="eventType === getEventTypes.packOpened">
       <p>
-        {{ packOpened.address }}
+        <router-link :to="packOpened.addressNFTLink">
+          {{ packOpened.address }}
+        </router-link>
         minted
         {{ processRarity(packOpened.rarity).prefix }}
         <span :class="processRarity(packOpened.rarity).class">
@@ -26,16 +30,23 @@
     </div>
     <div v-else-if="eventType === getEventTypes.cardMinted">
       <p v-if="cardMintedData">
-        {{ cardMintedData.address }}
+        <router-link :to="cardMintedData.addressNFTLink">
+          {{ cardMintedData.address }}
+        </router-link>
         <span style="color: #6aa84f">minted</span> a new
         <b>
           {{ cardMintedData.zombieType }}
           {{ cardMintedData.booster ? "Booster" : "" }}
         </b>
         NFT
-        <span :class="cardMintedData.rarityClass">
-          {{ cardMintedData.name }}
-          {{ `#${cardMintedData.editionNumber}` }}
+        <span>
+          <router-link
+            :class="cardMintedData.rarityClass"
+            :to="cardMintedData.viewNFTLink"
+          >
+            {{ cardMintedData.name }}
+            {{ `#${cardMintedData.editionNumber}` }}
+          </router-link>
         </span>
         from
         <b>{{ cardMintedData.cardSet }}</b>
@@ -45,11 +56,7 @@
 </template>
 
 <script>
-import {
-  EVENT_TYPES,
-  ZoomTokenInterface,
-  ZoombiesInterface,
-} from "../util/watcherUtil";
+import { EVENT_TYPES } from "../util/watcherUtil";
 import { ethers } from "ethers";
 import { getCardType } from "../util/cardUtil";
 
@@ -75,7 +82,7 @@ export default {
     zoomMinted: function () {
       const data = this.eventData.args;
       const toAddress = data[1];
-      const zoomAmount = ethers.utils.formatEther(data[2]);
+      const zoomAmount = parseInt(ethers.utils.formatEther(data[2]));
 
       return {
         zoomAmount,
@@ -89,6 +96,7 @@ export default {
 
       return {
         address,
+        addressNFTLink: this.computeWalletLink(data[0]),
         rarity,
       };
     },
@@ -110,6 +118,12 @@ export default {
         address.length - 3,
         address.length
       )}`;
+    },
+    computeWalletLink: function (address) {
+      return `/my-zoombies-nfts/${address}`;
+    },
+    computeViewNFTLink: function (tokenId) {
+      return `/view/${tokenId}`;
     },
     processRarity: function (rarity) {
       switch (rarity) {
@@ -186,12 +200,14 @@ export default {
       console.log(cardInfo);
       const extractedInfo = {
         address,
+        addressNFTLink: this.computeWalletLink(data[0]),
         zombieType: zombieType,
         booster: isBooster,
         name: cardInfo.name,
         editionNumber,
         cardSet: cardSet,
         rarityClass: rarityClass,
+        viewNFTLink: this.computeViewNFTLink(tokenId),
       };
 
       this.cardMintedData = extractedInfo;

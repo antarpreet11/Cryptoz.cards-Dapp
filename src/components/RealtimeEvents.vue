@@ -9,7 +9,7 @@
     <div class="events-wrapper">
       <event-notification
         v-for="event in getEvents"
-        :key="event.type"
+        :key="uniqueId()"
         :eventType="event.type"
         :eventData="event.data"
       ></event-notification>
@@ -21,6 +21,7 @@
 import { mapGetters } from "vuex";
 import { BButton } from "bootstrap-vue";
 import EventNotification from "./EventNotification.vue";
+import { v4 as uuidv4 } from "uuid";
 
 export default {
   name: "RealtimeEvents",
@@ -196,6 +197,9 @@ export default {
   methods: {
     clearEvents() {
       this.$store.dispatch("events/clearEvents");
+    },
+    uniqueId() {
+      return uuidv4();
     },
   },
   computed: {

@@ -11,10 +11,10 @@
             <h3>Zoombies NFT Collectible Cards</h3>
             <h5>
               ERC-721 NFT tokens are supported on the following auction
-              marketplaces:<br/>
+              marketplaces:<br />
             </h5>
             Zoombies NFT Contract - 0x08716e418e68564C96b68192E985762740728018
-            <br/><br/>
+            <br /><br />
 
             <b-row>
               <b-col>
@@ -27,7 +27,7 @@
                     <div class="market-info">
                       <div class="">
                         <img
-                         class="markets-logo"
+                          class="markets-logo"
                           src="https://s.raregems.io/45/img/diamond.svg"
                           align="absmiddle"
                         />
@@ -35,7 +35,8 @@
                       <div class="market-detail">
                         <h2>RareGems NFT Market</h2>
                         <p>
-                          Offers a very Zoombies NFT collection specific search and filter experience
+                          Offers a very Zoombies NFT collection specific search
+                          and filter experience
                         </p>
                       </div>
                     </div>
@@ -52,7 +53,7 @@
                     <div class="market-info">
                       <div class="">
                         <img
-                         class="markets-logo"
+                          class="markets-logo"
                           src="https://docs.tofunft.com/images/logos/light_round.svg"
                           align="absmiddle"
                         />
@@ -60,7 +61,9 @@
                       <div class="market-detail">
                         <h2>tofuNFT - MOVR NFT Marketplace</h2>
                         <p>
-                          tofuNFT is a fully featured decentralized marketplace for buying, selling and trading NFTs, created by SCV.Finance, and deployed on multiple blockchains.
+                          tofuNFT is a fully featured decentralized marketplace
+                          for buying, selling and trading NFTs, created by
+                          SCV.Finance, and deployed on multiple blockchains.
                         </p>
                       </div>
                     </div>
@@ -80,7 +83,7 @@
                     <div class="market-info">
                       <div class="">
                         <img
-                         class="markets-logo"
+                          class="markets-logo"
                           src="https://moonbeans.io/images/logo/logo.png"
                           align="absmiddle"
                         />
@@ -88,7 +91,8 @@
                       <div class="market-detail">
                         <h2>Moonbeans - MOVR NFT Marketplace</h2>
                         <p>
-                          Moonbeans provides a detailed and user friendly Zoombies search, buy and sell experience.
+                          Moonbeans provides a detailed and user friendly
+                          Zoombies search, buy and sell experience.
                         </p>
                       </div>
                     </div>
@@ -105,7 +109,7 @@
                     <div class="market-info">
                       <div class="">
                         <img
-                         class="markets-logo"
+                          class="markets-logo"
                           src="https://s.cheapswap.cc/52/img/logo.svg"
                           align="absmiddle"
                         />
@@ -113,8 +117,10 @@
                       <div class="market-detail">
                         <h2>Cheapswap - ZOOM-MOVR-ZoombiesNFT Swap</h2>
                         <p>
-                          Swap any combo of MOVR, ERC20, ERC721 and ERC1155 tokens on Moonriver.<br/>
-                          This service takes 0.1% fee of swapped MOVR and ERC20 tokens. NFTs are swapped for free.
+                          Swap any combo of MOVR, ERC20, ERC721 and ERC1155
+                          tokens on Moonriver.<br />
+                          This service takes 0.1% fee of swapped MOVR and ERC20
+                          tokens. NFTs are swapped for free.
                         </p>
                       </div>
                     </div>
@@ -122,24 +128,25 @@
                 </b-card>
               </b-col>
             </b-row>
-            <br/>
+            <br />
           </b-tab>
-
 
           <b-tab title="ZOOM Token">
             <h3>
-            ZOOM
-            <img
-              class="czxp-logo"
-              src="https://zoombies.world/images/zoombies_coin.svg"
-            />
+              ZOOM
+              <img
+                class="czxp-logo"
+                src="@/assets/zoomTokenCoin.svg"
+                alt="zoom coin"
+              />
               token
             </h3>
             <h5>
-              The ERC-20 compliant ZOOM Moonriver tokens are supported on the following token exchanges:<br/>
+              The ERC-20 compliant ZOOM Moonriver tokens are supported on the
+              following token exchanges:<br />
             </h5>
             ZOOM token Contract - 0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4
-            <br/><br/>
+            <br /><br />
 
             <b-row>
               <b-col sm="12" lg="6">
@@ -159,7 +166,8 @@
                       <div class="market-detail">
                         <h2>Moonlit Finance - ZOOM-MOVR Yield Farm</h2>
                         <p>
-                          Stake your Moonlit Liquidity Provider MLP tokens to earn reward token such as MLIT
+                          Stake your Moonlit Liquidity Provider MLP tokens to
+                          earn reward token such as MLIT
                         </p>
                       </div>
                     </div>
@@ -183,7 +191,9 @@
                       <div class="market-detail">
                         <h2>SushiSwap - ZOOM-MOVR swap pool</h2>
                         <p>
-                          Sushi is the home of DeFi. Our community is building a comprehensive, decentralized trading platform for the future of finance. Join us!
+                          Sushi is the home of DeFi. Our community is building a
+                          comprehensive, decentralized trading platform for the
+                          future of finance. Join us!
                         </p>
                       </div>
                     </div>
@@ -192,17 +202,18 @@
               </b-col>
             </b-row>
 
-            <br/>
+            <br />
           </b-tab>
         </b-tabs>
       </b-card>
 
       <p>
-        If you have an NFT market on Moonriver and would like to
-        feature Zoombies NFT World Cards, you can use the contract TokenURI endpoints
+        If you have an NFT market on Moonriver and would like to feature
+        Zoombies NFT World Cards, you can use the contract TokenURI endpoints
         for automated metadata consumption. We currently follow the OpenSea
         metadata standard. For inquires
-        <a href="mailto:contactus@zoombies.world?subject=NFT market integrations"
+        <a
+          href="mailto:contactus@zoombies.world?subject=NFT market integrations"
           >please contact us</a
         >
       </p>
@@ -220,7 +231,7 @@ export default {
     BTab,
     BTabs,
     BRow,
-    BCol
+    BCol,
   },
   data() {
     return {
@@ -281,7 +292,8 @@ h3 {
   border: 1px solid black;
 }
 
-.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
   background-color: darkslateblue;
   color: white;
   border: 1px solid white;
@@ -292,8 +304,8 @@ h3 {
 }
 
 .market-card {
-    color: white;
-    background-color: darkslateblue;
+  color: white;
+  background-color: darkslateblue;
 }
 
 .markets-wrapper {
@@ -372,6 +384,5 @@ h3 {
     height: 40px;
     margin-bottom: 10px;
   }
-
 }
 </style>

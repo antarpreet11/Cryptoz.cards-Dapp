@@ -1,9 +1,7 @@
-import {getCardType} from "../util/cardUtil";
+import { getCardType } from "../util/cardUtil";
 import { dynamicSort, getRarity, soldOutSort } from "../helpers";
 
 const typeIdsOnChain = [];
-
-
 
 //push 2021
 typeIdsOnChain.push(1,6,8,11,14,32,36,40,44,47,52,55,59,61,65,71,74,76,77,84,87,89,112,113,114,115);
@@ -47,7 +45,7 @@ export const RARITY_CLASSES = {
   Rare: "card-bg card-bg-4",
   Epic: "card-bg card-bg-3",
   Platinum: "card-bg card-bg-2",
-  Diamond: "card-bg card-bg-1"
+  Diamond: "card-bg card-bg-1",
 };
 
 const getCard = async (cardId, CryptozInstance) => {
@@ -87,7 +85,7 @@ const getCard = async (cardId, CryptozInstance) => {
     cardObj.soldOut = 0;
   }
 
-  const t =  await CryptozInstance.methods.storeReleaseTime(cardObj.id).call();
+  const t = await CryptozInstance.methods.storeReleaseTime(cardObj.id).call();
   cardObj.release_time = t;
   return cardObj;
 };
@@ -321,6 +319,11 @@ const cardStore = {
     },
     isShopLoadingFinished: (state) => {
       return state.shopLoaded;
+    },
+    getCardByTypeId: (state) => (typeId) => {
+      const card = state.allShopCards.filter(
+        (card) => card.type_id === typeId.toString()
+      );
     },
   },
 };

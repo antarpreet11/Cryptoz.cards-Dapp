@@ -71,7 +71,8 @@
           Automatically earn ZOOM
           <img
             class="czxp-logo"
-            src="https://zoombies.world/images/zoombies_coin.svg"
+            src="@/assets/zoomTokenCoin.svg"
+            alt="zoom coin"
             align="middle"
           />
           Token rewards from your affiliate network
@@ -786,6 +787,7 @@ export default {
   align-items: center;
   justify-content: flex-end;
   color: #d48b15;
+  margin-top: 8px;
   margin-bottom: 8px;
   padding-right: 32px;
 }
@@ -1251,5 +1253,9 @@ a {
   to {
     filter: drop-shadow(1px 1px 4px #ffffff);
   }
+}
+
+.events-drawer-button {
+  margin-right: 8px;
 }
 </style>

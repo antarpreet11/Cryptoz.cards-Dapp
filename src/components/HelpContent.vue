@@ -218,10 +218,14 @@
                     associated to an affiliate. This affiliation is permanent
                     and cannot be unmade. You may only have 1 sponsor, but may
                     have any number of affiliates.<br /><br />There are a number
-                    of affiliate player actions that will generate a 20% ZOOM                     <img
-                                          class="czxp-logo"
-                                          src="https://zoombies.world/images/zoombies_coin.svg"
-                                        /> token
+                    of affiliate player actions that will generate a 20% ZOOMBIE
+                    <img class="czxp-logo" 
+                    alt="zoom coin"
+                    src="@/assets/zoomTokenCoin.svg"
+
+                    />
+                        
+                        token
                     reward for their sponsor.
                   </p>
                   <ul>
@@ -260,7 +264,8 @@
                   <p>
                     <img
                       class="czxp-logo"
-                      src="https://zoombies.world/images/zoombies_coin.svg"
+                      src="@/assets/zoomTokenCoin.svg"
+                      alt="zoom coin"
                     />
                     <strong>ZOOM Tokens</strong> are ERC-20
                     Fungible tokens. This means that any ZOOM is exchangeable
@@ -364,7 +369,8 @@
                 How can I get more
                 <img
                   class="czxp-logo"
-                  src="https://zoombies.world/images/zoombies_coin.svg"
+                      src="@/assets/zoomTokenCoin.svg"
+                      alt="zoom coin"
                 />
                 ZOOM tokens ?
               </b-button>
@@ -379,7 +385,8 @@
                   There are multiple ways in which you can get ZOOM
                   <img
                     class="czxp-logo"
-                    src="https://zoombies.world/images/zoombies_coin.svg"
+                      src="@/assets/zoomTokenCoin.svg"
+                      alt="zoom coin"
                   />
                   tokens:
                   <ul>

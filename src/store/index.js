@@ -4,6 +4,7 @@ import state from "./state";
 import { showSuccessToast } from "../util/showToast";
 import cardStore from "./cardStore";
 import cryptStore from "./cryptStore";
+import eventStore from './eventsStore'
 
 Vue.use(Vuex);
 
@@ -160,5 +161,6 @@ export const store = new Vuex.Store({
   modules: {
     cards: cardStore,
     crypt: cryptStore,
+    events: eventStore
   },
 });

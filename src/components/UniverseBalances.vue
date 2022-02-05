@@ -12,7 +12,8 @@
         ZOOM {{ " " }}
         <img
           class="czxp-logo"
-          src="https://zoombies.world/images/zoombies_coin.svg"
+          src="@/assets/zoomTokenCoin.svg"
+          alt="zoom coin"
         />
         tokens
       </strong>
@@ -35,7 +36,8 @@
       <b-button
         v-if="isInOwnCrypt"
         v-b-tooltip.hover="'View probability of mint by rarity'"
-        v-b-modal="'open-probability-modal'" class="btn"
+        v-b-modal="'open-probability-modal'"
+        class="btn"
         variant="info"
       >
         <b-icon-pie-chart-fill />
@@ -62,8 +64,8 @@ export default {
   props: {
     isInOwnCrypt: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
@@ -73,50 +75,50 @@ export default {
       prevNftTypes: null,
       newNftSupply: null,
       prevNftSupply: null,
-    }
+    };
   },
   components: {
-    BButton
+    BButton,
   },
   methods: {
     formatNumber(number) {
-      return parseInt(number.toFixed(0)).toLocaleString()
+      return parseInt(number.toFixed(0)).toLocaleString();
     },
     pulsateText(ref) {
-      ref.$el.classList.value = ref.$el.classList.value + 'pulsate'
-      ref.play()
+      ref.$el.classList.value = ref.$el.classList.value + "pulsate";
+      ref.play();
       setTimeout(() => {
-        ref.$el.classList.value = ''
-      }, 500)
-    }
+        ref.$el.classList.value = "";
+      }, 500);
+    },
   },
   computed: {
     zoomBalance() {
-      return this.$store.state.totalCzxpSupply/1000000000000000000;
+      return this.$store.state.totalCzxpSupply / 1000000000000000000;
     },
     fromZoomBalance() {
-      return this.prevZoomBalance || this.zoomBalance
+      return this.prevZoomBalance || this.zoomBalance;
     },
     toZoomBalance() {
-      return this.newZoomBalance || this.zoomBalance
+      return this.newZoomBalance || this.zoomBalance;
     },
     nftSupply() {
       return this.$store.state.totalCryptozSupply;
     },
     fromNftSupply() {
-      return this.prevNftSupply || this.nftSupply
+      return this.prevNftSupply || this.nftSupply;
     },
     toNftSupply() {
-      return this.newNftSupply || this.nftSupply
+      return this.newNftSupply || this.nftSupply;
     },
     nftTypes() {
       return this.$store.state.totalCryptozTypes;
     },
     fromNftTypes() {
-      return this.prevNftTypes || this.nftTypes
+      return this.prevNftTypes || this.nftTypes;
     },
     toNftTypes() {
-      return this.newNftTypes || this.nftTypes
+      return this.newNftTypes || this.nftTypes;
     },
     coinbase() {
       return this.$store.state.web3.coinbase;
@@ -124,27 +126,27 @@ export default {
   },
   watch: {
     zoomBalance(newVal, oldVal) {
-      this.newZoomBalance = newVal
-      this.prevZoomBalance = oldVal
+      this.newZoomBalance = newVal;
+      this.prevZoomBalance = oldVal;
       if (oldVal > 0) {
-        this.pulsateText(this.$refs.zoomBal)
+        this.pulsateText(this.$refs.zoomBal);
       }
     },
     nftSupply(newVal, oldVal) {
-      this.newNftSupply = newVal
-      this.prevNftSupply = oldVal
+      this.newNftSupply = newVal;
+      this.prevNftSupply = oldVal;
       if (oldVal > 0) {
-        this.pulsateText(this.$refs.nftSupply)
+        this.pulsateText(this.$refs.nftSupply);
       }
     },
     nftTypes(newVal, oldVal) {
-      this.newNftTypes = newVal
-      this.prevNftTypes = oldVal
+      this.newNftTypes = newVal;
+      this.prevNftTypes = oldVal;
       if (oldVal > 0) {
-        this.pulsateText(this.$refs.nftTypes)
+        this.pulsateText(this.$refs.nftTypes);
       }
     },
-  }
+  },
 };
 </script>
 <style scoped>

@@ -4,9 +4,16 @@
       v-b-toggle.events-sidebar
       class="sidebar-button"
       variant="dark"
-      size="sm"
+      size="md"
+      @click="() => stop()"
     >
-      <b-icon-chevron-compact-right font-scale="2" variant="light" />
+      <lottie
+        class="lottie-container"
+        :options="defaultOptions"
+        :height="100"
+        :width="80"
+        v-on:animCreated="handleAnimation"
+      ></lottie>
     </b-button>
     <b-sidebar
       id="events-sidebar"
@@ -57,8 +64,11 @@ import TransactionModal from "./components/TransactionModal.vue";
 import dAppStates from "@/dAppStates";
 import { MessageBus } from "@/messageBus";
 import CzxpRewardEffect from "./components/layout/CzxpRewardEffect";
-import { BIconChevronCompactRight, BButton, BSidebar } from "bootstrap-vue";
+import { BButton, BSidebar } from "bootstrap-vue";
 import RealtimeEvents from "@/components/RealtimeEvents.vue";
+
+import Lottie from "vue-lottie";
+import animationData from "./assets/NotificationLottie.json";
 
 // import BurnerConnectProvider from "@burner-wallet/burner-connect-provider";
 // import WalletConnectProvider from "@walletconnect/web3-provider";
@@ -154,7 +164,7 @@ export default {
     AppFooter,
     TransactionModal,
     CzxpRewardEffect,
-    BIconChevronCompactRight,
+    Lottie,
     BButton,
     BSidebar,
     RealtimeEvents,
@@ -165,6 +175,11 @@ export default {
       wallet_balance: 0,
       network_name: "Detecting Ethereum network..Loading",
       eth_network_name: "",
+      defaultOptions: {
+        animationData: animationData,
+        loop: true,
+        autoplay: false,
+      },
     };
   },
   computed: {
@@ -180,11 +195,21 @@ export default {
     getChainId() {
       return this.$store.state.web3.chainId;
     },
+    events() {
+      return this.$store.state.events.events;
+    },
   },
   watch: {
     coinbase(val, oldVal) {
       if (val && oldVal && val !== oldVal) {
         showSuccessToast(this, "Successfully changed wallets.");
+      }
+    },
+    events(val, oldVal) {
+      if (val.length > oldVal.length) {
+        this.play();
+      } else {
+        this.stop();
       }
     },
   },
@@ -244,6 +269,15 @@ export default {
     ZoombiesContract.provider.removeAllListeners();
   },
   methods: {
+    handleAnimation: function (anim) {
+      this.anim = anim;
+    },
+    play: function () {
+      this.anim.play();
+    },
+    stop: function () {
+      this.anim.stop();
+    },
     configureMoonriver: async function () {
       const provider = await detectEthereumProvider({ mustBeMetaMask: true });
       if (provider) {
@@ -455,15 +489,18 @@ a {
 }
 
 .sidebar-button {
-  height: 100px;
-  width: 30px;
-  top: 50%;
+  height: 110px;
+  width: 40px;
+  top: 40%;
   position: fixed;
   background-color: darkgray;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
 
-  &:hover {
-    height: 110px;
-    width: 35px;
-  }
+.lottie-container {
+  position: absolute;
+  top: 0;
+  left: -22px;
 }
 </style>

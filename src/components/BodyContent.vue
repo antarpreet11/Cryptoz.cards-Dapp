@@ -38,10 +38,7 @@
                   </span><br/>
                   <span class="text-aqua h5">
                   ZOOM
-                  <b-img-lazy
-                    src="@/assets/zoomTokenCoin.svg"
-                    class="coin-logo"
-                  ></b-img-lazy>
+                  <img src="@/assets/zoomTokenCoin.svg" class="coin-logo" />
                   TOKENS IN ZWORLD
                   </span>
                 </b-col>

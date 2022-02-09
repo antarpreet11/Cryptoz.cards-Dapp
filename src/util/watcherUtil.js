@@ -84,7 +84,7 @@ const zoombiesEvents = [
     filter: {
       address: zoombiesContractAddress,
       topics: [
-        ethers.utils.id("LogSacrificeNFT(address,uint256,uint256,uint256)"),
+        ethers.utils.id("LogSacrificeNFT(address,uint256,uint16,uint256)"),
       ],
     },
     eventType: EVENT_TYPES.sacrificeNFT,
@@ -105,22 +105,22 @@ const zoombiesEvents = [
     },
     eventType: EVENT_TYPES.dailyReward,
   },
-  {
-    eventName: "Sponsor Reward Event",
-    filter: {
-      address: zoombiesContractAddress,
-      topics: [ethers.utils.id("LogSponsorReward(address,address,uint256)")],
-    },
-    eventType: EVENT_TYPES.sponsorReward,
-  },
-  {
-    eventName: "Card Type Loaded Event",
-    filter: {
-      address: zoombiesContractAddress,
-      topics: [ethers.utils.id("LogCardTypeLoaded(uint32,string,uint256)")],
-    },
-    eventType: EVENT_TYPES.cardTypeLoaded,
-  },
+  // {
+  //   eventName: "Sponsor Reward Event",
+  //   filter: {
+  //     address: zoombiesContractAddress,
+  //     topics: [ethers.utils.id("LogSponsorReward(address,address,uint256)")],
+  //   },
+  //   eventType: EVENT_TYPES.sponsorReward,
+  // },
+  // {
+  //   eventName: "Card Type Loaded Event",
+  //   filter: {
+  //     address: zoombiesContractAddress,
+  //     topics: [ethers.utils.id("LogCardTypeLoaded(uint32,string,uint256)")],
+  //   },
+  //   eventType: EVENT_TYPES.cardTypeLoaded,
+  // },
   {
     eventName: "Card Minted Event",
     filter: {
@@ -168,4 +168,38 @@ export const setupEventWatcher = (store) => {
       });
     });
   });
+};
+
+export const processDailyRewardEvent = (data) => {
+  const playerAddress = data[0];
+  const boosterBalance = ethers.BigNumber.from(data[1]).toNumber();
+
+  return {
+    address: playerAddress,
+    newBoosterBalance: boosterBalance,
+  };
+};
+
+export const processSacrificeNFTEvent = (data) => {
+  const address = data[0];
+  const tokenId = ethers.BigNumber.from(data[1]).toNumber();
+  const cardTypeId = data[2];
+  const zoomGained = ethers.BigNumber.from(data[3]).toNumber();
+
+  return {
+    address,
+    tokenId,
+    cardTypeId,
+    zoomGained,
+  };
+};
+
+export const processRewardBoosterEvent = (data) => {
+  const winner = data[0];
+  const boosterAwarded = ethers.BigNumber.from(data[1]).toNumber();
+
+  return {
+    winner,
+    boosterAwarded,
+  };
 };

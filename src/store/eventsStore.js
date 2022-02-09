@@ -15,7 +15,7 @@ const eventStore = {
       state.events = [];
     },
     [EVENT_MUTATIONS.ADD_EVENTS](state, payload) {
-      state.events = [...state.events, payload];
+      state.events = [payload, ...state.events];
     },
   },
   actions: {

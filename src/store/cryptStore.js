@@ -53,7 +53,9 @@ const filterByRarity = (includeRarity, cards) => {
   if (includeRarity.length === 0) {
     return cards;
   }
-  return cards.filter((card) => includeRarity.includes(card.rarityValue.toLowerCase()));
+  return cards.filter((card) =>
+    includeRarity.includes(card.rarityValue.toLowerCase())
+  );
 };
 
 // origin is either null (all), STORE, or BOOSTER
@@ -74,7 +76,7 @@ const filterByOrigin = (origin, cards) => {
 
 const filterCards = (filterBy, cards) => {
   let modifiedCards = [...cards];
-  Object.keys(filterBy).forEach(key => {
+  Object.keys(filterBy).forEach((key) => {
     switch (key) {
       case FILTER_TYPES.CARD_ORIGIN:
         modifiedCards = filterByOrigin(filterBy[key], modifiedCards);
@@ -87,7 +89,7 @@ const filterCards = (filterBy, cards) => {
     }
   });
 
-  return modifiedCards
+  return modifiedCards;
 };
 
 const getCryptCard = async (tokenId, instance) => {
@@ -217,7 +219,7 @@ const cryptStore = {
       }
     },
     [CRYPT_MUTATIONS.SET_SELECTED_CARDS](state, payload) {
-      state.selectedCryptCards = payload
+      state.selectedCryptCards = payload;
     },
   },
   actions: {
@@ -265,12 +267,12 @@ const cryptStore = {
         }
 
         let tokensOfOwner = [];
-        for(let l=0; l < balanceOfOwner; l++){
+        for (let l = 0; l < balanceOfOwner; l++) {
           const nftTokenId = await CryptozInstance.methods
-            .tokenOfOwnerByIndex(addressToLoad,l)
+            .tokenOfOwnerByIndex(addressToLoad, l)
             .call();
 
-            tokensOfOwner.push(nftTokenId);
+          tokensOfOwner.push(nftTokenId);
         }
 
         const cryptCards = await Promise.all(
@@ -296,7 +298,12 @@ const cryptStore = {
       try {
         const CryptozInstance = rootState.contractInstance.cryptoz;
 
-        const cardData = await getMintedCard(cardId, cardTypeId, edition, CryptozInstance);
+        const cardData = await getMintedCard(
+          cardId,
+          cardTypeId,
+          edition,
+          CryptozInstance
+        );
 
         commit(CRYPT_MUTATIONS.ADD_BOOSTER_CARD, cardData);
 
@@ -347,12 +354,12 @@ const cryptStore = {
       }
       if (!!pageStart) {
         return {
-          cards: _.uniqBy(cardsToReturn.slice(pageStart, endIndex), 'id'),
+          cards: _.uniqBy(cardsToReturn.slice(pageStart, endIndex), "id"),
           next: pageNext,
         };
       } else {
         return {
-          cards: _.uniqBy(cardsToReturn.slice(0, endIndex), 'id'),
+          cards: _.uniqBy(cardsToReturn.slice(0, endIndex), "id"),
           next: pageNext,
         };
       }

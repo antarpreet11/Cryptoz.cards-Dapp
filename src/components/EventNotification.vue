@@ -15,6 +15,20 @@
         />
       </p>
     </div>
+    <div v-else-if="eventType === getEventTypes.zoomBurn">
+      <p>
+        <router-link :to="computeWalletLink(zoomBurned.fromAddress)">
+          {{ createDottedAddress(zoomBurned.fromAddress) }}
+        </router-link>
+        <span style="color: #cc0000">burned</span>
+        {{ zoomBurned.zoomAmount }}
+        <img
+          class="zoom-token-icon"
+          alt="zoom coin"
+          src="@/assets/zoomTokenCoin.svg"
+        />
+      </p>
+    </div>
     <div v-else-if="eventType === getEventTypes.packOpened">
       <p>
         <router-link :to="packOpened.addressNFTLink">
@@ -36,7 +50,7 @@
         <span style="color: #6aa84f">minted</span> a new
         <b>
           {{ cardMintedData.zombieType }}
-          {{ cardMintedData.booster ? "Booster" : "" }}
+          {{ cardMintedData.booster ? "Booster" : "Shop" }}
         </b>
         NFT
         <span>
@@ -52,11 +66,59 @@
         <b>{{ cardMintedData.cardSet }}</b>
       </p>
     </div>
+    <div v-else-if="eventType === getEventTypes.dailyReward">
+      <p>
+        <router-link :to="computeWalletLink(dailyReward.address)">
+          {{ createDottedAddress(dailyReward.address) }}
+        </router-link>
+        claimed 2 FREE boosters,
+        {{ dailyReward.newBoosterBalance }} remaining.
+      </p>
+    </div>
+    <div v-else-if="eventType === getEventTypes.boosterReward">
+      <p>
+        <router-link :to="computeWalletLink(boosterCreditReward.winner)">
+          {{ createDottedAddress(boosterCreditReward.winner) }}
+        </router-link>
+        <span style="color: #6aa84f">WON</span>
+        {{ boosterCreditReward.boosterAwarded }} booster credits in a giveaway!
+      </p>
+      <a href="https://discord.gg/eDXvJKUZgQ" target="_blank">
+        Join Discord to learn more!
+      </a>
+    </div>
+    <div
+      v-else-if="eventType === getEventTypes.sacrificeNFT && sacrificedCardData"
+    >
+      <p>
+        <router-link :to="sacrificedCardData.addressNFTLink">
+          {{ createDottedAddress(sacrificedCardData.address) }}
+        </router-link>
+        <span style="color: #990000">sacrificed</span>
+        <b>
+          {{ sacrificedCardData.booster ? "Booster" : "Shop" }}
+          NFT
+        </b>
+        <span>
+          <router-link
+            :class="sacrificedCardData.rarityClass"
+            :to="sacrificedCardData.viewNFTLink"
+          >
+            {{ sacrificedCardData.name }}
+          </router-link>
+        </span>
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
-import { EVENT_TYPES } from "../util/watcherUtil";
+import {
+  EVENT_TYPES,
+  processDailyRewardEvent,
+  processRewardBoosterEvent,
+  processSacrificeNFTEvent,
+} from "../util/watcherUtil";
 import { ethers } from "ethers";
 import { getCardType } from "../util/cardUtil";
 
@@ -75,6 +137,18 @@ export default {
           return "Card Minted";
         case EVENT_TYPES.packOpened:
           return "Pack Opened";
+        case EVENT_TYPES.zoomBurn:
+          return "Zoom Burned";
+        case EVENT_TYPES.sponsorReward:
+          return "Sponsor Reward";
+        case EVENT_TYPES.dailyReward:
+          return "Daily Reward";
+        case EVENT_TYPES.boosterReward:
+          return "Booster Reward";
+        case EVENT_TYPES.sacrificeNFT:
+          return "NFT Sacrificed";
+        case EVENT_TYPES.cardTypeLoaded:
+          return "Card type loaded";
         default:
           return null;
       }
@@ -89,6 +163,16 @@ export default {
         toAddress,
       };
     },
+    zoomBurned: function () {
+      const data = this.eventData.args;
+      const fromAddress = data[0];
+      const zoomAmount = parseInt(ethers.utils.formatEther(data[2]));
+
+      return {
+        zoomAmount,
+        fromAddress,
+      };
+    },
     packOpened: function () {
       const data = this.eventData.args;
       const address = this.createDottedAddress(data[0]);
@@ -100,16 +184,30 @@ export default {
         rarity,
       };
     },
+    dailyReward: function () {
+      const data = this.eventData.args;
+      return processDailyRewardEvent(data);
+    },
+    boosterCreditReward: function () {
+      const data = this.eventData.args;
+
+      return processRewardBoosterEvent(data);
+    },
   },
   data() {
     return {
       isLoadingCardInfo: true,
       cardMintedData: null,
+      sacrificedCardData: null,
     };
   },
   async mounted() {
     if (this.eventType === EVENT_TYPES.cardMinted) {
       await this.computeCardMintedMessage();
+    }
+
+    if (this.eventType === EVENT_TYPES.sacrificeNFT) {
+      await this.computeSacrificedNFTMessage();
     }
   },
   methods: {
@@ -197,7 +295,6 @@ export default {
         return false;
       })[0].value;
 
-      console.log(cardInfo);
       const extractedInfo = {
         address,
         addressNFTLink: this.computeWalletLink(data[0]),
@@ -213,6 +310,61 @@ export default {
       this.cardMintedData = extractedInfo;
       this.isLoadingCardInfo = false;
     },
+    computeSacrificedNFTMessage: async function () {
+      const data = this.eventData.args;
+
+      const sacrificeData = processSacrificeNFTEvent(data);
+      const cardInStore = this.$store.getters.getCardByTypeId(
+        sacrificeData.cardTypeId
+      );
+
+      if (cardInStore) {
+        const rarity = cardInStore.attributes.filter((attribute) => {
+          if (attribute.trait_type === "rarity") return true;
+          return false;
+        })[0].value;
+        const rarityClass = this.computeRarityClass(rarity.toLowerCase());
+        const isBooster =
+          cardInStore.attributes.filter((attribute) => {
+            if (attribute.trait_type === "in_store") return true;
+            return false;
+          })[0].value === "Booster";
+
+        this.sacrificedCardData = {
+          address: sacrificeData.address,
+          addressNFTLink: this.computeWalletLink(sacrificeData.address),
+          booster: isBooster,
+          name: cardInfo.name,
+          rarityClass: rarityClass,
+          viewNFTLink: this.computeViewNFTLink(sacrificeData.tokenId),
+        };
+
+        return;
+      }
+
+      const cardInfo = await getCardType(sacrificeData.cardTypeId);
+      const rarity = cardInfo.attributes.filter((attribute) => {
+        if (attribute.trait_type === "rarity") return true;
+        return false;
+      })[0].value;
+      const rarityClass = this.computeRarityClass(rarity.toLowerCase());
+      const isBooster =
+        cardInfo.attributes.filter((attribute) => {
+          if (attribute.trait_type === "in_store") return true;
+          return false;
+        })[0].value === "Booster";
+
+      const extractedInfo = {
+        address: sacrificeData.address,
+        addressNFTLink: this.computeWalletLink(sacrificeData.address),
+        booster: isBooster,
+        name: cardInfo.name,
+        rarityClass: rarityClass,
+        viewNFTLink: this.computeViewNFTLink(sacrificeData.tokenId),
+      };
+
+      this.sacrificedCardData = extractedInfo;
+    },
   },
 };
 </script>
@@ -224,11 +376,11 @@ export default {
   margin: 8px 0px;
   min-height: 90px;
   border-radius: 8px;
-  background-color: lightgrey;
+  background-color: rgba(0, 0, 0, 0.25);
 
   h1 {
     font-size: 1rem;
-    color: black;
+    color: white;
     font-weight: bold;
   }
 
@@ -238,7 +390,7 @@ export default {
   }
 
   p {
-    color: black;
+    color: white;
   }
 
   .zoom-minted-text {

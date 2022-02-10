@@ -102,10 +102,8 @@ const ethChainParam = isLocal
         symbol: "DEV",
         decimals: 18,
       },
-      rpcUrls: ["https://moonbeam-alpha.api.onfinality.io/public"],
-      blockExplorerUrls: [
-        "https://moonbase-blockscout.testnet.moonbeam.network/",
-      ],
+      rpcUrls: ["https://rpc.api.moonbase.moonbeam.network"],
+      blockExplorerUrls: ["https://moonbase.moonscan.io/"],
     }
   : {
       chainId: "0x505", // Moonbase Alpha's chainId is 1287, which is 0x507 in hex
@@ -115,8 +113,8 @@ const ethChainParam = isLocal
         symbol: "MOVR",
         decimals: 18,
       },
-      rpcUrls: ["https://rpc.moonriver.moonbeam.network"],
-      blockExplorerUrls: ["https://blockscout.moonriver.moonbeam.network/"],
+      rpcUrls: ["https://rpc.api.moonriver.moonbeam.network"],
+      blockExplorerUrls: ["https://moonriver.moonscan.io/"],
     };
 
 // const providerOptions = {

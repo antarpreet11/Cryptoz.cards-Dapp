@@ -9,18 +9,20 @@ const isLocal =
 
 const networkId = isLocal ? 1287 : 1285;
 
-const zoomTokenContractAddress = "0x8e21404bAd3A1d2327cc6D2B2118f47911a1f316";
-const zoombiesContractAddress =
-  zoombiesContractJson.networks[networkId].address;
+const zoomTokenContractAddress = zoomTokenContractJson.networks[networkId].address;
+const zoombiesContractAddress = zoombiesContractJson.networks[networkId].address;
+
 
 const providerURL = isLocal
   ? "https://moonbeam-alpha.api.onfinality.io/public"
   : "https://moonriver.api.onfinality.io/public";
+
 // Define Provider
 const rpcProvider = new ethers.providers.StaticJsonRpcProvider(providerURL, {
   chainId: networkId,
   name: isLocal ? "moonbase-alphanet" : "Moonriver",
 });
+
 
 export const ZoomContract = new ethers.Contract(
   zoomTokenContractAddress,

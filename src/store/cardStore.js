@@ -4,24 +4,86 @@ import { dynamicSort, getRarity, soldOutSort } from "../helpers";
 const typeIdsOnChain = [];
 
 //push 2021
-typeIdsOnChain.push(1,6,8,11,14,32,36,40,44,47,52,55,59,61,65,71,74,76,77,84,87,89,112,113,114,115);
-typeIdsOnChain.push(146,147,148,149,150,151,152,153,154,155);
-typeIdsOnChain.push(202,203,204,205,206);
-typeIdsOnChain.push(217,218,219,220,221,222,223,224);
-typeIdsOnChain.push(259,263,269,270,271,272,273);
-typeIdsOnChain.push(285,287,288,289,290,291,292,293,294,295);
-typeIdsOnChain.push(307,308,309,310,311,312,313,314,315,316,317,318,319,320,321,322,323,324);
-typeIdsOnChain.push(330,332,333,334,335,348,349,350,351,352,353);
-typeIdsOnChain.push(366,367,368,369,370,371,372,373,374,375,376,377,378,379,380,381);
-typeIdsOnChain.push(410,412,413,415,418,419,421,422,423,424,425,428);
-typeIdsOnChain.push(429,430,431,432,433,434,435,436,437,438);
-typeIdsOnChain.push(439,440,441,442,444,445);
-typeIdsOnChain.push(450,451,452,453,454,455,459,461,462,463);
-typeIdsOnChain.push(473,475,476,477,483,484,489,497);
-typeIdsOnChain.push(498,499,504,505,508,509,510,515,516,521,522,523);
-typeIdsOnChain.push(525,526,527,528,530);
-typeIdsOnChain.push(545,546,547,548,549,550);
-
+typeIdsOnChain.push(
+  1,
+  6,
+  8,
+  11,
+  14,
+  32,
+  36,
+  40,
+  44,
+  47,
+  52,
+  55,
+  59,
+  61,
+  65,
+  71,
+  74,
+  76,
+  77,
+  84,
+  87,
+  89,
+  112,
+  113,
+  114,
+  115
+);
+typeIdsOnChain.push(146, 147, 148, 149, 150, 151, 152, 153, 154, 155);
+typeIdsOnChain.push(202, 203, 204, 205, 206);
+typeIdsOnChain.push(217, 218, 219, 220, 221, 222, 223, 224);
+typeIdsOnChain.push(259, 263, 269, 270, 271, 272, 273);
+typeIdsOnChain.push(285, 287, 288, 289, 290, 291, 292, 293, 294, 295);
+typeIdsOnChain.push(
+  307,
+  308,
+  309,
+  310,
+  311,
+  312,
+  313,
+  314,
+  315,
+  316,
+  317,
+  318,
+  319,
+  320,
+  321,
+  322,
+  323,
+  324
+);
+typeIdsOnChain.push(330, 332, 333, 334, 335, 348, 349, 350, 351, 352, 353);
+typeIdsOnChain.push(
+  366,
+  367,
+  368,
+  369,
+  370,
+  371,
+  372,
+  373,
+  374,
+  375,
+  376,
+  377,
+  378,
+  379,
+  380,
+  381
+);
+typeIdsOnChain.push(410, 412, 413, 415, 418, 419, 421, 422, 423, 424, 425, 428);
+typeIdsOnChain.push(429, 430, 431, 432, 433, 434, 435, 436, 437, 438);
+typeIdsOnChain.push(439, 440, 441, 442, 444, 445);
+typeIdsOnChain.push(450, 451, 452, 453, 454, 455, 459, 461, 462, 463);
+typeIdsOnChain.push(473, 475, 476, 477, 483, 484, 489, 497);
+typeIdsOnChain.push(498, 499, 504, 505, 508, 509, 510, 515, 516, 521, 522, 523);
+typeIdsOnChain.push(525, 526, 527, 528, 530);
+typeIdsOnChain.push(545, 546, 547, 548, 549, 550);
 
 const DEFAULT_CARD_STATE = {
   allShopCards: [],
@@ -74,9 +136,7 @@ const getCard = async (cardId, CryptozInstance) => {
     cardObj[attribute.trait_type] = attribute.value;
   }
 
-  const edition = await CryptozInstance.methods
-    .cardTypeToEdition(cardObj.id)
-    .call();
+  const edition = await CryptozInstance.cardTypeToEdition(cardObj.id);
 
   cardObj.edition_current = parseInt(edition);
 
@@ -87,15 +147,13 @@ const getCard = async (cardId, CryptozInstance) => {
     cardObj.soldOut = 0;
   }
 
-  const t = await CryptozInstance.methods.storeReleaseTime(cardObj.id).call();
+  const t = await CryptozInstance.storeReleaseTime(cardObj.id);
   cardObj.release_time = t;
   return cardObj;
 };
 
-const addIsOwnedProp = async (card, CryptozInstance, coinbase) => {
-  const isOwned = await CryptozInstance.methods
-    .cardTypesOwned(coinbase, card.id)
-    .call();
+const addIsOwnedProp = async (card, CryptozInstance, walletAddress) => {
+  const isOwned = await CryptozInstance.cardTypesOwned(walletAddress, card.id);
   card.isOwned = isOwned;
 
   return card;
@@ -216,7 +274,8 @@ const cardStore = {
   actions: {
     async setCurrentEdition({ commit, rootState }, payload) {
       try {
-        const CryptozInstance = rootState.contractInstance.cryptoz;
+        const CryptozInstance =
+          rootState.blockChain.contracts.readOnlyZoombiesContract;
 
         const { cardId, edition, isSorted } = payload;
         const parsedId = parseInt(cardId);
@@ -232,7 +291,9 @@ const cardStore = {
     },
     async fetchStoreCards({ commit, rootState }) {
       try {
-        const CryptozInstance = rootState.contractInstance.cryptoz;
+        const CryptozInstance =
+          rootState.blockChain.contracts.readOnlyZoombiesContract;
+
         commit(CARD_MUTATIONS.LOADING_SHOP_CARDS);
 
         const results = await Promise.all(

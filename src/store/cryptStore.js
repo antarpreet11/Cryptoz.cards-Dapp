@@ -93,7 +93,7 @@ const filterCards = (filterBy, cards) => {
 };
 
 const getCryptCard = async (tokenId, instance) => {
-  const ownedCard = await instance.methods.nfts(tokenId).call();
+  const ownedCard = await instance.nfts(tokenId);
   const cardData = await getCardType(parseInt(ownedCard[0]));
 
   cardData.id = tokenId;
@@ -126,7 +126,7 @@ const getCryptCard = async (tokenId, instance) => {
   return newAttr;
 };
 
-const getMintedCard = async (tokenId, cardTypeId, edition, instance) => {
+const getMintedCard = async (tokenId, cardTypeId, edition) => {
   const cardData = await getCardType(parseInt(cardTypeId));
 
   cardData.id = tokenId;
@@ -254,11 +254,10 @@ const cryptStore = {
       try {
         commit(CRYPT_MUTATIONS.LOADING_CRYPT_CARDS);
 
-        const CryptozInstance = rootState.contractInstance.cryptoz;
+        const CryptozInstance =
+          rootState.blockChain.contracts.readOnlyZoombiesContract;
 
-        const balanceOfOwner = await CryptozInstance.methods
-          .balanceOf(addressToLoad)
-          .call();
+        const balanceOfOwner = await CryptozInstance.balanceOf(addressToLoad);
 
         if (balanceOfOwner === 0) {
           console.log("Current address doesn't have any cards.");
@@ -268,9 +267,10 @@ const cryptStore = {
 
         let tokensOfOwner = [];
         for (let l = 0; l < balanceOfOwner; l++) {
-          const nftTokenId = await CryptozInstance.methods
-            .tokenOfOwnerByIndex(addressToLoad, l)
-            .call();
+          const nftTokenId = await CryptozInstance.tokenOfOwnerByIndex(
+            addressToLoad,
+            l
+          );
 
           tokensOfOwner.push(nftTokenId);
         }
@@ -296,7 +296,8 @@ const cryptStore = {
     async addBoosterCard({ commit, rootState }, payload) {
       const { cardId, cardTypeId, edition } = payload;
       try {
-        const CryptozInstance = rootState.contractInstance.cryptoz;
+        const CryptozInstance =
+          rootState.blockChain.contracts.readOnlyZoombiesContract;
 
         const cardData = await getMintedCard(
           cardId,

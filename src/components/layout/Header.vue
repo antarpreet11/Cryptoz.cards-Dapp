@@ -398,7 +398,6 @@
 
 <script>
 import { showSuccessToast, showErrorToast } from "../../util/showToast";
-import { isAddress } from "../../util/addressUtil";
 import moment from "moment";
 import dAppStates from "@/dAppStates";
 import {
@@ -412,6 +411,7 @@ import {
   BButton,
 } from "bootstrap-vue";
 import { mapGetters } from "vuex";
+import { ethers } from "ethers";
 
 const baseAddress = "0x0000000000000000000000000000000000000000";
 
@@ -498,7 +498,7 @@ export default {
         return false;
       }
 
-      return isAddress(this.sponsorAddress.toLowerCase());
+      return ethers.utils.isAddress(this.sponsorAddress.toLowerCase());
     },
     isSameSponsor() {
       return (

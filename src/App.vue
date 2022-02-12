@@ -76,8 +76,8 @@ import zoomTokenContractJSON from "./contracts/ZoomToken.json";
 
 import {
   setupEventWatcher,
-  ZoombiesContract,
-  ZoomContract,
+  WatcherZoombiesContract,
+  WatcherZoomContract,
 } from "./util/watcherUtil";
 
 import { mapGetters } from "vuex";
@@ -212,8 +212,8 @@ export default {
     }
   },
   unmounted() {
-    ZoomContract.provider.removeAllListeners();
-    ZoombiesContract.provider.removeAllListeners();
+    WatcherZoomContract.provider.removeAllListeners();
+    WatcherZoombiesContract.provider.removeAllListeners();
   },
   methods: {
     handleAnimation: function (anim) {

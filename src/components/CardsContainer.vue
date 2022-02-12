@@ -150,7 +150,9 @@
                     </button>
                   </div>
                   <b-spinner
-                    v-if="cardsBeingGifted[card.id] || cardsBeingSacrificed[card.id]"
+                    v-if="
+                      cardsBeingGifted[card.id] || cardsBeingSacrificed[card.id]
+                    "
                     label="Spinning"
                   />
                   <div class="float-right">
@@ -181,7 +183,7 @@
                     variant="danger"
                     :disabled="Object.keys(cardsBeingSacrificed).length > 0"
                   >
-                    ☠️ Sacrifice {{selectedCards.length}} Zoombies
+                    ☠️ Sacrifice {{ selectedCards.length }} Zoombies
                   </b-button>
                 </span>
               </div>
@@ -231,12 +233,27 @@
       <div>
         <strong>You will be sacrificing:</strong>
         <ul>
-          <li v-if="getSelectedCardCountByRarity('Diamond') > 0">{{ getSelectedCardCountByRarity('Diamond') }} Diamond Zoombie(s)</li>
-          <li v-if="getSelectedCardCountByRarity('Platinum') > 0">{{ getSelectedCardCountByRarity('Platinum') }} Platinum Zoombie(s)</li>
-          <li v-if="getSelectedCardCountByRarity('Epic') > 0" class="epic">{{ getSelectedCardCountByRarity('Epic') }} Epic Zoombie(s)</li>
-          <li v-if="getSelectedCardCountByRarity('Rare') > 0" class="rare">{{ getSelectedCardCountByRarity('Rare') }} Rare Zoombie(s)</li>
-          <li v-if="getSelectedCardCountByRarity('Uncommon') > 0" class="uncommon">{{ getSelectedCardCountByRarity('Uncommon') }} Uncommon Zoombie(s)</li>
-          <li v-if="getSelectedCardCountByRarity('Common') > 0" class="common">{{ getSelectedCardCountByRarity('Common') }} Common Zoombie(s)</li>
+          <li v-if="getSelectedCardCountByRarity('Diamond') > 0">
+            {{ getSelectedCardCountByRarity("Diamond") }} Diamond Zoombie(s)
+          </li>
+          <li v-if="getSelectedCardCountByRarity('Platinum') > 0">
+            {{ getSelectedCardCountByRarity("Platinum") }} Platinum Zoombie(s)
+          </li>
+          <li v-if="getSelectedCardCountByRarity('Epic') > 0" class="epic">
+            {{ getSelectedCardCountByRarity("Epic") }} Epic Zoombie(s)
+          </li>
+          <li v-if="getSelectedCardCountByRarity('Rare') > 0" class="rare">
+            {{ getSelectedCardCountByRarity("Rare") }} Rare Zoombie(s)
+          </li>
+          <li
+            v-if="getSelectedCardCountByRarity('Uncommon') > 0"
+            class="uncommon"
+          >
+            {{ getSelectedCardCountByRarity("Uncommon") }} Uncommon Zoombie(s)
+          </li>
+          <li v-if="getSelectedCardCountByRarity('Common') > 0" class="common">
+            {{ getSelectedCardCountByRarity("Common") }} Common Zoombie(s)
+          </li>
         </ul>
       </div>
       <template #modal-footer>
@@ -258,7 +275,7 @@
 
 <script>
 import Vue from "vue";
-import { isAddress } from "../util/addressUtil";
+import { ethers } from "ethers";
 import debounce from "lodash/debounce";
 import SortDropdown from "@/components/SortDropdown.vue";
 import OwnedCardContent from "@/components/OwnedCardContent";
@@ -278,7 +295,7 @@ import {
 import dAppStates from "@/dAppStates";
 import { MessageBus } from "@/messageBus";
 import { mapGetters } from "vuex";
-import { BIcon, BIconArrow90degDown } from 'bootstrap-vue';
+import { BIcon, BIconArrow90degDown } from "bootstrap-vue";
 
 export default {
   name: "CardsContainer",
@@ -330,16 +347,16 @@ export default {
         );
 
         if (this.isCardModified) {
-          this.modifiedPaginatedCryptCards = _.uniqBy([
-            ...this.modifiedPaginatedCryptCards,
-            ...newCards.cards,
-          ], 'id');
+          this.modifiedPaginatedCryptCards = _.uniqBy(
+            [...this.modifiedPaginatedCryptCards, ...newCards.cards],
+            "id"
+          );
           this.modifiedPageNext = newCards.next;
         } else {
-          this.paginatedCryptCards = _.uniqBy([
-            ...this.paginatedCryptCards,
-            ...newCards.cards,
-          ], 'id');
+          this.paginatedCryptCards = _.uniqBy(
+            [...this.paginatedCryptCards, ...newCards.cards],
+            "id"
+          );
           this.pageNext = newCards.next;
         }
       },
@@ -348,7 +365,7 @@ export default {
     );
   },
   mounted() {
-    this.$store.dispatch('crypt/setSelectedCards', [])
+    this.$store.dispatch("crypt/setSelectedCards", []);
     if (this.CryptozInstance && this.addressToLoad) {
       this.fetchCryptCards();
     }
@@ -359,16 +376,16 @@ export default {
     return {
       cardOriginData: {
         ALL: {
-          value: 'ALL',
-          label: 'All Cards',
+          value: "ALL",
+          label: "All Cards",
         },
         STORE: {
-          value: 'STORE',
-          label: 'Store Cards',
+          value: "STORE",
+          label: "Store Cards",
         },
         BOOSTER: {
-          value: 'BOOSTER',
-          label: 'Booster Cards',
+          value: "BOOSTER",
+          label: "Booster Cards",
         },
       },
       selected: [], // Must be an array reference!
@@ -403,6 +420,7 @@ export default {
       ownsCards: "crypt/getIfOwnsCards",
       isLoading: "crypt/isLoadingCrypt",
       isCryptLoaded: "crypt/isCryptLoaded",
+      getReadOnlyZoombiesContract: "blockChain/getReadOnlyZoombiesContract",
     }),
     displayCards() {
       return this.isCardModified
@@ -429,7 +447,7 @@ export default {
       return this.$store.state.contractInstance.cryptoz;
     },
     addressToSearchState() {
-      return isAddress(this.addressToSearch);
+      return ethers.utils.isAddress(this.addressToSearch);
     },
     tableFields() {
       if (this.isOthersCrypt) {
@@ -455,7 +473,9 @@ export default {
       }
     },
     tableButtonTooltip() {
-      return this.isTableView || this.isOthersCrypt ? '' : 'Use Table to Sacrifice multiple Zoombies at once'
+      return this.isTableView || this.isOthersCrypt
+        ? ""
+        : "Use Table to Sacrifice multiple Zoombies at once";
     },
     getMyCryptLink() {
       let url;
@@ -479,16 +499,16 @@ export default {
       return this.$store.state.crypt.selectedCryptCards;
     },
     cardOriginFilterLabel() {
-      const originFilter = this.filterBy[FILTER_TYPES.CARD_ORIGIN]
-      if (originFilter) return originFilter.label
-      return "Card Origin"
+      const originFilter = this.filterBy[FILTER_TYPES.CARD_ORIGIN];
+      if (originFilter) return originFilter.label;
+      return "Card Origin";
     },
   },
   watch: {
     cardsBeingSacrificed(val) {
-      console.log({cardsBeingSacrificed: val})
+      console.log({ cardsBeingSacrificed: val });
     },
-    CryptozInstance(newVal) {
+    getReadOnlyZoombiesContract(newVal) {
       if (newVal && this.addressToLoad && !this.isCryptLoaded) {
         this.fetchCryptCards();
       }
@@ -499,7 +519,7 @@ export default {
       }
     },
     addressToSearch: function (newVal, oldVal) {
-      const isSearchAddressValid = isAddress(newVal.toLowerCase());
+      const isSearchAddressValid = ethers.utils.isAddress(newVal.toLowerCase());
       if (isSearchAddressValid) {
         this.disableSearch = false;
       } else {
@@ -549,7 +569,8 @@ export default {
       return isCurrentRarityFilterActive ? "filter-button-active" : null;
     },
     getSelectedCardCountByRarity(rarity) {
-      return this.selectedCards.filter((card) => card.rarityValue === rarity).length
+      return this.selectedCards.filter((card) => card.rarityValue === rarity)
+        .length;
     },
     setOriginFilter: async function (criteria) {
       this.filterBy = {
@@ -577,10 +598,10 @@ export default {
         this.modifiedPageNext = 0;
       }
 
-      this.$store.dispatch('crypt/setSelectedCards', [])
+      this.$store.dispatch("crypt/setSelectedCards", []);
     },
     setRarityFilter: async function (criteria) {
-      this.$store.dispatch('crypt/setSelectedCards', [])
+      this.$store.dispatch("crypt/setSelectedCards", []);
       if (this.filterBy[FILTER_TYPES.CARD_RARITY].includes(criteria)) {
         // remove it from filter by
         this.filterBy[FILTER_TYPES.CARD_RARITY] = this.filterBy[
@@ -627,7 +648,7 @@ export default {
       this.modifiedPaginatedCryptCards = [];
     },
     toggleTableView: function () {
-      this.$store.dispatch("crypt/setSelectedCards", [])
+      this.$store.dispatch("crypt/setSelectedCards", []);
       const nextVal = !this.isTableView;
       this.isTableView = nextVal;
     },
@@ -726,19 +747,19 @@ export default {
     },
     sacrificeCards: async function (ids) {
       this.$store.dispatch("setIsTransactionPending", true);
-      
-      ids.forEach(id => {
+
+      ids.forEach((id) => {
         Vue.set(this.cardsBeingSacrificed, id, true);
-      })
+      });
       const sacrificeRes = await this.CryptozInstance.methods
         .sacrificeNFTs(ids)
         .send({ from: this.coinbase }, (err, txHash) => {
           this.$store.dispatch("setIsTransactionPending", false);
 
           if (err) {
-            ids.forEach(id => {
+            ids.forEach((id) => {
               Vue.delete(this.cardsBeingSacrificed, id);
-            })
+            });
           }
         })
         .catch((err) => {
@@ -747,10 +768,10 @@ export default {
             showErrorToast(this, "Failed to sacrifice card(s)");
           }
         });
-  
-      ids.forEach(id => {
+
+      ids.forEach((id) => {
         Vue.delete(this.cardsBeingSacrificed, id);
-      })
+      });
 
       if (sacrificeRes) {
         this.$store.dispatch("crypt/cardsSacrificed", { ids });
@@ -796,13 +817,13 @@ export default {
         showSuccessToast(this, "Card Gifted.");
       }
     },
-    confirmMassSacrifice: function() {
-      this.isSacrificing = true
-      this.$bvModal.hide('mass-sacrifice-modal')
-      this.sacrificeCards(this.selectedCards.map(card => card.id))
+    confirmMassSacrifice: function () {
+      this.isSacrificing = true;
+      this.$bvModal.hide("mass-sacrifice-modal");
+      this.sacrificeCards(this.selectedCards.map((card) => card.id));
     },
     sortByAttr: async function (param, isDescending) {
-      this.$store.dispatch('crypt/setSelectedCards', [])
+      this.$store.dispatch("crypt/setSelectedCards", []);
       if (!param) {
         this.sortParam = null;
       } else {
@@ -872,12 +893,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 #button-container {
   display: flex;
   margin-bottom: 2rem;
   flex-direction: column;
-   
+
   & button {
     white-space: nowrap !important;
   }
@@ -980,20 +1000,20 @@ export default {
 
 .btn-epic {
   color: #fff;
-  background-color: #B92EE4;
-  border-color: #B92EE4;
+  background-color: #b92ee4;
+  border-color: #b92ee4;
 }
 
 .btn-rare {
   color: #fff;
-  background-color: #D5005A;
-  border-color: #D5005A;
+  background-color: #d5005a;
+  border-color: #d5005a;
 }
 
 .btn-uncommon {
   color: #fff;
-  background-color: #03C1E8;
-  border-color: #03C1E8;
+  background-color: #03c1e8;
+  border-color: #03c1e8;
 }
 
 .btn-common {
@@ -1054,7 +1074,7 @@ export default {
 }
 
 .table {
-  background: rgba(255,255,255,0.8);
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 8px;
   padding: 4px 4px 0 4px;
 }
@@ -1088,15 +1108,14 @@ export default {
 }
 
 .uncommon {
-  color: #03C1E8;
+  color: #03c1e8;
 }
 
 .rare {
-  color: #D5005A;
+  color: #d5005a;
 }
 
 .epic {
-  color: #B92EE4;
+  color: #b92ee4;
 }
-
 </style>

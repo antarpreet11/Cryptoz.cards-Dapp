@@ -9,39 +9,42 @@ const isLocal =
 
 const networkId = isLocal ? 1287 : 1285;
 
-const zoomTokenContractAddress = zoomTokenContractJson.networks[networkId].address;
-const zoombiesContractAddress = zoombiesContractJson.networks[networkId].address;
+const zoomTokenContractAddress =
+  zoomTokenContractJson.networks[networkId].address;
+const zoombiesContractAddress =
+  zoombiesContractJson.networks[networkId].address;
 
-
-const providerURL = isLocal
-  ? "https://moonbeam-alpha.api.onfinality.io/public"
-  : "https://moonriver.api.onfinality.io/public";
+const devRPC = `wss://moonbeam-alpha.api.onfinality.io/ws?apikey=${process.env["VUE_APP_MOONBEAM_RPC_API_KEY"]}`;
+const prodRPC = `wss://moonriver.api.onfinality.io/ws?apikey=${process.env["VUE_APP_MOONBEAM_RPC_API_KEY"]}`;
 
 // Define Provider
-const rpcProvider = new ethers.providers.StaticJsonRpcProvider(providerURL, {
+const providerParam = {
   chainId: networkId,
   name: isLocal ? "moonbase-alphanet" : "Moonriver",
-});
+};
 
+const rpcProvider = new ethers.providers.WebSocketProvider(
+  isLocal ? devRPC : prodRPC,
+  providerParam
+);
 
-export const ZoomContract = new ethers.Contract(
+export const WatcherZoomContract = new ethers.Contract(
   zoomTokenContractAddress,
   zoomTokenContractJson.abi,
   rpcProvider
 );
 
-export const ZoomTokenInterface = new ethers.utils.Interface(
+const ZoomTokenInterface = new ethers.utils.Interface(
   zoomTokenContractJson.abi
 );
 
-export const ZoombiesContract = new ethers.Contract(
+export const WatcherZoombiesContract = new ethers.Contract(
   zoombiesContractAddress,
   zoombiesContractJson.abi,
   rpcProvider
 );
-export const ZoombiesInterface = new ethers.utils.Interface(
-  zoombiesContractJson.abi
-);
+
+const ZoombiesInterface = new ethers.utils.Interface(zoombiesContractJson.abi);
 
 export const EVENT_TYPES = {
   zoomBurn: "zoomBurn",
@@ -148,7 +151,7 @@ const zoombiesEvents = [
 export const setupEventWatcher = (store) => {
   zoomTokenEvents.forEach((event) => {
     console.log(`Watching ${event.eventName}`);
-    ZoomContract.provider.on(event.filter, (log) => {
+    WatcherZoomContract.provider.on(event.filter, (log) => {
       console.log(`Got ${event.eventName}`);
       // Dispatch to store to add event
       store.dispatch("events/addEvents", {
@@ -161,7 +164,7 @@ export const setupEventWatcher = (store) => {
 
   zoombiesEvents.forEach((event) => {
     console.log(`Watching ${event.eventName}`);
-    ZoombiesContract.provider.on(event.filter, (log) => {
+    WatcherZoombiesContract.provider.on(event.filter, (log) => {
       console.log(`Got ${event.eventName}`);
       // Dispatch to store to add event
       console.log(log.transactionHash);

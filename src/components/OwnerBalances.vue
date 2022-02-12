@@ -25,9 +25,6 @@ export default {
     isWalletConnected() {
       return this.$store.state.dAppState === dAppStates.WALLET_CONNECTED;
     },
-    ownerBalances() {
-      return this.$store.state.ownerBalances;
-    },
     boosters_owned() {
       return this.$store.state.boostersOwned.toLocaleString();
     },

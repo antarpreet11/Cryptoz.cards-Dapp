@@ -4,7 +4,8 @@ import state from "./state";
 import { showSuccessToast } from "../util/showToast";
 import cardStore from "./cardStore";
 import cryptStore from "./cryptStore";
-import eventStore from './eventsStore'
+import eventStore from "./eventsStore";
+import blockchainStore from "./blockChainStore";
 
 Vue.use(Vuex);
 
@@ -30,11 +31,11 @@ export const store = new Vuex.Store({
         czxpBalance,
         cryptozBalance,
         boosterPacksOwned,
-      } = payload
+      } = payload;
       state.web3 = { ...state.web3, coinbase, balance };
-      state.czxpBalance = czxpBalance
-      state.cardsOwned = cryptozBalance
-      state.boostersOwned = boosterPacksOwned
+      state.czxpBalance = czxpBalance;
+      state.cardsOwned = cryptozBalance;
+      state.boostersOwned = boosterPacksOwned;
     },
     web3isConnected(state, payload) {
       state.web3 = { ...state.web3, isConnected: payload };
@@ -161,6 +162,7 @@ export const store = new Vuex.Store({
   modules: {
     cards: cardStore,
     crypt: cryptStore,
-    events: eventStore
+    events: eventStore,
+    blockChain: blockchainStore
   },
 });

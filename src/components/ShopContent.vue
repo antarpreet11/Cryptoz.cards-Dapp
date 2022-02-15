@@ -339,7 +339,7 @@ export default {
     );
   },
   mounted() {
-    if (this.CryptozInstance) {
+    if (this.getReadOnlyZoombiesContract) {
       this.fetchStoreCards();
     }
     window.nowTimer = setInterval(this.setNow, 1000);
@@ -383,13 +383,13 @@ export default {
       }
     },
     ...mapGetters(["isLoadingShopCards", "isShopLoadingFinished"]),
+    ...mapGetters({
+      getReadOnlyZoombiesContract: "blockChain/getReadOnlyZoombiesContract",
+    }),
   },
   watch: {
     dAppState(newVal) {
-      if (
-        newVal === dAppStates.CONNECTED ||
-        newVal === dAppStates.WALLET_CONNECTED
-      ) {
+      if (newVal === dAppStates.WALLET_CONNECTED) {
         this.fetchStoreCards();
       }
     },

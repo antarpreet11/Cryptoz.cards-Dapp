@@ -54,7 +54,6 @@
 
 <script>
 import detectEthereumProvider from "@metamask/detect-provider";
-import axios from "axios";
 import debounce from "lodash/debounce";
 import watchEvents from "./util/watchEvents";
 import { showSuccessToast } from "./util/showToast";
@@ -70,28 +69,17 @@ import RealtimeEvents from "@/components/RealtimeEvents.vue";
 import Lottie from "vue-lottie";
 import animationData from "./assets/NotificationLottie.json";
 
-// import BurnerConnectProvider from "@burner-wallet/burner-connect-provider";
-// import WalletConnectProvider from "@walletconnect/web3-provider";
 const Web3 = require("web3");
-// const Torus = require("@toruslabs/torus-embed");
-// const Portis = require("@portis/web3");
-// const Fortmatic = require("fortmatic");
 import "./main.css";
-
-// import dev_cryptoz_artifacts from './dev/contracts/Cryptoz.json';
-// import dev_cryptoz_token_artifacts from './dev/contracts/CzxpToken.json';
 import zoombiesContractJSON from "./contracts/Zoombies.json";
 import zoomTokenContractJSON from "./contracts/ZoomToken.json";
 
-import {
-  setupEventWatcher,
-  ZoombiesContract,
-  ZoomContract,
-} from "./util/watcherUtil";
+import { mapGetters } from "vuex";
 
 const isLocal =
   process.env.NODE_ENV === "development" ||
   window.location.host !== "movr.zoombies.world";
+// const isLocal = false;
 
 const ethChainParam = isLocal
   ? {
@@ -117,44 +105,6 @@ const ethChainParam = isLocal
       blockExplorerUrls: ["https://moonriver.moonscan.io/"],
     };
 
-// const providerOptions = {
-// torus: {
-//   package: Torus,
-// },
-// walletconnect: {
-//   package: WalletConnectProvider,
-//   options: {
-//     // infuraId: "27e484dcd9e3efcfd25a83a78777cdf1",
-//     rpc: {
-//       56: 'https://bsc-dataseed.binance.org/',
-//       97: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
-//     },
-//   },
-// },
-// burnerconnect: {
-//   package: BurnerConnectProvider,
-//   options: {
-//     defaultWallets: [
-//       { origin: "https://denver-demo.burnerfactory.com/", name: "Denver Demo Wallet" },
-//     ],
-//   },
-// },
-// portis: {
-//   package: Portis,
-//   options: {
-//     id: "1f9427a6-ceef-4d45-a6df-79f081e909d9",
-//   },
-// },
-// fortmatic: {
-//   package: Fortmatic,
-//   options: {
-//     key: process.env.NODE_ENV === 'production' ? "pk_live_6D8AC68104516C09" : "pk_test_2ED863FB3FCEB2F3",
-//   },
-// }
-// }
-
-const contractBaseUrl = `https://movr.zoombies.world/services`;
-
 export default {
   name: "App",
   components: {
@@ -169,10 +119,6 @@ export default {
   },
   data() {
     return {
-      wallet: "",
-      wallet_balance: 0,
-      network_name: "Detecting Ethereum network..Loading",
-      eth_network_name: "",
       defaultOptions: {
         animationData: animationData,
         loop: true,
@@ -181,24 +127,16 @@ export default {
     };
   },
   computed: {
-    coinbase() {
-      return this.$store.state.web3.coinbase;
-    },
-    CryptozInstance() {
-      return this.$store.state.contractInstance.cryptoz;
-    },
-    CzxpInstance() {
-      return this.$store.state.contractInstance.czxp;
-    },
-    getChainId() {
-      return this.$store.state.web3.chainId;
-    },
     events() {
       return this.$store.state.events.events;
     },
+    ...mapGetters({
+      getWalletAddress: "blockChain/getWalletAddress",
+      getBalance: "blockChain/getBalance",
+    }),
   },
   watch: {
-    coinbase(val, oldVal) {
+    getWalletAddress(val, oldVal) {
       if (val && oldVal && val !== oldVal) {
         showSuccessToast(this, "Successfully changed wallets.");
       }
@@ -218,15 +156,21 @@ export default {
       // and we need provider to be set in child components
       const web3 = new Web3(window.ethereum);
       window.web3 = web3;
+      this.$store.dispatch("blockChain/initBlockchain", {
+        isLocal: isLocal,
+        noMetamaskCallback: () => {
+          this.$bvModal.show("no-web3-modal");
+        },
+      });
       this.initializeApp();
     }
 
-    // set this here to be able to debounce it..
-    // debounce prevents this from showing the "Balance Updated" twice
-    // when both Cryptoz and Czxp contracts emit an event
-    this.onBalanceUpdated = debounce(() => {
-      showSuccessToast(this, "Balance Updated!");
-    }, 1000);
+    // // set this here to be able to debounce it..
+    // // debounce prevents this from showing the "Balance Updated" twice
+    // // when both Cryptoz and Czxp contracts emit an event
+    // this.onBalanceUpdated = debounce(() => {
+    //   showSuccessToast(this, "Balance Updated!");
+    // }, 1000);
 
     MessageBus.$on("connect", () => {
       this.handleConnect();
@@ -258,13 +202,7 @@ export default {
 
     if (!provider) {
       this.$bvModal.show("no-web3-modal");
-    } else {
-      setupEventWatcher(this.$store);
     }
-  },
-  unmounted() {
-    ZoomContract.provider.removeAllListeners();
-    ZoombiesContract.provider.removeAllListeners();
   },
   methods: {
     handleAnimation: function (anim) {
@@ -312,22 +250,22 @@ export default {
         await this.$store.dispatch("updateOwnerBalances");
         this.$store.dispatch("setDAppState", dAppStates.WALLET_CONNECTED);
 
-        watchEvents(this.CzxpInstance, this.CryptozInstance, {
-          onCardMinted: this.onCardMinted,
-          onBalanceUpdated: this.onBalanceUpdated,
-          onSponsorEvent: (czxpReward, event) => {
-            MessageBus.$emit("czxpReward", czxpReward);
-            const affiliate = event.returnValues.affiliate.toLowerCase();
-            const shortendAffiliate = `${affiliate.substring(
-              0,
-              5
-            )}....${affiliate.substring(affiliate.length - 4)}`;
-            showSuccessToast(
-              this,
-              `${shortendAffiliate} just used your sponsor link and became an affiliate!`
-            );
-          },
-        });
+        // watchEvents(this.CzxpInstance, this.CryptozInstance, {
+        //   onCardMinted: this.onCardMinted,
+        //   onBalanceUpdated: this.onBalanceUpdated,
+        //   onSponsorEvent: (czxpReward, event) => {
+        //     MessageBus.$emit("czxpReward", czxpReward);
+        //     const affiliate = event.returnValues.affiliate.toLowerCase();
+        //     const shortendAffiliate = `${affiliate.substring(
+        //       0,
+        //       5
+        //     )}....${affiliate.substring(affiliate.length - 4)}`;
+        //     showSuccessToast(
+        //       this,
+        //       `${shortendAffiliate} just used your sponsor link and became an affiliate!`
+        //     );
+        //   },
+        // });
       }
     },
     loadContracts: async function (accounts, networkId) {

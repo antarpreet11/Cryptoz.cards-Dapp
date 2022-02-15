@@ -12,8 +12,6 @@ let state = {
   isTransactionPending: false,
 
   //Component states
-  ownerBalances: 0,
-  universeBalances: 0,
   zoomContribution: 0,
 
   // wallet balances

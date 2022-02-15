@@ -243,10 +243,12 @@
         <img src="@/assets/metamask-face.png" class="header-icon" />
       </div>
 
-      <span v-b-tooltip.hover.bottom :title="coinbase">
-        &nbsp;{{ coinbase.substr(0, 6) + "..." + coinbase.substr(38) }}
+      <span v-b-tooltip.hover.bottom :title="getWalletAddress">
+        &nbsp;{{
+          getWalletAddress.substr(0, 6) + "..." + getWalletAddress.substr(38)
+        }}
       </span>
-      <div id="wallet-balance" v-b-tooltip.hover.bottom :title="ethBalance">
+      <div id="wallet-balance" v-b-tooltip.hover.bottom :title="getBalance">
         <img
           v-if="onMainNet"
           src="https://zoombies.world/images/mr-icon.png"
@@ -254,7 +256,7 @@
         />
         <span
           >{{
-            onMainNet ? ethBalance.toFixed(4) : ethBalance.toFixed(3) + " DEV"
+            onMainNet ? getBalance.toFixed(4) : getBalance.toFixed(3) + " DEV"
           }}
         </span>
       </div>
@@ -302,14 +304,16 @@
 
         <span
           v-b-tooltip.hover="{ customClass: 'tooltip-1' }"
-          :title="coinbase"
+          :title="getWalletAddress"
         >
-          &nbsp;{{ coinbase.substr(0, 6) + "..." + coinbase.substr(38) }}
+          &nbsp;{{
+            getWalletAddress.substr(0, 6) + "..." + getWalletAddress.substr(38)
+          }}
         </span>
         <div
           id="wallet-balance"
           v-b-tooltip.hover="{ customClass: 'tooltip-2' }"
-          :title="ethBalance"
+          :title="getBalance"
         >
           <img
             v-if="onMainNet"
@@ -318,7 +322,7 @@
           />
           <span
             >{{
-              onMainNet ? ethBalance.toFixed(4) : ethBalance.toFixed(3) + " DEV"
+              onMainNet ? getBalance.toFixed(4) : getBalance.toFixed(3) + " DEV"
             }}
           </span>
         </div>
@@ -394,7 +398,6 @@
 
 <script>
 import { showSuccessToast, showErrorToast } from "../../util/showToast";
-import { isAddress } from "../../util/addressUtil";
 import moment from "moment";
 import dAppStates from "@/dAppStates";
 import {
@@ -407,6 +410,8 @@ import {
   BAlert,
   BButton,
 } from "bootstrap-vue";
+import { mapGetters } from "vuex";
+import { ethers } from "ethers";
 
 const baseAddress = "0x0000000000000000000000000000000000000000";
 
@@ -448,16 +453,6 @@ export default {
     isWalletConnected() {
       return this.$store.state.dAppState === dAppStates.WALLET_CONNECTED;
     },
-    ethBalance() {
-      const balance = this.$store.state.web3.balance;
-      if (balance !== null) {
-        return parseFloat(web3.utils.fromWei(balance.toString()));
-      }
-      return null;
-    },
-    coinbase() {
-      return this.$store.state.web3.coinbase;
-    },
     ZoomContribution() {
       return this.$store.state.zoomContribution;
     },
@@ -478,7 +473,7 @@ export default {
         url = "https://movr.zoombies.world";
       }
 
-      return `${url}?sponsor=${this.coinbase}`;
+      return `${url}?sponsor=${this.getWalletAddress}`;
     },
     sponsorTitle() {
       return this.mySponsor
@@ -489,22 +484,32 @@ export default {
       return `https://twitter.com/intent/tweet?text=Click%20my%20sponsor%20link%20to%20claim%20Your%20Free%20Platinum%20Zoombies%20NFT%20Now!%0D%0A%0D%0A&hashtags=moonriver,nft,ZWorldNFT,NFTCommunity,nftcollectors,nftart,cryptoart&url=${this.getSponsorRoute}%0D%0A%0D%0A&related=CryptozNFT&via=CryptozNFT`;
     },
     getTelegramLink() {
-      return `https://movr.zoombies.world/?sponsor=${this.coinbase}`;
+      return `https://movr.zoombies.world/?sponsor=${this.getWalletAddress}`;
     },
     isSponsorValid() {
       if (this.sponsorAddress === "") {
         return true;
       }
 
-      if (this.sponsorAddress.toLowerCase() === this.coinbase.toLowerCase()) {
+      if (
+        this.sponsorAddress.toLowerCase() ===
+        this.getWalletAddress.toLowerCase()
+      ) {
         return false;
       }
 
-      return isAddress(this.sponsorAddress.toLowerCase());
+      return ethers.utils.isAddress(this.sponsorAddress.toLowerCase());
     },
     isSameSponsor() {
-      return this.sponsorAddress.toLowerCase() === this.coinbase.toLowerCase();
+      return (
+        this.sponsorAddress.toLowerCase() ===
+        this.getWalletAddress.toLowerCase()
+      );
     },
+    ...mapGetters({
+      getWalletAddress: "blockChain/getWalletAddress",
+      getBalance: "blockChain/getBalance",
+    }),
   },
   data() {
     return {
@@ -527,7 +532,7 @@ export default {
   watch: {
     isWalletConnected(value) {
       if (value) {
-        this.checkSponsor(this.coinbase);
+        this.checkSponsor(this.getWalletAddress);
       }
     },
     currentEvent(newValue, oldValue) {
@@ -539,7 +544,7 @@ export default {
         this.getDailyBonusTime();
       }
     },
-    coinbase(value) {
+    getWalletAddress(value) {
       this.getDailyBonusTime();
       if (value) {
         this.checkSponsor(value);
@@ -596,7 +601,7 @@ export default {
       this.$store.dispatch("setIsTransactionPending", true);
       const result = await this.CryptozInstance.methods
         .linkMySponsor(this.sponsorAddress)
-        .send({ from: this.coinbase }, (err, transactionHash) => {
+        .send({ from: this.getWalletAddress }, (err, transactionHash) => {
           this.$store.dispatch("setIsTransactionPending", false);
         })
         .catch((err) => {
@@ -625,9 +630,9 @@ export default {
         });
     },
     getDailyBonusTime: async function () {
-      if (this.CryptozInstance && this.coinbase) {
+      if (this.CryptozInstance && this.getWalletAddress) {
         const res = await this.CryptozInstance.methods
-          .getTimeToDailyBonus(this.coinbase)
+          .getTimeToDailyBonus(this.getWalletAddress)
           .call();
 
         var timeOfNextBonusInMilli = parseInt(res) * 1000;
@@ -647,8 +652,8 @@ export default {
       this.$store.dispatch("setIsTransactionPending", true);
 
       const result = await this.CryptozInstance.methods
-        .getBonusBoosters(this.coinbase)
-        .send({ from: this.coinbase }, (err, transactionHash) => {
+        .getBonusBoosters(this.getWalletAddress)
+        .send({ from: this.getWalletAddress }, (err, transactionHash) => {
           this.pendingTransaction = transactionHash;
           if (err) {
             this.showSpinner = false;
@@ -673,7 +678,9 @@ export default {
     },
     getZoomContributionStatus: async function () {
       this.$store.state.zoomContribution = parseInt(
-        await this.CzxpInstance.methods.contributions(this.coinbase).call()
+        await this.CzxpInstance.methods
+          .contributions(this.getWalletAddress)
+          .call()
       );
     },
   },

@@ -1,12 +1,5 @@
 import Vue from "vue";
 import Router from "vue-router";
-// import BodyContent from '@/components/BodyContent.vue'
-// import ShopContent from '@/components/ShopContent.vue'
-// import CryptContent from '@/components/CryptContent.vue'
-// import MarketContent from '@/components/MarketContent.vue'
-// import HelpContent from '@/components/HelpContent.vue'
-// import TokenContent from '@/components/TokenContent.vue'
-// import OthersCryptContent from '@/components/OthersCryptContent.vue'
 
 const lazyLoadComponents = (component) => {
   return () => import(`@/components/${component}.vue`);

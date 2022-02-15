@@ -74,17 +74,12 @@ import "./main.css";
 import zoombiesContractJSON from "./contracts/Zoombies.json";
 import zoomTokenContractJSON from "./contracts/ZoomToken.json";
 
-import {
-  setupEventWatcher,
-  WatcherZoombiesContract,
-  WatcherZoomContract,
-} from "./util/watcherUtil";
-
 import { mapGetters } from "vuex";
 
 const isLocal =
   process.env.NODE_ENV === "development" ||
   window.location.host !== "movr.zoombies.world";
+// const isLocal = false;
 
 const ethChainParam = isLocal
   ? {
@@ -207,13 +202,7 @@ export default {
 
     if (!provider) {
       this.$bvModal.show("no-web3-modal");
-    } else {
-      setupEventWatcher(this.$store);
     }
-  },
-  unmounted() {
-    WatcherZoomContract.provider.removeAllListeners();
-    WatcherZoombiesContract.provider.removeAllListeners();
   },
   methods: {
     handleAnimation: function (anim) {

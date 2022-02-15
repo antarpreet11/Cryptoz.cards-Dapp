@@ -2,7 +2,9 @@ import { ethers } from "ethers";
 import detectEthereumProvider from "@metamask/detect-provider";
 import zoombiesContractJson from "../contracts/Zoombies.json";
 import zoomContractJson from "../contracts/ZoomToken.json";
-import dAppState from '../dAppStates'
+import dAppState from "../dAppStates";
+import { setupEventWatcher } from "../util/watcherUtil";
+import WebsocketProvider from "../util/WebsocketProvider";
 
 const DEFAULT_BLOCKCHAIN_STATE = {
   ethersCryptozContract: null,
@@ -50,11 +52,7 @@ const prodChainParam = {
 const isLocal =
   process.env.NODE_ENV === "development" ||
   window.location.host !== "movr.zoombies.world";
-
-const devRPC =
-  `wss://moonbeam-alpha.api.onfinality.io/ws?apikey=${process.env['VUE_APP_MOONBEAM_RPC_API_KEY']}`;
-const prodRPC =
-  `wss://moonriver.api.onfinality.io/ws?apikey=${process.env['VUE_APP_MOONBEAM_RPC_API_KEY']}`;
+// const isLocal = false;
 
 const setupMetamaskProvider = async () => {
   try {
@@ -95,20 +93,6 @@ const setupMetamaskProvider = async () => {
   }
 };
 
-const createWebsocketProvider = (isLocal, chainId) => {
-  const providerParam = {
-    chainId: chainId,
-    name: isLocal ? "moonbase-alphanet" : "Moonriver",
-  };
-
-  const rpcProvider = new ethers.providers.WebSocketProvider(
-    isLocal ? devRPC : prodRPC,
-    providerParam
-  );
-
-  return rpcProvider;
-};
-
 const createContracts = (chainId, rpcProvider, signer) => {
   const zoombiesContractAddress =
     zoombiesContractJson.networks[chainId].address;
@@ -145,11 +129,11 @@ const createContracts = (chainId, rpcProvider, signer) => {
   };
 };
 
-const subscribeToProviderEvents = (metamaskProvider, dispatch) => {
+const subscribeToMetamaskProviderEvents = (metamaskProvider, dispatch) => {
   // subscribe to connect and accounts changed event.
   metamaskProvider.on("connect", ({ chainId }) => {
     dispatch("setChainId", chainId);
-    dispatch('setDAppState', dAppState.CONNECTED, { root: true })
+    dispatch("setDAppState", dAppState.CONNECTED, { root: true });
   });
 
   metamaskProvider.on("chainChanged", (chainId) => {
@@ -160,10 +144,10 @@ const subscribeToProviderEvents = (metamaskProvider, dispatch) => {
     if (accounts.length == 0) {
       console.log("no account connected");
       dispatch("clearBlockchain");
-      dispatch('setDAppState', dAppState.NOT_CONNECTED, { root: true })
+      dispatch("setDAppState", dAppState.NOT_CONNECTED, { root: true });
     } else {
       dispatch("initBlockchain");
-      dispatch('setDAppState', dAppState.CONNECTED, { root: true })
+      dispatch("setDAppState", dAppState.CONNECTED, { root: true });
     }
   });
 };
@@ -212,29 +196,49 @@ const blockchainStore = {
       if (!metamaskProviderData) {
         payload.noMetamaskCallback();
       }
-
-      console.log(metamaskProviderData);
-
-      const rpcProvider = createWebsocketProvider(
-        isLocal,
-        metamaskProviderData.network.chainId
+      subscribeToMetamaskProviderEvents(
+        metamaskProviderData.provider,
+        dispatch
       );
+
+      const rpcProvider = new WebsocketProvider(isLocal, (provider) => {
+        /**
+         * After websocket reconnects:
+         * - Set new contracts
+         * - watch events with new provider
+         */
+
+        const contracts = createContracts(
+          metamaskProviderData.network.chainId,
+          provider,
+          metamaskProviderData.signer
+        );
+
+        dispatch("setContracts", contracts);
+        setupEventWatcher((eventPayload) => {
+          dispatch("events/addEvents", eventPayload, { root: true });
+        }, provider);
+      });
+
+      rpcProvider.init();
 
       const contracts = createContracts(
         metamaskProviderData.network.chainId,
-        rpcProvider,
+        rpcProvider.provider,
         metamaskProviderData.signer
       );
 
-      subscribeToProviderEvents(metamaskProviderData.provider, dispatch);
-
-      dispatch('setDAppState', dAppState.WALLET_CONNECTED, { root: true })
+      dispatch("setDAppState", dAppState.WALLET_CONNECTED, { root: true });
       commit(BLOCKCHAIN_MUTATIONS.SET_BLOCKCHAIN, {
         walletAddress: metamaskProviderData.address,
         walletBalance: ethers.utils.formatEther(metamaskProviderData.balance),
         chainId: metamaskProviderData.network.chainId,
         contracts: contracts,
       });
+
+      setupEventWatcher((eventPayload) => {
+        dispatch("events/addEvents", eventPayload, { root: true });
+      }, rpcProvider.provider);
     },
 
     setChainId({ commit }, payload) {
@@ -246,6 +250,12 @@ const blockchainStore = {
     clearBlockchain({ commit }) {
       commit(BLOCKCHAIN_MUTATIONS.CLEAR_BLOCKCHAIN);
     },
+
+    setContracts({ commit }, payload) {
+      commit(BLOCKCHAIN_MUTATIONS.SET_BLOCKCHAIN, {
+        contracts: payload,
+      });
+    },
   },
   getters: {
     getWalletAddress: (state) => {
@@ -254,10 +264,12 @@ const blockchainStore = {
     getBalance: (state) => {
       return parseFloat(state.walletBalance);
     },
-    getReadOnlyZoombiesContract: (state) => state.contracts.readOnlyZoombiesContract,
+    getReadOnlyZoombiesContract: (state) =>
+      state.contracts.readOnlyZoombiesContract,
     getReadOnlyZoomContract: (state) => state.contracts.readOnlyZoomContract,
-    getSignedZoombiesContract: (state) => state.contracts.signedZoombiesContract,
-    getSignedZoomContract: (state) => state.contracts.signedZoomContract
+    getSignedZoombiesContract: (state) =>
+      state.contracts.signedZoombiesContract,
+    getSignedZoomContract: (state) => state.contracts.signedZoomContract,
   },
 };
 

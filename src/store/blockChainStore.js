@@ -3,7 +3,7 @@ import detectEthereumProvider from "@metamask/detect-provider";
 import zoombiesContractJson from "../contracts/Zoombies.json";
 import zoomContractJson from "../contracts/ZoomToken.json";
 import dAppState from "../dAppStates";
-import { setupEventWatcher } from "../util/watcherUtil";
+import { EVENT_TYPES, setupEventWatcher } from "../util/watcherUtil";
 import WebsocketProvider from "../util/WebsocketProvider";
 
 const DEFAULT_BLOCKCHAIN_STATE = {
@@ -18,11 +18,15 @@ const DEFAULT_BLOCKCHAIN_STATE = {
     signedZoomContract: null,
     signedZoombiesContract: null,
   },
+  zoomBalance: 0,
+  nftOwned: 0,
+  boosterCreditOwned: 0,
 };
 
 export const BLOCKCHAIN_MUTATIONS = {
   SET_BLOCKCHAIN: "SET_BLOCKCHAIN",
   CLEAR_BLOCKCHAIN: "CLEAR_BLOCKCHAIN",
+  SET_WALLET_BALANCES: "SET_WALLET_BALANCES",
 };
 
 const devChainParam = {
@@ -181,6 +185,11 @@ const blockchainStore = {
     [BLOCKCHAIN_MUTATIONS.CLEAR_BLOCKCHAIN](state) {
       state = DEFAULT_BLOCKCHAIN_STATE;
     },
+    [BLOCKCHAIN_MUTATIONS.SET_WALLET_BALANCES](state, payload) {
+      state.zoomBalance = payload.zoomBalance;
+      state.nftOwned = payload.nftOwned;
+      state.boosterCreditOwned = payload.boosterCreditOwned;
+    },
   },
   actions: {
     /**
@@ -217,6 +226,9 @@ const blockchainStore = {
         dispatch("setContracts", contracts);
         setupEventWatcher((eventPayload) => {
           dispatch("events/addEvents", eventPayload, { root: true });
+          if (eventPayload.type === EVENT_TYPES.zoomMint) {
+            dispatch("updateWalletBalances");
+          }
         }, provider);
       });
 
@@ -238,7 +250,38 @@ const blockchainStore = {
 
       setupEventWatcher((eventPayload) => {
         dispatch("events/addEvents", eventPayload, { root: true });
+        if (eventPayload.type === EVENT_TYPES.zoomMint) {
+          dispatch("updateWalletBalances");
+        }
       }, rpcProvider.provider);
+
+      dispatch("updateWalletBalances");
+    },
+
+    async updateWalletBalances({ commit, state }) {
+      const { walletAddress, contracts } = state;
+
+      if (!walletAddress || !contracts) return;
+
+      const { readOnlyZoomContract, readOnlyZoombiesContract } = contracts;
+
+      const zoomBalancePromise = readOnlyZoomContract.balanceOf(walletAddress);
+      const nftOwnedPromise = readOnlyZoombiesContract.balanceOf(walletAddress);
+      const boosterCreditPromise = readOnlyZoombiesContract.boosterCreditsOwned(
+        walletAddress
+      );
+
+      const [zoomBalance, nftOwned, boosterCreditOwned] = await Promise.all([
+        zoomBalancePromise,
+        nftOwnedPromise,
+        boosterCreditPromise,
+      ]);
+
+      commit(BLOCKCHAIN_MUTATIONS.SET_WALLET_BALANCES, {
+        zoomBalance: ethers.utils.formatEther(zoomBalance),
+        nftOwned: nftOwned.toNumber(),
+        boosterCreditOwned: boosterCreditOwned.toNumber(),
+      });
     },
 
     setChainId({ commit }, payload) {
@@ -270,6 +313,10 @@ const blockchainStore = {
     getSignedZoombiesContract: (state) =>
       state.contracts.signedZoombiesContract,
     getSignedZoomContract: (state) => state.contracts.signedZoomContract,
+    getChainId: (state) => state.chainId,
+    getNftOwned: (state) => state.nftOwned,
+    getBoosterCreditOwned: (state) => state.boosterCreditOwned,
+    getZoomBalance: (state) => parseInt(state.zoomBalance),
   },
 };
 

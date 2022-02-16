@@ -46,9 +46,6 @@ export const store = new Vuex.Store({
     setLastEvent(state, payload) {
       state.lastChainEvent = payload;
     },
-    updateCZXPBalance(state, payload) {
-      state.czxpBalance = payload;
-    },
     updateCardsOwned(state, payload) {
       state.cardsOwned = payload;
     },
@@ -130,9 +127,6 @@ export const store = new Vuex.Store({
       commit("updateCZXPTotal", totalCzxp);
       commit("updateTypesTotal", parseInt(totalTypes));
       commit("updateCryptozTotal", parseInt(totalCryptoz));
-    },
-    updateCZXPBalance({ commit }, payload) {
-      commit("updateCZXPBalance", payload);
     },
     updateCardsOwned({ commit }, payload) {
       commit("updateCardsOwned", payload);

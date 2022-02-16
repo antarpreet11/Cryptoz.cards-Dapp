@@ -35,7 +35,7 @@
  lotties/75315-rocket.json
 */
 
-import { MessageBus } from "@/messageBus";
+import { mapGetters } from "vuex";
 
 export default {
   name: "CzxpRewardEffect",
@@ -58,25 +58,14 @@ export default {
     },
   },
   computed: {
-    czxp_balance() {
-      return this.$store.state.czxpBalance;
-    },
-    coinbase_czxp_balance() {
-      return {
-        coinbase: this.$store.state.web3.coinbase,
-        czxp_balance: this.$store.state.czxpBalance,
-      };
-    },
+    ...mapGetters({
+      getZoomBalance: "blockChain/getZoomBalance",
+    }),
   },
   watch: {
-    coinbase_czxp_balance(val, oldVal) {
-      if (
-        val.czxp_balance &&
-        oldVal.czxp_balance &&
-        val.czxp_balance !== oldVal.czxp_balance &&
-        val.coinbase === oldVal.coinbase
-      ) {
-        this.animate(val.czxp_balance - oldVal.czxp_balance);
+    getZoomBalance(val, oldVal) {
+      if (val && oldVal && val !== oldVal) {
+        this.animate(val - oldVal);
       }
     },
   },

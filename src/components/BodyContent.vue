@@ -4,7 +4,7 @@
       <b-container fluid class="text-center">
         <b-row>
           <b-col>
-            <div v-if="coinbase">
+            <div v-if="getWalletAddress">
               <b-col sm="12" md="12">
                 <b-button
                   v-b-modal.sponsor-modal
@@ -80,6 +80,7 @@
 
 <script>
 import { BButton, BContainer, BRow, BCol, BImgLazy } from "bootstrap-vue";
+import { mapGetters } from "vuex";
 export default {
   name: "BodyContent",
   components: {
@@ -112,9 +113,6 @@ export default {
         return false;
       }
     },
-    coinbase() {
-      return this.$store.state.web3.coinbase;
-    },
     CzxpInstance() {
       return this.$store.state.contractInstance.czxp;
     },
@@ -145,6 +143,10 @@ export default {
     myPurchaseTotalLabel() {
       return parseInt(this.myPurchaseTotal / 100000000000).toLocaleString();
     },
+    ...mapGetters({
+      getWalletAddress: "blockChain/getWalletAddress",
+      getSignedZoomContract: "blockChain/getSignedZoomContract",
+    }),
   },
   mounted() {
     //console.log('chain:',this.$store.state.web3.chainId);
@@ -220,28 +222,6 @@ export default {
         console.log("addCZXPtoMetaMask error:", error);
       }
     },
-    buyCzxp: async function () {
-      //console.log( new web3.utils.BN(this.totalCzxpToBuy).mul(new web3.utils.BN('1000000000000')).toString() );
-      let buyinWei = new web3.utils.BN(this.totalCzxpToBuy)
-        .mul(new web3.utils.BN("100000000000"))
-        .toString();
-
-      await this.CzxpInstance.methods
-        .buy()
-        .send({
-          from: this.coinbase,
-          value: buyinWei,
-        })
-        .then((res) => {
-          //console.log(res.status);
-          if (res.status) {
-            this.updateSale();
-          }
-        })
-        .catch((e) => {
-          console.error(e);
-        });
-    },
     updateSale: async function () {
       console.log("Update sale data..");
       //console.log(await this.CzxpInstance.methods.totalSupply().call());
@@ -255,7 +235,9 @@ export default {
       this.movrCost = 0;
       //console.log("contr.total:",await this.CzxpInstance.methods.contributions(this.coinbase).call());
       this.myPurchaseTotal = parseInt(
-        await this.CzxpInstance.methods.contributions(this.coinbase).call()
+        await this.CzxpInstance.methods
+          .contributions(this.getWalletAddress)
+          .call()
       );
 
       this.$store.state.zoomContribution = this.myPurchaseTotal;

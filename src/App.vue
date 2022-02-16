@@ -149,6 +149,16 @@ export default {
       }
     },
   },
+  beforeCreate() {
+    if (window.web3 && window.ethereum) {
+      this.$store.dispatch("blockChain/initBlockchain", {
+        isLocal: isLocal,
+        noMetamaskCallback: () => {
+          this.$bvModal.show("no-web3-modal");
+        },
+      });
+    }
+  },
   async created() {
     if (window.web3 && window.ethereum) {
       // this needs to be set in beforeCreate because vue lifecycle
@@ -195,14 +205,6 @@ export default {
 
       return t;
     })(document, "script", "twitter-wjs");
-
-    const provider = await detectEthereumProvider({
-      mustBeMetaMask: true,
-    });
-
-    if (!provider) {
-      this.$bvModal.show("no-web3-modal");
-    }
   },
   methods: {
     handleAnimation: function (anim) {

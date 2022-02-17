@@ -34,7 +34,7 @@
       </template>
       <template #cell(minted_from)="row">
         <div class="cell">
-          <b>{{ row.item.in_store === "Booster" ? "Booster" : "Shop" }}</b> 
+          <b>{{ row.item.in_store === "Booster" ? "Booster" : "Shop" }}</b>
         </div>
       </template>
       <template #cell(card_level)="row">
@@ -101,11 +101,15 @@ export default {
   props: {
     displayCards: {
       type: Array,
-      default: [],
+      default() {
+        return [];
+      },
     },
     tableFields: {
       type: Array,
-      default: [],
+      default() {
+        return [];
+      },
     },
     isOthersCrypt: {
       type: Boolean,

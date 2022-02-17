@@ -5,7 +5,11 @@
       <h1>NFT Wallet</h1>
       <h2 class="text-danger">
         Viewing <img src="@/assets/metamask-face.png" class="header-icon" />
-        <a class="text-danger moonbeam-link" :href="moonbeamURL" target="_blank">
+        <a
+          class="text-danger moonbeam-link"
+          :href="moonbeamURL"
+          target="_blank"
+        >
           {{ addressToLoad.substr(0, 6) + "..." + addressToLoad.substr(38) }}
           <b-icon-box-arrow-up-right class="icon"></b-icon-box-arrow-up-right>
         </a>
@@ -28,14 +32,13 @@
 <script>
 import CardsContainer from "@/components/CardsContainer.vue";
 import UniverseBalances from "./UniverseBalances.vue";
-import { BIcon, BIconBoxArrowUpRight } from 'bootstrap-vue';
+import { BIconBoxArrowUpRight } from "bootstrap-vue";
 
 export default {
   name: "OthersCryptContent",
   components: {
     CardsContainer,
     UniverseBalances,
-    BIcon,
     BIconBoxArrowUpRight,
   },
   data() {
@@ -44,12 +47,11 @@ export default {
     };
   },
   computed: {
-    coinbase() {
-      return this.$store.state.web3.coinbase;
-    },
     moonbeamURL() {
-      return this.addressToLoad ? `https://blockscout.moonriver.moonbeam.network/address/${this.addressToLoad}` : "";
-    }
+      return this.addressToLoad
+        ? `https://blockscout.moonriver.moonbeam.network/address/${this.addressToLoad}`
+        : "";
+    },
   },
   created() {
     this.addressToLoad = this.$route.params.address;
@@ -63,7 +65,6 @@ export default {
 </script>
 
 <style scoped>
-
 .description {
   margin-bottom: 16px;
 }

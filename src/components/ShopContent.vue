@@ -75,7 +75,7 @@
               v-b-tooltip.hover="'Earn +500 ZOOM per credit'"
               v-b-modal.buy-boosters-modal
               class="btn btn-danger"
-              :disabled="balance < 10000000100000000 || isBuyingBooster"
+              :disabled="getBalance < 0.02 || isBuyingBooster"
             >
               Buy <b-icon-lightning-fill /> Booster NFT Minting Credits @ 0.01
               <img src="@/assets/movr_logo.png" class="mr-icon" />
@@ -166,9 +166,9 @@
               v-else-if="!card.isOwned"
               id="buy-get-button-wrapper"
               :class="
-                (parseFloat(weiToEther(balance)) <= parseFloat(3 * card.cost) &&
-                  czxpBalance < parseInt(card.unlock_czxp)) ||
-                parseFloat(weiToEther(balance)) <= card.cost
+                (parseFloat(getBalance) <= parseFloat(3 * card.cost) &&
+                  getZoomBalance < parseInt(card.unlock_czxp)) ||
+                parseFloat(getBalance) <= card.cost
                   ? 'disabled-btn'
                   : ''
               "
@@ -183,32 +183,30 @@
                 <b-button
                   id="buy-button"
                   :disabled="
-                    (parseFloat(weiToEther(balance)) <=
-                      parseFloat(3 * card.cost) &&
-                      czxpBalance < parseInt(card.unlock_czxp)) ||
-                    parseFloat(weiToEther(balance)) <= card.cost
+                    (parseFloat(getBalance) <= parseFloat(3 * card.cost) &&
+                      getZoomBalance < parseInt(card.unlock_czxp)) ||
+                    parseFloat(getBalance) <= card.cost
                   "
                   variant="primary"
                   @click="buyCard(card)"
                 >
                   <b-icon-lock-fill
                     v-if="
-                      (parseFloat(weiToEther(balance)) <=
-                        parseFloat(3 * card.cost) &&
-                        czxpBalance < parseInt(card.unlock_czxp)) ||
-                      parseFloat(weiToEther(balance)) <= card.cost
+                      (parseFloat(getBalance) <= parseFloat(3 * card.cost) &&
+                        getZoomBalance < parseInt(card.unlock_czxp)) ||
+                      parseFloat(getBalance) <= card.cost
                     "
                   />
                   Mint NFT for
                   {{
-                    czxpBalance < card.unlock_czxp
+                    getZoomBalance < card.unlock_czxp
                       ? (card.cost * 3).toFixed(3)
                       : card.cost
                   }}
                   <img src="@/assets/movr_logo.png" class="mr-icon" />
                 </b-button>
                 <img
-                  v-if="czxpBalance < parseInt(card.unlock_czxp)"
+                  v-if="getZoomBalance < parseInt(card.unlock_czxp)"
                   src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Emojione_1F680.svg"
                   class="rocket-icon"
                 />
@@ -218,17 +216,17 @@
                 id="getBtnwrapper"
                 v-b-tooltip.hover="getBtnTooltipText(card.unlock_czxp)"
                 :class="{
-                  'disabled-btn': czxpBalance < parseInt(card.unlock_czxp),
+                  'disabled-btn': getZoomBalance < parseInt(card.unlock_czxp),
                 }"
               >
                 <button
                   id="get-button"
                   class="btn btn-primary"
-                  :disabled="czxpBalance < parseInt(card.unlock_czxp)"
+                  :disabled="getZoomBalance < parseInt(card.unlock_czxp)"
                   @click="getCardForFree(card)"
                 >
                   <b-icon-lock-fill
-                    v-if="czxpBalance < parseInt(card.unlock_czxp)"
+                    v-if="getZoomBalance < parseInt(card.unlock_czxp)"
                   />
                   Mint for FREE
                 </button>
@@ -264,6 +262,7 @@ import SortDropdown from "@/components/SortDropdown.vue";
 import dAppStates from "@/dAppStates";
 import { showErrorToast } from "../util/showToast";
 import { MessageBus } from "@/messageBus";
+import { ethers } from "ethers";
 
 export default {
   components: {
@@ -355,20 +354,8 @@ export default {
     web3() {
       return web3;
     },
-    CryptozInstance() {
-      return this.$store.state.contractInstance.cryptoz;
-    },
-    czxpBalance() {
-      return this.$store.state.czxpBalance;
-    },
-    balance() {
-      return this.$store.state.web3.balance;
-    },
     getNowTimeStamp() {
       return this.nowTimeStamp;
-    },
-    coinbase() {
-      return this.$store.state.web3.coinbase;
     },
     displayCards() {
       return this.isCardSorted
@@ -385,6 +372,10 @@ export default {
     ...mapGetters(["isLoadingShopCards", "isShopLoadingFinished"]),
     ...mapGetters({
       getReadOnlyZoombiesContract: "blockChain/getReadOnlyZoombiesContract",
+      getWalletAddress: "blockChain/getWalletAddress",
+      getBalance: "blockChain/getBalance",
+      getZoomBalance: "blockChain/getZoomBalance",
+      getSignedZoombiesContract: "blockChain/getSignedZoombiesContract",
     }),
   },
   watch: {
@@ -446,157 +437,154 @@ export default {
       return days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
     },
     getBtnTooltipText(unlock_czxp) {
-      if (this.czxpBalance < parseInt(unlock_czxp)) {
+      if (this.getZoomBalance < parseInt(unlock_czxp)) {
         return this.getBtnBlockedTooltipTextContent;
       } else {
         return this.getBtnTooltipTextContent;
       }
     },
     getCardForFree: async function (cardAttributes) {
-      this.showTransactionModal();
-      this.$store.dispatch("setCardAsBought", {
-        cardId: cardAttributes.type_id,
-        isSorted: this.isCardSorted,
-      });
-
-      let freeCost = 0;
-      if (this.czxpBalance < parseInt(cardAttributes.unlock_czxp)) {
-        let cardBNValue = new web3.utils.BN(cardAttributes.unlock_czxp);
-        cardBNValue.imul(new web3.utils.BN("10000000000000"));
-        freeCost = cardBNValue.toString();
-      }
-
-      const result = await this.CryptozInstance.methods
-        .getFreeCard(cardAttributes.type_id)
-        .send(
-          {
-            from: this.coinbase,
-            value: freeCost,
-          },
-          (err, txHash) => {
-            this.hideTransactionModal();
-          }
-        )
-        .catch((err) => {
-          this.$store.dispatch("setCardAsNotBought", {
-            cardId: cardAttributes.type_id,
-            isSorted: this.isCardSorted,
-          });
-
-          if (err.code !== 4001) {
-            console.log(err);
-            showErrorToast(this, "Failed to mint card");
-          }
-        });
-
-      if (result) {
-        this.$store.dispatch("setCurrentEdition", {
+      try {
+        this.showTransactionModal();
+        this.$store.dispatch("setCardAsBought", {
           cardId: cardAttributes.type_id,
-          edition: result.events.LogCardMinted.returnValues.editionNumber,
           isSorted: this.isCardSorted,
         });
+
+        let freeCost = 0;
+        if (this.getZoomBalance < parseInt(cardAttributes.unlock_czxp)) {
+          let cardBNValue = new web3.utils.BN(cardAttributes.unlock_czxp);
+          cardBNValue.imul(new web3.utils.BN("10000000000000"));
+          freeCost = cardBNValue.toString();
+        }
+
+        const result = await this.getSignedZoombiesContract.getFreeCard(
+          cardAttributes.type_id,
+          {
+            value: freeCost,
+          }
+        );
+        this.hideTransactionModal();
+        await result.wait();
+
+        if (result) {
+          this.$store.dispatch("setCurrentEdition", {
+            cardId: cardAttributes.type_id,
+            edition: (cardAttributes.edition_current += 1),
+            isSorted: this.isCardSorted,
+          });
+        }
+      } catch (err) {
+        this.$store.dispatch("setCardAsNotBought", {
+          cardId: cardAttributes.type_id,
+          isSorted: this.isCardSorted,
+        });
+
+        if (err.code !== 4001) {
+          console.log(err);
+          showErrorToast(this, "Failed to mint card");
+        }
       }
     },
     buyCard: async function (cardAttributes) {
-      this.$store.dispatch("setCardAsBought", {
-        cardId: cardAttributes.id,
-        isSorted: this.isCardSorted,
-      });
+      try {
+        this.$store.dispatch("setCardAsBought", {
+          cardId: cardAttributes.id,
+          isSorted: this.isCardSorted,
+        });
 
-      this.showTransactionModal();
+        this.showTransactionModal();
+        let cardBNValue = new web3.utils.BN(
+          web3.utils.toWei(cardAttributes.cost)
+        ).toString();
 
-      let cardBNValue = new web3.utils.BN(
-        web3.utils.toWei(cardAttributes.cost)
-      ).toString();
-      //HAck for cemetary wolf
-      if (cardAttributes.type_id == 147) {
-        cardBNValue = "8999999999999999";
-      }
-
-      if (cardAttributes.type_id == 149 || cardAttributes.type_id == 151) {
-        cardBNValue = "70000000000000008";
-      }
-
-      if (this.czxpBalance < cardAttributes.unlock_czxp) {
-        cardBNValue = web3.utils.toWei((cardAttributes.cost * 3).toFixed(5));
-        //console.log(cardBNValue.toString());
+        //HAck for cemetary wolf
         if (cardAttributes.type_id == 147) {
-          //HAck for cemetary wolf
-          cardBNValue = "26999999999999997";
+          cardBNValue = "8999999999999999";
         }
 
         if (cardAttributes.type_id == 149 || cardAttributes.type_id == 151) {
-          cardBNValue = "210000000000000024";
+          cardBNValue = "70000000000000008";
         }
-      }
 
-      //console.log(cardBNValue.toString());
-
-      const result = await this.CryptozInstance.methods
-        .buyCard(cardAttributes.type_id)
-        .send(
-          {
-            from: this.coinbase,
-            value: cardBNValue.toString(),
-          },
-          (err, transactionHash) => {
-            this.hideTransactionModal();
+        if (this.getZoomBalance < cardAttributes.unlock_czxp) {
+          cardBNValue = web3.utils.toWei((cardAttributes.cost * 3).toFixed(5));
+          if (cardAttributes.type_id == 147) {
+            cardBNValue = "26999999999999997";
           }
-        )
-        .catch((err) => {
-          this.$store.dispatch("setCardAsNotBought", {
+
+          if (cardAttributes.type_id == 149 || cardAttributes.type_id == 151) {
+            cardBNValue = "210000000000000024";
+          }
+        }
+
+        const result = await this.getSignedZoombiesContract.buyCard(
+          cardAttributes.type_id,
+          {
+            value: cardBNValue.toString(),
+          }
+        );
+
+        this.hideTransactionModal();
+
+        await result.wait();
+
+        if (result) {
+          this.$store.dispatch("setCurrentEdition", {
             cardId: cardAttributes.id,
+            edition: (cardAttributes.edition_current += 1),
             isSorted: this.isCardSorted,
           });
-          if (err.code !== 4001) {
-            console.log(err);
-            showErrorToast(this, "Failed to mint card");
-          }
-        });
-
-      if (result) {
-        this.$store.dispatch("setCurrentEdition", {
+        }
+      } catch (err) {
+        this.$store.dispatch("setCardAsNotBought", {
           cardId: cardAttributes.id,
-          edition: result.events.LogCardMinted.returnValues.editionNumber,
           isSorted: this.isCardSorted,
         });
+        if (err.code !== 4001) {
+          console.log(err);
+          showErrorToast(this, "Failed to mint card");
+        }
       }
     },
-    buyBoosters: function () {
-      this.$bvModal.hide("buy-boosters-modal");
-      this.isBuyingBooster = true;
+    buyBoosters: async function () {
+      try {
+        this.$bvModal.hide("buy-boosters-modal");
+        this.isBuyingBooster = true;
 
-      this.showTransactionModal();
+        this.showTransactionModal();
 
-      var totalBoostersCost =
-        10000000000000000 * parseInt(this.totalCreditsToBuy);
-      this.CryptozInstance.methods
-        .buyBoosterCredits(parseInt(this.totalCreditsToBuy))
-        .send(
-          { from: this.coinbase, value: totalBoostersCost },
-          (err, txHash) => {
-            this.hideTransactionModal();
+        var totalBoostersCost = ethers.utils
+          .parseEther((0.01 * parseInt(this.totalCreditsToBuy)).toString())
+          .toString();
+
+        const result = await this.getSignedZoombiesContract.buyBoosterCredits(
+          parseInt(this.totalCreditsToBuy),
+          {
+            value: totalBoostersCost,
           }
-        )
-        .catch((err) => {
-          if (err.code !== 4001) {
-            showErrorToast(this, "Failed to mint card");
-          }
-        })
-        .finally(() => {
-          this.isBuyingBooster = false;
-        });
+        );
+        this.hideTransactionModal();
+        await result.wait();
+      } catch (error) {
+        console.error(error);
+        if (error.code !== 4001) {
+          showErrorToast(this, "Failed to mint card");
+        }
+      } finally {
+        this.isBuyingBooster = false;
+      }
     },
     buyBtnTooltipText(cost, unlock_czxp) {
       if (
-        (parseFloat(this.weiToEther(this.balance)) <= parseFloat(3 * cost) &&
-          parseInt(this.czxpBalance) < parseInt(unlock_czxp)) ||
-        parseFloat(this.weiToEther(this.balance)) <= parseFloat(3 * cost)
+        (parseFloat(this.getBalance) <= parseFloat(3 * cost) &&
+          parseInt(this.getZoomBalance) < parseInt(unlock_czxp)) ||
+        parseFloat(this.getBalance) <= parseFloat(3 * cost)
       ) {
         return this.buyBtnBlockedTooltipTextContent;
       } else if (
-        parseFloat(this.weiToEther(this.balance)) > parseFloat(3 * cost) &&
-        parseInt(this.czxpBalance) < parseInt(unlock_czxp)
+        parseFloat(this.getBalance) > parseFloat(3 * cost) &&
+        parseInt(this.getZoomBalance) < parseInt(unlock_czxp)
       ) {
         return this.buyBtnFastPassTooltipTextContent;
       } else {

@@ -30,7 +30,7 @@
         header="All NFTs minted by Rarity"
         header-tag="header"
       >
-        <b-tabs  content-class="centered-container">
+        <b-tabs content-class="centered-container">
           <b-tab title="All NFTs" lazy>
             <div class="doughnut-container" v-if="nftsMintedByRarity" lazy>
               <doughnut-chart :chart-data="nftsMintedByRarity" />
@@ -44,7 +44,10 @@
         header-tag="header"
       >
         <div class="line-container" v-if="nftsMintedOverTime.cumulative">
-          <line-chart :chart-data="nftsMintedOverTime.cumulative" :options="options" />
+          <line-chart
+            :chart-data="nftsMintedOverTime.cumulative"
+            :options="options"
+          />
         </div>
         <!--b-tabs>
           <b-tab title="NFTs minted total" lazy>
@@ -61,45 +64,38 @@
 </template>
 
 <script>
+const statsBaseUrl = "https://zoombies.world/services/endpoints";
 
-const statsBaseUrl = 'https://zoombies.world/services/endpoints'
+import { BCard, BTabs, BTab } from "bootstrap-vue";
 
-import {
-  BCard,
-  BCardText,
-  BTabs,
-  BTab
-} from "bootstrap-vue";
-
-import LineChart from './charts/LineChart'
-import DoughnutChart from './charts/DoughnutChart'
-import path from 'path'
-import axios from 'axios'
-import moment from 'moment'
+import LineChart from "./charts/LineChart";
+import DoughnutChart from "./charts/DoughnutChart";
+import axios from "axios";
+import moment from "moment";
+import { mapGetters } from "vuex";
 
 const rarityNames = {
-  1: 'Diamond',
-  2: 'Platinum',
-  3: 'Epic',
-  4: 'Rare',
-  5: 'Uncommon',
-  6: 'Common',
-}
+  1: "Diamond",
+  2: "Platinum",
+  3: "Epic",
+  4: "Rare",
+  5: "Uncommon",
+  6: "Common",
+};
 
 const colors = [
-  '#FFFFFF',
-  '#D3D3D3',
-  '#5745E5',
-  '#CA3C2C',
-  '#2BA4FA',
-  '#545161',
-]
+  "#FFFFFF",
+  "#D3D3D3",
+  "#5745E5",
+  "#CA3C2C",
+  "#2BA4FA",
+  "#545161",
+];
 
 export default {
   name: "DataIndicators",
   components: {
     BCard,
-    BCardText,
     BTabs,
     BTab,
     LineChart,
@@ -114,82 +110,92 @@ export default {
       },
       nftsMintedByRarity: null,
       nftsMintedOverTime: {
-        cumulative: null
+        cumulative: null,
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
       },
-    }
+    };
   },
   computed: {
-    CryptozInstance() {
-      return this.$store.state.contractInstance.cryptoz;
-    },
+    ...mapGetters({
+      getReadOnlyZoombiesContract: "blockChain/getReadOnlyZoombiesContract",
+    }),
   },
   mounted() {
-    this.getRarityDistributions()
-    this.getNFTsMintedOverTime()
-    if (this.CryptozInstance) {
-      this.getNFTsByRarity()
+    this.getRarityDistributions();
+    this.getNFTsMintedOverTime();
+    if (this.getReadOnlyZoombiesContract) {
+      this.getNFTsByRarity();
     }
   },
   methods: {
     async getNFTsByRarity() {
-      const nftByRarity = await this.CryptozInstance.methods.getTokensByRarity().call();
+      const nftByRarity = await this.getReadOnlyZoombiesContract.getTokensByRarity();
 
-      const labels = Object.values(rarityNames)
-      const rarities = Object.values(nftByRarity).map((val) => parseInt(val))
+      const labels = Object.values(rarityNames);
+      const rarities = Object.values(nftByRarity).map((val) => parseInt(val));
 
       this.nftsMintedByRarity = {
         labels,
-        datasets: [{
-          label: '',
-          data: rarities,
-          backgroundColor: colors,
-        }]
-      }
+        datasets: [
+          {
+            label: "",
+            data: rarities,
+            backgroundColor: colors,
+          },
+        ],
+      };
     },
     async getRarityDistributions() {
-      const rarityResult = await axios.get(`${statsBaseUrl}/type-rarity.json`)
-      const { data } = rarityResult
+      const rarityResult = await axios.get(`${statsBaseUrl}/type-rarity.json`);
+      const { data } = rarityResult;
 
-      const labels = Object.values(rarityNames)
+      const labels = Object.values(rarityNames);
 
       this.rarityDistribution = {
         all: {
           labels,
-          datasets: [{
-            label: '',
-            data: data.all.map(datum => parseInt(datum.count)),
-            backgroundColor: colors,
-          }]
+          datasets: [
+            {
+              label: "",
+              data: data.all.map((datum) => parseInt(datum.count)),
+              backgroundColor: colors,
+            },
+          ],
         },
         store: {
           labels: labels.slice(2),
-          datasets: [{
-            label: '',
-            data: data.store.map(datum => parseInt(datum.count)),
-            backgroundColor: colors.slice(2),
-          }]
+          datasets: [
+            {
+              label: "",
+              data: data.store.map((datum) => parseInt(datum.count)),
+              backgroundColor: colors.slice(2),
+            },
+          ],
         },
         boosters: {
           labels: labels.slice(2),
-          datasets: [{
-            label: '',
-            data: data.booster.map(datum => parseInt(datum.count)),
-            backgroundColor: colors.slice(2),
-          }]
+          datasets: [
+            {
+              label: "",
+              data: data.booster.map((datum) => parseInt(datum.count)),
+              backgroundColor: colors.slice(2),
+            },
+          ],
         },
-      }
+      };
     },
     async getNFTsMintedOverTime() {
-      const result = await axios.get(`${statsBaseUrl}/nfts-minted-over-time.json`)
-      const { data } = result
-      const labels = Object.keys(data).map(timestamp =>
-        moment.unix(parseInt(timestamp)).format('MMM D, YYYY')
-      )
-      const cumulativeData = Object.values(data)
+      const result = await axios.get(
+        `${statsBaseUrl}/nfts-minted-over-time.json`
+      );
+      const { data } = result;
+      const labels = Object.keys(data).map((timestamp) =>
+        moment.unix(parseInt(timestamp)).format("MMM D, YYYY")
+      );
+      const cumulativeData = Object.values(data);
       // const dailyData = cumulativeData.map((val, i) => {
       //   if (i === 0) {
       //     return 0
@@ -202,10 +208,10 @@ export default {
           labels,
           datasets: [
             {
-              label: 'Total NFTs Minted',
+              label: "Total NFTs Minted",
               data: cumulativeData,
-              borderColor: 'hsla(11, 100%, 50%, 1)',
-              backgroundColor: 'hsla(11, 100%, 50%, 0.4)',
+              borderColor: "hsla(11, 100%, 50%, 1)",
+              backgroundColor: "hsla(11, 100%, 50%, 0.4)",
             },
           ],
         },
@@ -220,10 +226,10 @@ export default {
         //     },
         //   ]
         // }
-      }
-    }
-  }
-}
+      };
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">

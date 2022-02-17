@@ -18,15 +18,22 @@ const DEFAULT_BLOCKCHAIN_STATE = {
     signedZoomContract: null,
     signedZoombiesContract: null,
   },
+  // wallet balances
   zoomBalance: 0,
   nftOwned: 0,
   boosterCreditOwned: 0,
+
+  // universe balances
+  totalZoomBalance: 0,
+  totalNftSupply: 0,
+  totalNftTypes: 0,
 };
 
 export const BLOCKCHAIN_MUTATIONS = {
   SET_BLOCKCHAIN: "SET_BLOCKCHAIN",
   CLEAR_BLOCKCHAIN: "CLEAR_BLOCKCHAIN",
   SET_WALLET_BALANCES: "SET_WALLET_BALANCES",
+  SET_UNIVERSE_BALANCES: "SET_UNIVERSE_BALANCES",
 };
 
 const devChainParam = {
@@ -190,6 +197,11 @@ const blockchainStore = {
       state.nftOwned = payload.nftOwned;
       state.boosterCreditOwned = payload.boosterCreditOwned;
     },
+    [BLOCKCHAIN_MUTATIONS.SET_UNIVERSE_BALANCES](state, payload) {
+      state.totalZoomBalance = payload.totalZoomBalance;
+      state.totalNftSupply = payload.totalNftSupply;
+      state.totalNftTypes = payload.totalNftTypes;
+    },
   },
   actions: {
     /**
@@ -226,8 +238,13 @@ const blockchainStore = {
         dispatch("setContracts", contracts);
         setupEventWatcher((eventPayload) => {
           dispatch("events/addEvents", eventPayload, { root: true });
-          if (eventPayload.type === EVENT_TYPES.zoomMint) {
+          if (
+            eventPayload.type === EVENT_TYPES.zoomMint ||
+            eventPayload.type === EVENT_TYPES.packOpened ||
+            eventPayload.type === EVENT_TYPES.cardMinted
+          ) {
             dispatch("updateWalletBalances");
+            dispatch("updateUniverseBalances");
           }
         }, provider);
       });
@@ -250,12 +267,19 @@ const blockchainStore = {
 
       setupEventWatcher((eventPayload) => {
         dispatch("events/addEvents", eventPayload, { root: true });
-        if (eventPayload.type === EVENT_TYPES.zoomMint) {
+
+        if (
+          eventPayload.type === EVENT_TYPES.zoomMint ||
+          eventPayload.type === EVENT_TYPES.packOpened ||
+          eventPayload.type === EVENT_TYPES.cardMinted
+        ) {
           dispatch("updateWalletBalances");
+          dispatch("updateUniverseBalances");
         }
       }, rpcProvider.provider);
 
       dispatch("updateWalletBalances");
+      dispatch("updateUniverseBalances");
     },
 
     async updateWalletBalances({ commit, state }) {
@@ -281,6 +305,28 @@ const blockchainStore = {
         zoomBalance: ethers.utils.formatEther(zoomBalance),
         nftOwned: nftOwned.toNumber(),
         boosterCreditOwned: boosterCreditOwned.toNumber(),
+      });
+    },
+
+    async updateUniverseBalances({ commit, state }) {
+      const { contracts } = state;
+      if (!contracts) return;
+      const { readOnlyZoomContract, readOnlyZoombiesContract } = contracts;
+
+      const totalCzxpPromise = readOnlyZoomContract.totalSupply();
+      const totalTypesPromise = readOnlyZoombiesContract.totalCardTypes();
+      const totalCryptozPromise = readOnlyZoombiesContract.totalSupply();
+
+      const [totalCzxp, totalTypes, totalCryptoz] = await Promise.all([
+        totalCzxpPromise,
+        totalTypesPromise,
+        totalCryptozPromise,
+      ]);
+
+      commit(BLOCKCHAIN_MUTATIONS.SET_UNIVERSE_BALANCES, {
+        totalZoomBalance: ethers.utils.formatEther(totalCzxp),
+        totalNftSupply: ethers.BigNumber.from(totalCryptoz).toNumber(),
+        totalNftTypes: totalTypes,
       });
     },
 
@@ -317,6 +363,9 @@ const blockchainStore = {
     getNftOwned: (state) => state.nftOwned,
     getBoosterCreditOwned: (state) => state.boosterCreditOwned,
     getZoomBalance: (state) => parseInt(state.zoomBalance),
+    getTotalZoomBalance: (state) => parseInt(state.totalZoomBalance),
+    getTotalNftSupply: (state) => parseInt(state.totalNftSupply),
+    getTotalNftTypes: (state) => parseInt(state.totalNftTypes),
   },
 };
 

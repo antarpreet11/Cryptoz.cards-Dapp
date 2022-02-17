@@ -19,8 +19,8 @@
                 <span class="zoombies-font h1">
                   <number
                     ref="nftSupply"
-                    :from="fromNftSupply"
-                    :to="toNftSupply"
+                    :from="oldTotalNft"
+                    :to="getTotalNftSupply"
                     :format="formatNumber"
                     :duration="3.5"
                   /> </span
@@ -32,8 +32,8 @@
                 <span class="zoombies-font h1">
                   <number
                     ref="zoomBal"
-                    :from="fromZoomBalance"
-                    :to="toZoomBalance"
+                    :from="oldTotalZoom"
+                    :to="getTotalZoomBalance"
                     :format="formatNumber"
                     :duration="3.5"
                   /> </span
@@ -98,58 +98,21 @@ export default {
       movrCost: 0,
       myPurchaseTotal: 0,
       onMainNet: false,
+      oldTotalZoom: 0,
+      oldTotalNft: 0,
     };
   },
   computed: {
-    buyCzxpBtnEnabled() {
-      if (
-        this.totalCzxpToBuy !== "" &&
-        this.totalCzxpToBuy >= 10000000 &&
-        this.totalCzxpToBuy <= 200000000 &&
-        this.myPurchaseTotal < 200000000000000000000
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    CzxpInstance() {
-      return this.$store.state.contractInstance.czxp;
-    },
-    ZoombiesInstance() {
-      return this.$store.state.contractInstance.cryptoz;
-    },
-    zoomBalance() {
-      return this.$store.state.totalCzxpSupply / 1000000000000000000;
-    },
-    fromZoomBalance() {
-      return this.prevZoomBalance || this.zoomBalance;
-    },
-    toZoomBalance() {
-      return this.newZoomBalance || this.zoomBalance;
-    },
-    nftSupply() {
-      return this.$store.state.totalCryptozSupply;
-    },
-    fromNftSupply() {
-      return this.prevNftSupply || this.nftSupply;
-    },
-    toNftSupply() {
-      return this.newNftSupply || this.nftSupply;
-    },
-    pendingPurchase() {
-      return this.movrCost + " MOVR =";
-    },
-    myPurchaseTotalLabel() {
-      return parseInt(this.myPurchaseTotal / 100000000000).toLocaleString();
-    },
     ...mapGetters({
       getWalletAddress: "blockChain/getWalletAddress",
       getSignedZoomContract: "blockChain/getSignedZoomContract",
+      getZoomBalance: "blockChain/getZoomBalance",
+      getTotalZoomBalance: "blockChain/getTotalZoomBalance",
+      getTotalNftSupply: "blockChain/getTotalNftSupply",
+      getTotalNftTypes: "blockChain/getTotalNftTypes",
     }),
   },
   mounted() {
-    //console.log('chain:',this.$store.state.web3.chainId);
     if (
       this.$store.state.web3.chainId == "1285" ||
       window.location.host == "movr.zoombies.world"
@@ -158,29 +121,17 @@ export default {
     } else {
       this.onMainNet = false;
     }
-
-    if (this.ZoombiesInstance) {
-      //this.updateSale();
-    }
   },
   watch: {
-    ZoombiesInstance(newVal) {
-      console.log({ newVal });
-      if (newVal) {
-        //this.updateSale();
-      }
-    },
-    zoomBalance(newVal, oldVal) {
-      this.newZoomBalance = newVal;
-      this.prevZoomBalance = oldVal;
-      if (oldVal > 0) {
+    getTotalZoomBalance(newVal, oldVal) {
+      if (newVal > 0) {
+        this.oldTotalZoom = oldVal;
         this.pulsateText(this.$refs.zoomBal);
       }
     },
-    nftSupply(newVal, oldVal) {
-      this.newNftSupply = newVal;
-      this.prevNftSupply = oldVal;
-      if (oldVal > 0) {
+    getTotalNftSupply(newVal, oldVal) {
+      if (newVal > 0) {
+        this.oldTotalNft = oldVal;
         this.pulsateText(this.$refs.nftSupply);
       }
     },
@@ -222,26 +173,6 @@ export default {
         console.log("addCZXPtoMetaMask error:", error);
       }
     },
-    updateSale: async function () {
-      console.log("Update sale data..");
-      //console.log(await this.CzxpInstance.methods.totalSupply().call());
-      this.zoomWalletsRemaining =
-        1000 - (await this.CzxpInstance.methods.totalContributors().call());
-      this.zoomSold = parseInt(
-        (await this.CzxpInstance.methods.totalZoomPurchased().call()) /
-          1000000000000000000
-      ).toLocaleString();
-      this.totalCzxpToBuy = "";
-      this.movrCost = 0;
-      //console.log("contr.total:",await this.CzxpInstance.methods.contributions(this.coinbase).call());
-      this.myPurchaseTotal = parseInt(
-        await this.CzxpInstance.methods
-          .contributions(this.getWalletAddress)
-          .call()
-      );
-
-      this.$store.state.zoomContribution = this.myPurchaseTotal;
-    },
     updateBadge: async function () {
       console.log("ggogogogo");
     },
@@ -256,13 +187,6 @@ export default {
       }
 
       this.movrCost = parseFloat(this.totalCzxpToBuy / 10000000).toFixed(7);
-    },
-  },
-  watch: {
-    ZoombiesInstance(newVal) {
-      if (newVal) {
-        //this.updateSale();
-      }
     },
   },
 };

@@ -182,3 +182,17 @@ export const processRewardBoosterEvent = (data) => {
     boosterAwarded,
   };
 };
+
+export const processCardMintedEvent = (data) => {
+  const address = data[0];
+  const tokenId = ethers.BigNumber.from(data[1]).toNumber();
+  const cardTypeId = data[2];
+  const editionNumber = ethers.BigNumber.from(data[3]).toNumber();
+
+  return {
+    address,
+    tokenId,
+    cardTypeId,
+    editionNumber,
+  };
+};

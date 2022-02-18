@@ -115,6 +115,7 @@
 <script>
 import {
   EVENT_TYPES,
+  processCardMintedEvent,
   processDailyRewardEvent,
   processRewardBoosterEvent,
   processSacrificeNFTEvent,
@@ -268,11 +269,12 @@ export default {
       }
     },
     computeCardMintedMessage: async function () {
-      const data = this.eventData.args;
-      const address = this.createDottedAddress(data[0]);
-      const tokenId = ethers.BigNumber.from(data[1]).toNumber();
-      const cardTypeId = data[2];
-      const editionNumber = ethers.BigNumber.from(data[3]).toNumber();
+      const {
+        address,
+        tokenId,
+        cardTypeId,
+        editionNumber,
+      } = processCardMintedEvent(this.eventData.args);
 
       const cardInfo = await getCardType(cardTypeId);
       const rarity = cardInfo.attributes.filter((attribute) => {
@@ -296,8 +298,8 @@ export default {
       })[0].value;
 
       const extractedInfo = {
-        address,
-        addressNFTLink: this.computeWalletLink(data[0]),
+        address: this.createDottedAddress(address),
+        addressNFTLink: this.computeWalletLink(address),
         zombieType: zombieType,
         booster: isBooster,
         name: cardInfo.name,

@@ -295,7 +295,7 @@ import {
 import dAppStates from "@/dAppStates";
 import { MessageBus } from "@/messageBus";
 import { mapGetters } from "vuex";
-import { BIcon, BIconArrow90degDown } from "bootstrap-vue";
+import { BIconArrow90degDown } from "bootstrap-vue";
 
 export default {
   name: "CardsContainer",
@@ -311,7 +311,6 @@ export default {
     BDropdown,
     BDropdownItem,
     BButtonGroup,
-    BIcon,
     BIconArrow90degDown,
   },
   props: {
@@ -366,7 +365,7 @@ export default {
   },
   mounted() {
     this.$store.dispatch("crypt/setSelectedCards", []);
-    if (this.CryptozInstance && this.addressToLoad) {
+    if (this.getSignedZoombiesContract && this.addressToLoad) {
       this.fetchCryptCards();
     }
 
@@ -421,6 +420,8 @@ export default {
       isLoading: "crypt/isLoadingCrypt",
       isCryptLoaded: "crypt/isCryptLoaded",
       getReadOnlyZoombiesContract: "blockChain/getReadOnlyZoombiesContract",
+      getSignedZoombiesContract: "blockChain/getSignedZoombiesContract",
+      getWalletAddress: "blockChain/getWalletAddress",
     }),
     displayCards() {
       return this.isCardModified
@@ -434,17 +435,11 @@ export default {
         return this.pageNext !== null;
       }
     },
-    coinbase() {
-      return this.$store.state.web3.coinbase;
-    },
     dAppState() {
       return this.$store.state.dAppState;
     },
     isWalletConnected() {
       return this.$store.state.dAppState === dAppStates.WALLET_CONNECTED;
-    },
-    CryptozInstance() {
-      return this.$store.state.contractInstance.cryptoz;
     },
     addressToSearchState() {
       return ethers.utils.isAddress(this.addressToSearch);
@@ -487,7 +482,7 @@ export default {
         url = "https://movr.zoombies.world";
       }
 
-      return `${url}/my-zoombies-nfts/${this.coinbase}`;
+      return `${url}/my-zoombies-nfts/${this.getWalletAddress}`;
     },
     isModified() {
       return {
@@ -546,7 +541,7 @@ export default {
         this.fetchCryptCards();
       }
     },
-    coinbase: function (val, oldVal) {
+    getWalletAddress: function (val, oldVal) {
       if (val && oldVal && val !== oldVal) {
         this.fetchCryptCards();
       }
@@ -746,75 +741,73 @@ export default {
       }
     },
     sacrificeCards: async function (ids) {
-      this.$store.dispatch("setIsTransactionPending", true);
-
-      ids.forEach((id) => {
-        Vue.set(this.cardsBeingSacrificed, id, true);
-      });
-      const sacrificeRes = await this.CryptozInstance.methods
-        .sacrificeNFTs(ids)
-        .send({ from: this.coinbase }, (err, txHash) => {
-          this.$store.dispatch("setIsTransactionPending", false);
-
-          if (err) {
-            ids.forEach((id) => {
-              Vue.delete(this.cardsBeingSacrificed, id);
-            });
-          }
-        })
-        .catch((err) => {
-          if (err.code !== 4001) {
-            console.log(err);
-            showErrorToast(this, "Failed to sacrifice card(s)");
-          }
+      try {
+        this.$store.dispatch("setIsTransactionPending", true);
+        ids.forEach((id) => {
+          Vue.set(this.cardsBeingSacrificed, id, true);
         });
 
-      ids.forEach((id) => {
-        Vue.delete(this.cardsBeingSacrificed, id);
-      });
-
-      if (sacrificeRes) {
-        this.$store.dispatch("crypt/cardsSacrificed", { ids });
-        this.paginatedCryptCards = this.paginatedCryptCards.filter(
-          (card) => !ids.includes(card.id)
+        const sacrificeRes = await this.getSignedZoombiesContract.sacrificeNFTs(
+          ids
         );
-        this.modifiedPaginatedCryptCards = this.modifiedPaginatedCryptCards.filter(
-          (card) => !ids.includes(card.id)
-        );
-        showSuccessToast(this, "Card(s) sacrificed.");
+        this.$store.dispatch("setIsTransactionPending", false);
+        await sacrificeRes.wait();
+        if (sacrificeRes) {
+          this.$store.dispatch("crypt/cardsSacrificed", { ids });
+          this.paginatedCryptCards = this.paginatedCryptCards.filter(
+            (card) => !ids.includes(card.id)
+          );
+          this.modifiedPaginatedCryptCards = this.modifiedPaginatedCryptCards.filter(
+            (card) => !ids.includes(card.id)
+          );
+          showSuccessToast(this, "Card(s) sacrificed.");
+        }
+      } catch (error) {
+        if (err.code !== 4001) {
+          console.log(err);
+          showErrorToast(this, "Failed to sacrifice card(s)");
+        }
+      } finally {
+        ids.forEach((id) => {
+          Vue.delete(this.cardsBeingSacrificed, id);
+        });
       }
     },
     transferCard: async function (id) {
-      Vue.set(this.cardsBeingGifted, id, true);
-      this.$store.dispatch("setIsTransactionPending", true);
+      try {
+        Vue.set(this.cardsBeingGifted, id, true);
+        this.$store.dispatch("setIsTransactionPending", true);
 
-      const giftRes = await this.CryptozInstance.methods
-        .transferFrom(this.coinbase, this.receivingWallet, id)
-        .send({ from: this.coinbase }, (err, txHash) => {
-          this.$store.dispatch("setIsTransactionPending", false);
-        })
-        .catch((err) => {
-          if (err.code !== 4001) {
-            console.log("Error: ", err);
-          }
-        })
-        .finally(() => {
-          Vue.set(this.cardsBeingGifted, id, false);
-        });
-
-      if (giftRes) {
-        this.$store.dispatch("crypt/cardGifted", {
-          id: id,
-        });
-
-        this.paginatedCryptCards = this.paginatedCryptCards.filter(
-          (card) => card.id !== id
-        );
-        this.modifiedPaginatedCryptCards = this.modifiedPaginatedCryptCards.filter(
-          (card) => card.id !== id
+        const giftRes = await this.getSignedZoombiesContract.transferFrom(
+          this.getWalletAddress,
+          this.receivingWallet,
+          id
         );
 
-        showSuccessToast(this, "Card Gifted.");
+        this.$store.dispatch("setIsTransactionPending", false);
+
+        await giftRes.wait();
+
+        if (giftRes) {
+          this.$store.dispatch("crypt/cardGifted", {
+            id: id,
+          });
+
+          this.paginatedCryptCards = this.paginatedCryptCards.filter(
+            (card) => card.id !== id
+          );
+          this.modifiedPaginatedCryptCards = this.modifiedPaginatedCryptCards.filter(
+            (card) => card.id !== id
+          );
+
+          showSuccessToast(this, "Card Gifted.");
+        }
+      } catch (error) {
+        if (err.code !== 4001) {
+          console.log("Error: ", err);
+        }
+      } finally {
+        Vue.set(this.cardsBeingGifted, id, false);
       }
     },
     confirmMassSacrifice: function () {

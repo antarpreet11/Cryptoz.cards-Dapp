@@ -16,17 +16,14 @@
               placeholder="Search for a Zoombies Token"
             />
             <b-input-group-append>
-              <b-button
-                variant="success"
-                @click="searchToken"
-              >
-                Go
-              </b-button>
+              <b-button variant="success" @click="searchToken"> Go </b-button>
             </b-input-group-append>
           </b-input-group>
           <div v-if="load_state == 0" class="row">
             <div class="col">
-              <h2>Zoombies Token #{{ token_id }} does not exist on this chain</h2>
+              <h2>
+                Zoombies Token #{{ token_id }} does not exist on this chain
+              </h2>
               <p>Please search for a valid token</p>
             </div>
           </div>
@@ -96,7 +93,9 @@
                 </div>
               </div>
               <div class="flex-row">
-                <div class="text-right font-weight-bold label">Zombie Type:</div>
+                <div class="text-right font-weight-bold label">
+                  Zombie Type:
+                </div>
                 <div class="">
                   {{ card.attributes.zombie_type }}
                 </div>
@@ -128,7 +127,9 @@
                 </div>
               </div>
               <div class="flex-row">
-                <div class="text-right font-weight-bold label">Unlock ZOOM:</div>
+                <div class="text-right font-weight-bold label">
+                  Unlock ZOOM:
+                </div>
                 <div class="">
                   {{ card.attributes.unlock_czxp }}
                 </div>
@@ -160,6 +161,7 @@ import {
   BFormInput,
   BInputGroupAppend,
 } from "bootstrap-vue";
+import { mapGetters } from "vuex";
 
 export default {
   name: "TokenContent",
@@ -195,34 +197,33 @@ export default {
       rarity: "",
       released_date: "Loading..",
       edition_current: "Loading...",
-      etherscan_token_id: "https://blockscout.moonriver.moonbeam.network/tokens/",
+      etherscan_token_id:
+        "https://blockscout.moonriver.moonbeam.network/tokens/",
       tokenToSearch: "",
     };
   },
   computed: {
-    CryptozInstance() {
-      return this.$store.state.contractInstance.cryptoz;
-    },
     isDAppConnected() {
       return (
         this.$store.state.dAppState === dAppStates.CONNECTED ||
         this.$store.state.dAppState === dAppStates.WALLET_CONNECTED
       );
     },
-    coinbase() {
-      return this.$store.state.web3.coinbase;
-    },
+    ...mapGetters({
+      getReadOnlyZoombiesContract: "blockChain/getReadOnlyZoombiesContract",
+    }),
   },
+
   watch: {
-    isDAppConnected(value) {
+    getReadOnlyZoombiesContract(value) {
       if (value) {
         this.loadCard(this.token_id);
       }
     },
-    '$route.params.token_id': function (id) {
-      this.token_id = parseInt(id)
+    "$route.params.token_id": function (id) {
+      this.token_id = parseInt(id);
       this.loadCard(this.token_id);
-    }
+    },
   },
   mounted() {
     //grab the token id from the url
@@ -233,27 +234,33 @@ export default {
   },
   methods: {
     loadCard: async function (token_id) {
-      const res = await this.CryptozInstance.methods
-        .nfts(token_id)
-        .call()
-        .catch((err) => console.log({ err }));
+      if (!this.getReadOnlyZoombiesContract) return;
+      try {
+        const res = await this.getReadOnlyZoombiesContract.nfts(token_id);
+        //returns TypeId, Edition #
+        let cardTypeId = parseInt(res[0]);
 
-      //returns TypeId, Edition #
-      let cardTypeId = parseInt(res[0]);
+        //If the tokenId is greater than 0, we have something valid
+        if (cardTypeId === 0) {
+          this.load_state = 0;
+          return;
+        }
 
-      //If the tokenId is greater than 0, we have something valid
-      if (cardTypeId === 0) {
-        this.load_state = 0;
-        return;
+        this.edition_current = parseInt(res[1]);
+        this.getCardData(cardTypeId);
+        const owner = await this.getReadOnlyZoombiesContract.ownerOf(token_id);
+        this.owner = owner;
+        this.owner_url = this.getCryptLink(owner);
+        const releaseTime = await this.getReadOnlyZoombiesContract.storeReleaseTime(
+          cardTypeId
+        );
+        this.released_date = new Intl.DateTimeFormat("en-US", {
+          dateStyle: "full",
+          timeStyle: "long",
+        }).format(releaseTime * 1000);
+      } catch (error) {
+        console.error({ error });
       }
-
-      this.edition_current = parseInt(res[1]);
-      this.getCardData(cardTypeId);
-      const owner = await this.CryptozInstance.methods.ownerOf(token_id).call();
-      this.owner = owner;
-      this.owner_url = this.getCryptLink(owner)
-      const releaseTime = await this.CryptozInstance.methods.storeReleaseTime(cardTypeId).call();
-      this.released_date = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'long' }).format(releaseTime*1000);
     },
     getCryptLink(owner) {
       let url;
@@ -317,13 +324,13 @@ export default {
       }
 
       this.card = res.data;
-      this.card.id = this.token_id
+      this.card.id = this.token_id;
       this.load_state = 1;
     },
     searchToken() {
-      const tokenId = this.tokenToSearch.replace('#', '')
-      this.$router.replace(tokenId)
-    }
+      const tokenId = this.tokenToSearch.replace("#", "");
+      this.$router.replace(tokenId);
+    },
   },
 };
 </script>
@@ -335,7 +342,7 @@ export default {
 }
 
 a {
-  color: #7EF4F6;
+  color: #7ef4f6;
 }
 
 .row {

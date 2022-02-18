@@ -58,6 +58,7 @@
 </template>
 <script>
 import { BButton } from "bootstrap-vue";
+import { mapGetters } from "vuex";
 
 export default {
   name: "UniverseBalances",
@@ -93,53 +94,46 @@ export default {
     },
   },
   computed: {
-    zoomBalance() {
-      return this.$store.state.totalCzxpSupply / 1000000000000000000;
-    },
     fromZoomBalance() {
-      return this.prevZoomBalance || this.zoomBalance;
+      return this.prevZoomBalance || this.getTotalZoomBalance;
     },
     toZoomBalance() {
-      return this.newZoomBalance || this.zoomBalance;
-    },
-    nftSupply() {
-      return this.$store.state.totalCryptozSupply;
+      return this.newZoomBalance || this.getTotalZoomBalance;
     },
     fromNftSupply() {
-      return this.prevNftSupply || this.nftSupply;
+      return this.prevNftSupply || this.getTotalNftSupply;
     },
     toNftSupply() {
-      return this.newNftSupply || this.nftSupply;
-    },
-    nftTypes() {
-      return this.$store.state.totalCryptozTypes;
+      return this.newNftSupply || this.getTotalNftSupply;
     },
     fromNftTypes() {
-      return this.prevNftTypes || this.nftTypes;
+      return this.prevNftTypes || this.getTotalNftTypes;
     },
     toNftTypes() {
-      return this.newNftTypes || this.nftTypes;
+      return this.newNftTypes || this.getTotalNftTypes;
     },
-    coinbase() {
-      return this.$store.state.web3.coinbase;
-    },
+    ...mapGetters({
+      getTotalZoomBalance: "blockChain/getTotalZoomBalance",
+      getTotalNftSupply: "blockChain/getTotalNftSupply",
+      getTotalNftTypes: "blockChain/getTotalNftTypes",
+    }),
   },
   watch: {
-    zoomBalance(newVal, oldVal) {
+    getTotalZoomBalance(newVal, oldVal) {
       this.newZoomBalance = newVal;
       this.prevZoomBalance = oldVal;
       if (oldVal > 0) {
         this.pulsateText(this.$refs.zoomBal);
       }
     },
-    nftSupply(newVal, oldVal) {
+    getTotalNftSupply(newVal, oldVal) {
       this.newNftSupply = newVal;
       this.prevNftSupply = oldVal;
       if (oldVal > 0) {
         this.pulsateText(this.$refs.nftSupply);
       }
     },
-    nftTypes(newVal, oldVal) {
+    getTotalNftTypes(newVal, oldVal) {
       this.newNftTypes = newVal;
       this.prevNftTypes = oldVal;
       if (oldVal > 0) {

@@ -441,12 +441,6 @@ export default {
       return "eth-link";
       //  }
     },
-    CzxpInstance() {
-      return this.$store.state.contractInstance.czxp;
-    },
-    CryptozInstance() {
-      return this.$store.state.contractInstance.cryptoz;
-    },
     dAppState() {
       return this.$store.state.dAppState;
     },
@@ -455,12 +449,6 @@ export default {
     },
     ZoomContribution() {
       return this.$store.state.zoomContribution;
-    },
-    czxp_balance() {
-      return this.$store.state.czxpBalance;
-    },
-    currentEvent() {
-      return this.$store.state.lastChainEvent;
     },
     getSponsorRoute() {
       let url;
@@ -509,6 +497,9 @@ export default {
     ...mapGetters({
       getWalletAddress: "blockChain/getWalletAddress",
       getBalance: "blockChain/getBalance",
+      getReadOnlyZoomContract: "blockChain/getReadOnlyZoomContract",
+      getSignedZoombiesContract: "blockChain/getSignedZoombiesContract",
+      getReadOnlyZoombiesContract: "blockChain/getReadOnlyZoombiesContract",
     }),
   },
   data() {
@@ -533,15 +524,6 @@ export default {
     isWalletConnected(value) {
       if (value) {
         this.checkSponsor(this.getWalletAddress);
-      }
-    },
-    currentEvent(newValue, oldValue) {
-      if (newValue !== oldValue && typeof newValue !== "undefined") {
-        if (this.pendingTransaction == newValue.blockHash) {
-          this.showSpinner = false;
-          this.transactionMessage = "Confirmed! Balance updated";
-        }
-        this.getDailyBonusTime();
       }
     },
     getWalletAddress(value) {
@@ -581,10 +563,10 @@ export default {
       this.showShareMyLink = false;
     },
     checkSponsor: async function (address) {
-      if (this.CryptozInstance && address) {
-        const sponsor = await this.CryptozInstance.methods
-          .sponsors(address)
-          .call();
+      if (this.getReadOnlyZoombiesContract && address) {
+        const sponsor = await this.getReadOnlyZoombiesContract.sponsors(
+          address
+        );
         this.mySponsor = parseInt(sponsor, 16) ? sponsor : null;
         if (sponsor && sponsor !== baseAddress) {
           this.shouldShowSponsor = false;
@@ -598,24 +580,27 @@ export default {
       }
     },
     linkSponsor: async function () {
-      this.$store.dispatch("setIsTransactionPending", true);
-      const result = await this.CryptozInstance.methods
-        .linkMySponsor(this.sponsorAddress)
-        .send({ from: this.getWalletAddress }, (err, transactionHash) => {
-          this.$store.dispatch("setIsTransactionPending", false);
-        })
-        .catch((err) => {
-          if (err.code !== 4001) {
-            console.log(err);
-            showErrorToast(this, "Failed to link sponsor.");
-          }
-        });
+      try {
+        this.$store.dispatch("setIsTransactionPending", true);
+        const result = await this.getSignedZoombiesContract.linkMySponsor(
+          this.sponsorAddress
+        );
 
-      if (result) {
-        showSuccessToast(this, "Sponsor linked!");
-        this.shouldShowSponsor = false;
-        this.mySponsor = this.sponsorAddress;
-        this.nextSponsorModalAction();
+        await result.wait();
+        this.$store.dispatch("setIsTransactionPending", false);
+
+        if (result) {
+          showSuccessToast(this, "Sponsor linked!");
+          this.shouldShowSponsor = false;
+          this.mySponsor = this.sponsorAddress;
+          this.nextSponsorModalAction();
+        }
+      } catch (error) {
+        if (err.code !== 4001) {
+          console.log(err);
+          showErrorToast(this, "Failed to link sponsor.");
+        }
+        this.$store.dispatch("setIsTransactionPending", false);
       }
     },
     copySponsorLink: function () {
@@ -630,10 +615,10 @@ export default {
         });
     },
     getDailyBonusTime: async function () {
-      if (this.CryptozInstance && this.getWalletAddress) {
-        const res = await this.CryptozInstance.methods
-          .getTimeToDailyBonus(this.getWalletAddress)
-          .call();
+      if (this.getReadOnlyZoombiesContract && this.getWalletAddress) {
+        const res = await this.getReadOnlyZoombiesContract.getTimeToDailyBonus(
+          this.getWalletAddress
+        );
 
         var timeOfNextBonusInMilli = parseInt(res) * 1000;
         var now = new Date();
@@ -647,41 +632,37 @@ export default {
       }
     },
     GetBonus: async function () {
-      this.showSpinner = true;
-      this.transactionMessage = "Pending confirmation...";
-      this.$store.dispatch("setIsTransactionPending", true);
+      try {
+        this.showSpinner = true;
+        this.transactionMessage = "Pending confirmation...";
+        this.$store.dispatch("setIsTransactionPending", true);
 
-      const result = await this.CryptozInstance.methods
-        .getBonusBoosters(this.getWalletAddress)
-        .send({ from: this.getWalletAddress }, (err, transactionHash) => {
-          this.pendingTransaction = transactionHash;
-          if (err) {
-            this.showSpinner = false;
-            this.transactionMessage = "Claim 2 FREE Boosters!";
-          } else {
-            this.transactionMessage = "Broadcast to chain...";
-          }
-          this.$store.dispatch("setIsTransactionPending", false);
-        })
-        .catch((e) => {
-          this.showSpinner = false;
-          this.transactionMessage = "Claim 2 FREE Boosters!";
-        });
+        const result = await this.getSignedZoombiesContract.getBonusBoosters(
+          this.getWalletAddress
+        );
+        this.transactionMessage = "Broadcast to chain...";
+        this.$store.dispatch("setIsTransactionPending", false);
 
-      this.showSpinner = false;
-      if (result) {
-        this.getDailyBonusTime();
+        await result.wait();
+        if (result) {
+          this.getDailyBonusTime();
+        }
+      } catch (error) {
+        this.transactionMessage = "Claim 2 FREE Boosters!";
+      } finally {
+        this.showSpinner = false;
       }
     },
     GetTimeString: function (_timeStamp) {
       return moment(_timeStamp).format("MMM D, h:mm a");
     },
     getZoomContributionStatus: async function () {
-      this.$store.state.zoomContribution = parseInt(
-        await this.CzxpInstance.methods
-          .contributions(this.getWalletAddress)
-          .call()
+      const contract = this.getReadOnlyZoomContract;
+      const zoomContribution = await contract.contributions(
+        this.getWalletAddress
       );
+
+      this.$store.state.zoomContribution = parseInt(zoomContribution);
     },
   },
 };

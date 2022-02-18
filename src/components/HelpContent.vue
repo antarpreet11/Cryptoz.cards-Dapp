@@ -452,6 +452,7 @@ import {
   BCardBody,
   BFormInput
 } from "bootstrap-vue";
+import { mapGetters } from 'vuex';
 export default {
   name: "HelpContent",
   components: {
@@ -470,8 +471,16 @@ export default {
       onMainNet: false,
     };
   },
+  computed: {
+    ...mapGetters({
+      getChainId: "blockChain/getChainId"
+    })
+  },
   mounted() {
-    if(this.$store.state.web3.chainId == "0x505") {
+     if (
+      this.getChainId == 1285 ||
+      window.location.host == "movr.zoombies.world"
+    ) {
       this.onMainNet = true;
     } else{
       this.onMainNet = false;

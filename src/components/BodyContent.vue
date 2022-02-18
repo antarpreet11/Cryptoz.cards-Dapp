@@ -76,7 +76,8 @@
         <b-row>
           <b-col>
             <div>
-              <apexchart ref="zoomChart" width="100%" type="line" :options="chartOptions" :series="chartSeries"></apexchart>
+              <div class="graph-title">Moonriver ZOOM Token Inflation</div>
+              <apexchart id="chartContainer" ref="zoomChart" width="100%" type="line" :options="chartOptions" :series="chartSeries"></apexchart>
             </div>
           </b-col>
         </b-row>
@@ -111,17 +112,6 @@ export default {
       oldTotalNft: 0,
       graphData: Object(),
       chartOptions: {
-        title: {
-          text: 'Moonriver ZOOM token minted/burned',
-          align: 'left',
-          style: {
-            fontSize:  '28px',
-            fontWeight:  'bold',
-            fontFamily:  'Helvetica, Arial, sans-serif',
-            color:  '#deadfc',
-            textShadow: '2px 2px 2px #000000'
-          },
-        },
         markers: {
           size: 3,
           strokeWidth: 2,
@@ -149,10 +139,17 @@ export default {
           },
         },
         tooltip: {
+
+          palette: 'palette10',
+          x : {
+            show: false
+          },
+          onDatasetHover: {
+            highlightDataSeries: true,
+          },
           style: {
             fontSize: '18px',
             fontFamily: 'Helvetica, Arial, sans-serif',
-            color: "#000000",
           },
           followCursor: true,
           shared: true,
@@ -212,11 +209,11 @@ export default {
       },
       chartSeries: [{
         name: 'minted',
-        color: '#6fd2d3',
+        color: '#17a2b8',
         data: [1,2,3]
       },{
         name: 'burned',
-        color: '#d35bc3',
+        color: '#f566e2',
         data: [7,6,4]
       }]
     };
@@ -281,11 +278,12 @@ export default {
 
       res.data.zoomPerDays.nodes.forEach( i => {
         graphData.date.push(parseInt(i.id));
-        graphData.minted.push(parseInt(i.minted/1000000000000000000));
+        graphData.minted.push(parseInt(i.minted/1000000000000000000)); // maybe use BN ?
         graphData.burned.push(parseInt(i.burned/1000000000000000000));
       });
 
-      this.$refs.zoomChart.updateOptions({xaxis: {
+      this.$refs.zoomChart.updateOptions({
+              xaxis: {
                 title: {
                   text: 'Day/Month',
                   style: {
@@ -308,15 +306,17 @@ export default {
                     cssClass: 'apexcharts-xaxis-label',
                   },
                 },
-              },})
+              },
+      })
 
+      //Update the model for the series
       this.chartSeries = [{
         name: 'minted',
-        color: '#6fd2d3',
+        color: '#17a2b8',
         data: graphData.minted
       },{
         name: 'burned',
-        color: '#d35bc3',
+        color: '#f566e2',
         data: graphData.burned
       }]
     },
@@ -424,5 +424,17 @@ export default {
 
 .totals {
   display: table;
+}
+
+.graph-title {
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #7EF4F6;
+}
+
+.apexcharts-tooltip .apexcharts-tooltip-series-group {
+  background: #1c1f50;
+  border: 4px solid red;
 }
 </style>

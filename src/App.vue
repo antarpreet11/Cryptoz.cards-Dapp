@@ -24,7 +24,7 @@
     >
       <realtime-events></realtime-events>
     </b-sidebar>
-    <Header @connect="handleConnect" />
+    <Header />
     <b-modal id="no-web3-modal" hide-footer>
       <template #modal-title> Web3 Not Detected! </template>
       <div class="d-block text-center">
@@ -53,14 +53,10 @@
 </template>
 
 <script>
-import detectEthereumProvider from "@metamask/detect-provider";
-import debounce from "lodash/debounce";
-import watchEvents from "./util/watchEvents";
 import { showSuccessToast } from "./util/showToast";
 import Header from "./components/layout/Header.vue";
 import AppFooter from "./components/layout/AppFooter";
 import TransactionModal from "./components/TransactionModal.vue";
-import dAppStates from "@/dAppStates";
 import { MessageBus } from "@/messageBus";
 import CzxpRewardEffect from "./components/layout/CzxpRewardEffect";
 import { BButton, BSidebar } from "bootstrap-vue";
@@ -71,8 +67,6 @@ import animationData from "./assets/NotificationLottie.json";
 
 const Web3 = require("web3");
 import "./main.css";
-import zoombiesContractJSON from "./contracts/Zoombies.json";
-import zoomTokenContractJSON from "./contracts/ZoomToken.json";
 
 import { mapGetters } from "vuex";
 
@@ -80,30 +74,6 @@ const isLocal =
   process.env.NODE_ENV === "development" ||
   window.location.host !== "movr.zoombies.world";
 // const isLocal = false;
-
-const ethChainParam = isLocal
-  ? {
-      chainId: "0x507", // Moonbase Alpha's chainId is 1287, which is 0x507 in hex
-      chainName: "Moonbase Alpha",
-      nativeCurrency: {
-        name: "DEV",
-        symbol: "DEV",
-        decimals: 18,
-      },
-      rpcUrls: ["https://rpc.api.moonbase.moonbeam.network"],
-      blockExplorerUrls: ["https://moonbase.moonscan.io/"],
-    }
-  : {
-      chainId: "0x505", // Moonbase Alpha's chainId is 1287, which is 0x507 in hex
-      chainName: "Moonriver",
-      nativeCurrency: {
-        name: "MOVR",
-        symbol: "MOVR",
-        decimals: 18,
-      },
-      rpcUrls: ["https://rpc.api.moonriver.moonbeam.network"],
-      blockExplorerUrls: ["https://moonriver.moonscan.io/"],
-    };
 
 export default {
   name: "App",
@@ -149,6 +119,16 @@ export default {
       }
     },
   },
+  beforeCreate() {
+    if (window.web3 && window.ethereum) {
+      this.$store.dispatch("blockChain/initBlockchain", {
+        isLocal: isLocal,
+        noMetamaskCallback: () => {
+          this.$bvModal.show("no-web3-modal");
+        },
+      });
+    }
+  },
   async created() {
     if (window.web3 && window.ethereum) {
       // this needs to be set in beforeCreate because vue lifecycle
@@ -156,24 +136,15 @@ export default {
       // and we need provider to be set in child components
       const web3 = new Web3(window.ethereum);
       window.web3 = web3;
+    }
+
+    MessageBus.$on("connect", () => {
       this.$store.dispatch("blockChain/initBlockchain", {
         isLocal: isLocal,
         noMetamaskCallback: () => {
           this.$bvModal.show("no-web3-modal");
         },
       });
-      this.initializeApp();
-    }
-
-    // // set this here to be able to debounce it..
-    // // debounce prevents this from showing the "Balance Updated" twice
-    // // when both Cryptoz and Czxp contracts emit an event
-    // this.onBalanceUpdated = debounce(() => {
-    //   showSuccessToast(this, "Balance Updated!");
-    // }, 1000);
-
-    MessageBus.$on("connect", () => {
-      this.handleConnect();
     });
   },
   async mounted() {
@@ -195,14 +166,6 @@ export default {
 
       return t;
     })(document, "script", "twitter-wjs");
-
-    const provider = await detectEthereumProvider({
-      mustBeMetaMask: true,
-    });
-
-    if (!provider) {
-      this.$bvModal.show("no-web3-modal");
-    }
   },
   methods: {
     handleAnimation: function (anim) {
@@ -213,132 +176,6 @@ export default {
     },
     stop: function () {
       this.anim.stop();
-    },
-    configureMoonriver: async function () {
-      const provider = await detectEthereumProvider({ mustBeMetaMask: true });
-      if (provider) {
-        try {
-          await provider.request({ method: "eth_requestAccounts" });
-          await provider.request({
-            method: "wallet_addEthereumChain",
-            params: [ethChainParam],
-          });
-        } catch (e) {
-          console.error(e);
-        }
-      } else {
-        console.error("Please install MetaMask");
-        //window.alert("Please go to metamask.io, follow the instructions carefully and then return.");
-      }
-    },
-    initializeApp: async function () {
-      const [accounts, networkId] = await Promise.all([
-        web3.eth.getAccounts(),
-        web3.eth.net.getId(),
-      ]);
-
-      if (networkId !== 1285 || isLocal) {
-        await this.configureMoonriver();
-      }
-
-      this.$store.dispatch("chainChanged", networkId);
-      await this.loadContracts(accounts, networkId);
-      this.$store.dispatch("setDAppState", dAppStates.CONNECTED);
-      this.subscribeToProviderEvents(web3.currentProvider);
-      this.$store.dispatch("updateUniverseBalances");
-      if (accounts.length > 0) {
-        await this.$store.dispatch("updateOwnerBalances");
-        this.$store.dispatch("setDAppState", dAppStates.WALLET_CONNECTED);
-
-        // watchEvents(this.CzxpInstance, this.CryptozInstance, {
-        //   onCardMinted: this.onCardMinted,
-        //   onBalanceUpdated: this.onBalanceUpdated,
-        //   onSponsorEvent: (czxpReward, event) => {
-        //     MessageBus.$emit("czxpReward", czxpReward);
-        //     const affiliate = event.returnValues.affiliate.toLowerCase();
-        //     const shortendAffiliate = `${affiliate.substring(
-        //       0,
-        //       5
-        //     )}....${affiliate.substring(affiliate.length - 4)}`;
-        //     showSuccessToast(
-        //       this,
-        //       `${shortendAffiliate} just used your sponsor link and became an affiliate!`
-        //     );
-        //   },
-        // });
-      }
-    },
-    loadContracts: async function (accounts, networkId) {
-      const zoombiesContractAddress =
-        zoombiesContractJSON.networks[networkId].address;
-      const zoomTokenContractAddress =
-        zoomTokenContractJSON.networks[networkId].address;
-      const zoombiesContract = new web3.eth.Contract(
-        zoombiesContractJSON.abi,
-        zoombiesContractAddress
-      );
-      const zoomTokenContract = new web3.eth.Contract(
-        zoomTokenContractJSON.abi,
-        zoomTokenContractAddress
-      );
-      return this.$store.dispatch("setContractInstance", {
-        cryptoz: zoombiesContract,
-        czxp: zoomTokenContract,
-      });
-    },
-    handleConnect: async function () {
-      const provider = window.ethereum;
-
-      await provider.request({ method: "eth_requestAccounts" });
-      const web3 = new Web3(provider);
-      window.web3 = web3;
-      this.initializeApp();
-      // const web3Modal = new Web3Modal({
-      //   cacheProvider: true,
-      //   providerOptions,
-      // });
-
-      // const provider = await web3Modal.connect()
-      // await provider.enable()
-      // this.setContractProvider(provider)
-    },
-    onCardMinted({ cardTypeId, editionNumber }) {
-      this.$store.dispatch("updateMintedCountForCard", {
-        cardTypeId,
-        editionNumber,
-      });
-    },
-
-    subscribeToProviderEvents(provider) {
-      provider.on("connect", ({ chainId }) => {
-        this.$store.dispatch("chainChanged", chainId);
-        this.$store.dispatch("setDAppState", dAppStates.CONNECTED);
-      });
-      provider.on("accountsChanged", async (accounts) => {
-        if (accounts.length > 0) {
-          await this.$store.dispatch("updateOwnerBalances");
-          this.$store.dispatch("setDAppState", dAppStates.WALLET_CONNECTED);
-        }
-        //user "locks" their wallet via provider
-        else {
-          this.disconnectWallet();
-          this.$store.dispatch("setDAppState", dAppStates.CONNECTED);
-        }
-      });
-      provider.on("chainChanged", (chainId) => {
-        this.$store.dispatch("chainChanged", chainId);
-        const previousChainId = localStorage.getItem("ethChainId");
-        localStorage.setItem("ethChainId", chainId);
-        window.location.reload();
-      });
-      provider.on("disconnect", () => {
-        this.disconnectWallet();
-        this.$store.dispatch("setDAppState", dAppStates.NOT_CONNECTED);
-      });
-    },
-    disconnectWallet() {
-      this.$store.dispatch("disconnectWallet");
-      this.$store.dispatch("chainChanged", null);
     },
   },
 };

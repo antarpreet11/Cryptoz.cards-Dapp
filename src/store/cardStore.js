@@ -101,6 +101,7 @@ export const CARD_MUTATIONS = {
   SET_CARD_BOUGHT: "SET_CARD_BOUGHT",
   SET_CARD_NOT_BOUGHT: "SET_CARD_NOT_BOUGHT",
   SET_CARD_EDITION: "SET_CARD_EDITION",
+  CLEAR_STORE_CARDS: "CLEAR_STORE_CARDS",
 };
 
 export const RARITY_CLASSES = {
@@ -162,6 +163,9 @@ const addIsOwnedProp = async (card, CryptozInstance, walletAddress) => {
 const cardStore = {
   state: DEFAULT_CARD_STATE,
   mutations: {
+    [CARD_MUTATIONS.CLEAR_STORE_CARDS](state) {
+      state = DEFAULT_CARD_STATE;
+    },
     [CARD_MUTATIONS.SET_CARD_EDITION](state, payload) {
       const { cardId, edition, isSorted } = payload;
 
@@ -303,11 +307,11 @@ const cardStore = {
               return;
             }
 
-            return rootState.web3.coinbase
+            return rootState.blockChain.walletAddress
               ? await addIsOwnedProp(
                   cardData,
                   CryptozInstance,
-                  rootState.web3.coinbase
+                  rootState.blockChain.walletAddress
                 )
               : cardData;
           })
@@ -333,6 +337,9 @@ const cardStore = {
     },
     updateMintedCountForCard({ commit }, payload) {
       commit("updateMintedCountForCard", payload);
+    },
+    clearShopCards({ commit }) {
+      commit(CARD_MUTATIONS.CLEAR_STORE_CARDS);
     },
   },
   getters: {
@@ -387,6 +394,9 @@ const cardStore = {
       const card = state.allShopCards.filter(
         (card) => card.type_id === typeId.toString()
       );
+    },
+    getAllShopCards: (state) => {
+      return state.allShopCards;
     },
   },
 };

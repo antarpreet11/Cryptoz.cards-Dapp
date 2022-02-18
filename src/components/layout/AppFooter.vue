@@ -162,24 +162,18 @@ import {
   BModal,
   BButton,
 } from "bootstrap-vue";
+import { mapGetters } from 'vuex'
 
 export default {
-
   components: {
     BModal,
     BButton,
   },
-
   name: "AppFooter",
   props: [],
-  data() {
-    return {
-      // 0 - detecting, 1 - no metamask, 2- mm installed , show network
-    };
-  },
   computed: {
     classObject: function () {
-      const chainId = this.$store.state.web3.chainId;
+      const chainId = this.getChainId;
       switch (chainId) {
         case 0x38:
         case 0x61:
@@ -196,14 +190,16 @@ export default {
     },
     network() {
       let hexString;
-      if (this.$store.state.web3.chainId) {
-        hexString = `0x${this.$store.state.web3.chainId.toString(16)}`;
+      if (this.getChainId) {
+        hexString = `0x${this.getChainId.toString(16)}`;
       }
       if (!hexString) return "Unidentified Network";
       return NETWORKS[hexString];
     },
+    ...mapGetters({
+      getChainId: 'blockChain/getChainId'
+    })
   },
-  methods: {},
 };
 </script>
 

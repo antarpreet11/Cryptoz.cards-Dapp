@@ -1,6 +1,8 @@
 <template>
   <div v-if="isWalletConnected" id="container" class="row-col">
-    <p><strong>Your Zoombies NFTs:</strong> {{ cards_owned }}</p>
+    <p>
+      <strong>Your Zoombies NFTs:</strong> {{ getNftOwned.toLocaleString() }}
+    </p>
     <p>
       <strong
         >Your ZOOM
@@ -12,12 +14,13 @@
         />
         Balance:</strong
       >
-      {{ czxp_balance }}
+      {{ getZoomBalance.toLocaleString() }}
     </p>
   </div>
 </template>
 <script>
 import dAppStates from "@/dAppStates";
+import { mapGetters } from "vuex";
 
 export default {
   name: "OwnerBalances",
@@ -25,18 +28,10 @@ export default {
     isWalletConnected() {
       return this.$store.state.dAppState === dAppStates.WALLET_CONNECTED;
     },
-    boosters_owned() {
-      return this.$store.state.boostersOwned.toLocaleString();
-    },
-    cards_owned() {
-      return this.$store.state.cardsOwned.toLocaleString();
-    },
-    czxp_balance() {
-      return this.$store.state.czxpBalance.toLocaleString();
-    },
-    coinbase() {
-      return this.$store.state.web3.coinbase;
-    },
+    ...mapGetters({
+      getNftOwned: "blockChain/getNftOwned",
+      getZoomBalance: "blockChain/getZoomBalance",
+    }),
   },
 };
 </script>

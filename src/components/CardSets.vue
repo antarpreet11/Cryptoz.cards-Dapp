@@ -9,8 +9,10 @@
     <div class="card-set-header">
       <h2>Zoombies World Inhabitants and item types catalog</h2>
       <p>
-        Zoombies unlike other NFT collections are a unique world of strange and wonderful People, Creatures, Plants and Objects.
-        Cards are grouped into sets and may contain any combination of rarity, store and booster, limited and unlimited edition minting.
+        Zoombies unlike other NFT collections are a unique world of strange and
+        wonderful People, Creatures, Plants and Objects. Cards are grouped into
+        sets and may contain any combination of rarity, store and booster,
+        limited and unlimited edition minting.
       </p>
     </div>
 
@@ -121,12 +123,14 @@ export default {
   computed: {
     cardSetOptions: function () {
       if (this.cardSets) {
-        const sortedCardsets = this.cardSets.map(cardset => cardset.cardSetName).sort();
+        const sortedCardsets = this.cardSets
+          .map((cardset) => cardset.cardSetName)
+          .sort();
 
         const cardSetNames = sortedCardsets.map((cardset, index) => ({
           text: cardset,
           value: index,
-        }))
+        }));
 
         return cardSetNames;
       }
@@ -137,7 +141,6 @@ export default {
       if (this.cardSets) {
         const sortedCardSet = this.cardSets;
 
-
         return sortedCardSet.sort((a, b) => {
           if (a.cardSetName < b.cardSetName) {
             return -1;
@@ -146,10 +149,10 @@ export default {
           }
 
           return 0;
-        })
+        });
       }
 
-      return []
+      return [];
     },
     getCurrentlySelectedCardSet: function () {
       if (this.mobileSelectedTab !== null && this.cardSets !== null) {
@@ -188,21 +191,6 @@ export default {
       this.cardSets = transformedCardSets;
       this.mobileSelectedTab = 0;
       this.isLoadingCardset = false;
-    },
-    selectCardForEnlarge(cardIndex) {
-      const index = parseInt(this.mobileSelectedTab);
-
-      const currentCardset = this.cardSets[index];
-
-      this.enlargedCard = currentCardset.cards[cardIndex];
-      console.log(this.enlargedCard);
-    },
-    isCardEnlarged: function (cardId) {
-      if (cardId && this.enlargedCard) {
-        return this.enlargedCard.id === cardId;
-      }
-
-      return null;
     },
     getCardImageUrl(svg) {
       return `https://zoombies.world/card-gen/assets/${svg}`;

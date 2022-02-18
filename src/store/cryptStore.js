@@ -283,18 +283,23 @@ const cryptStore = {
 
         cryptCards.sort((a, b) => b.id - a.id);
 
-        if (isOwnCrypt) {
-          dispatch("updateCardsOwned", cryptCards.length, { root: true });
-        }
-
         commit(CRYPT_MUTATIONS.SET_CRYPT_CARDS, cryptCards);
       } catch (err) {
         console.error(err);
         commit(CRYPT_MUTATIONS.LOADING_CRYPT_CARDS_FAILED);
       }
     },
-    async addBoosterCard({ commit, rootState }, payload) {
+    async addBoosterCard({ commit, rootState, state }, payload) {
       const { cardId, cardTypeId, edition } = payload;
+
+      const stateCard = state.allCryptCards.filter((card) => {
+        return card.id === cardId && card.type_id === cardTypeId;
+      });
+
+      if (stateCard.length > 0) {
+        return null;
+      }
+
       try {
         const CryptozInstance =
           rootState.blockChain.contracts.readOnlyZoombiesContract;

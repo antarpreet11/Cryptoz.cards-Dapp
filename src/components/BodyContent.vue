@@ -4,7 +4,7 @@
       <b-container fluid class="text-center">
         <b-row>
           <b-col>
-            <div v-if="coinbase">
+            <div v-if="getWalletAddress">
               <b-col sm="12" md="12">
                 <b-button
                   v-b-modal.sponsor-modal
@@ -19,8 +19,8 @@
                 <span class="zoombies-font h1">
                   <number
                     ref="nftSupply"
-                    :from="fromNftSupply"
-                    :to="toNftSupply"
+                    :from="oldTotalNft"
+                    :to="getTotalNftSupply"
                     :format="formatNumber"
                     :duration="3.5"
                   /> </span
@@ -32,8 +32,8 @@
                 <span class="zoombies-font h1">
                   <number
                     ref="zoomBal"
-                    :from="fromZoomBalance"
-                    :to="toZoomBalance"
+                    :from="oldTotalZoom"
+                    :to="getTotalZoomBalance"
                     :format="formatNumber"
                     :duration="3.5"
                   /> </span
@@ -73,6 +73,13 @@
             ></b-img-lazy>
           </b-col>
         </b-row>
+        <b-row>
+          <b-col>
+            <div>
+              <apexchart ref="zoomChart" width="100%" type="line" :options="chartOptions" :series="chartSeries"></apexchart>
+            </div>
+          </b-col>
+        </b-row>
       </b-container>
     </main>
   </div>
@@ -80,6 +87,8 @@
 
 <script>
 import { BButton, BContainer, BRow, BCol, BImgLazy } from "bootstrap-vue";
+import { mapGetters } from "vuex";
+import apexchart from 'vue-apexcharts'
 export default {
   name: "BodyContent",
   components: {
@@ -88,6 +97,7 @@ export default {
     BRow,
     BCol,
     BImgLazy,
+    apexchart,
   },
   data() {
     return {
@@ -97,57 +107,131 @@ export default {
       movrCost: 0,
       myPurchaseTotal: 0,
       onMainNet: false,
+      oldTotalZoom: 0,
+      oldTotalNft: 0,
+      graphData: Object(),
+      chartOptions: {
+        title: {
+          text: 'Moonriver ZOOM token minted/burned',
+          align: 'left',
+          style: {
+            fontSize:  '28px',
+            fontWeight:  'bold',
+            fontFamily:  'Helvetica, Arial, sans-serif',
+            color:  '#deadfc',
+            textShadow: '2px 2px 2px #000000'
+          },
+        },
+        markers: {
+          size: 3,
+          strokeWidth: 2,
+          strokeColors: '#fff',
+          hover: {
+            sizeOffset: 6
+          },
+          colors: ['#325d5e', '#602958'],
+        },
+        chart: {
+          id: 'vuechart-example',
+          zoom: {
+            type: 'x',
+            enabled: true,
+            autoScaleYaxis: true
+          },
+          toolbar: {
+            autoSelected: 'zoom'
+          },
+        },
+        legend: {
+          fontSize: '22px',
+          labels: {
+            useSeriesColors: true
+          },
+        },
+        tooltip: {
+          style: {
+            fontSize: '18px',
+            fontFamily: 'Helvetica, Arial, sans-serif',
+            color: "#000000",
+          },
+          followCursor: true,
+          shared: true,
+          inverseOrder: false,
+          custom: undefined,
+          fillSeriesColor: true,
+        },
+        xaxis: {
+          title: {
+            text: 'Day/Month',
+            style: {
+                color: '#deadfc',
+                fontSize: '22px',
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                fontWeight: 600,
+                cssClass: 'apexcharts-xaxis-title',
+            },
+          },
+          type: 'datetime',
+          categories: [],
+           labels: {
+            format: 'dd/MM',
+            style: {
+              colors: '#FFFFFF',
+              fontSize: '16px',
+              fontFamily: 'Helvetica, Arial, sans-serif',
+              fontWeight: 400,
+              cssClass: 'apexcharts-xaxis-label',
+            },
+          },
+        },
+        yaxis: {
+          title: {
+            text: 'ZOOM Tokens',
+            style: {
+              color: '#deadfc',
+              fontSize: '22px',
+              fontFamily: 'Helvetica, Arial, sans-serif',
+              fontWeight: 600,
+              cssClass: 'apexcharts-yaxis-title',
+            },
+          },
+          type: 'numeric',
+          labels: {
+            style: {
+              colors: '#FFFFFF',
+              fontSize: '12px',
+              fontFamily: 'Helvetica, Arial, sans-serif',
+              fontWeight: 400,
+              cssClass: 'apexcharts-yaxis-label',
+            },
+            formatter: function(val) {
+              return parseInt(val).toLocaleString();
+            },
+          },
+        },
+      },
+      chartSeries: [{
+        name: 'minted',
+        color: '#6fd2d3',
+        data: [1,2,3]
+      },{
+        name: 'burned',
+        color: '#d35bc3',
+        data: [7,6,4]
+      }]
     };
   },
   computed: {
-    buyCzxpBtnEnabled() {
-      if (
-        this.totalCzxpToBuy !== "" &&
-        this.totalCzxpToBuy >= 10000000 &&
-        this.totalCzxpToBuy <= 200000000 &&
-        this.myPurchaseTotal < 200000000000000000000
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    coinbase() {
-      return this.$store.state.web3.coinbase;
-    },
-    CzxpInstance() {
-      return this.$store.state.contractInstance.czxp;
-    },
-    ZoombiesInstance() {
-      return this.$store.state.contractInstance.cryptoz;
-    },
-    zoomBalance() {
-      return this.$store.state.totalCzxpSupply / 1000000000000000000;
-    },
-    fromZoomBalance() {
-      return this.prevZoomBalance || this.zoomBalance;
-    },
-    toZoomBalance() {
-      return this.newZoomBalance || this.zoomBalance;
-    },
-    nftSupply() {
-      return this.$store.state.totalCryptozSupply;
-    },
-    fromNftSupply() {
-      return this.prevNftSupply || this.nftSupply;
-    },
-    toNftSupply() {
-      return this.newNftSupply || this.nftSupply;
-    },
-    pendingPurchase() {
-      return this.movrCost + " MOVR =";
-    },
-    myPurchaseTotalLabel() {
-      return parseInt(this.myPurchaseTotal / 100000000000).toLocaleString();
-    },
+    ...mapGetters({
+      getWalletAddress: "blockChain/getWalletAddress",
+      getSignedZoomContract: "blockChain/getSignedZoomContract",
+      getZoomBalance: "blockChain/getZoomBalance",
+      getTotalZoomBalance: "blockChain/getTotalZoomBalance",
+      getTotalNftSupply: "blockChain/getTotalNftSupply",
+      getTotalNftTypes: "blockChain/getTotalNftTypes",
+    }),
   },
   mounted() {
-    //console.log('chain:',this.$store.state.web3.chainId);
     if (
       this.$store.state.web3.chainId == "1285" ||
       window.location.host == "movr.zoombies.world"
@@ -156,34 +240,86 @@ export default {
     } else {
       this.onMainNet = false;
     }
-
-    if (this.ZoombiesInstance) {
-      //this.updateSale();
-    }
+    this.graphData = new Object({"date":[], "minted": [], "burned":[]});
+    this.getZoomGraph();
   },
   watch: {
-    ZoombiesInstance(newVal) {
-      console.log({ newVal });
-      if (newVal) {
-        //this.updateSale();
-      }
-    },
-    zoomBalance(newVal, oldVal) {
-      this.newZoomBalance = newVal;
-      this.prevZoomBalance = oldVal;
-      if (oldVal > 0) {
+    getTotalZoomBalance(newVal, oldVal) {
+      if (newVal > 0) {
+        this.oldTotalZoom = oldVal;
         this.pulsateText(this.$refs.zoomBal);
       }
     },
-    nftSupply(newVal, oldVal) {
-      this.newNftSupply = newVal;
-      this.prevNftSupply = oldVal;
-      if (oldVal > 0) {
+    getTotalNftSupply(newVal, oldVal) {
+      if (newVal > 0) {
+        this.oldTotalNft = oldVal;
         this.pulsateText(this.$refs.nftSupply);
       }
     },
   },
   methods: {
+    getZoomGraph: async function () {
+      const query = `query { zoomPerDays {
+                    nodes{
+                      id
+                      minted
+                      burned
+                    }
+                  }}`;
+      const result = await fetch('https://api.subquery.network/sq/ryanprice/zoombies-moonriver', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          query
+        })
+      });
+      const res = await result.json();
+      let graphData = new Object({"date":[], "minted": [], "burned":[]});
+
+      res.data.zoomPerDays.nodes.forEach( i => {
+        graphData.date.push(parseInt(i.id));
+        graphData.minted.push(parseInt(i.minted/1000000000000000000));
+        graphData.burned.push(parseInt(i.burned/1000000000000000000));
+      });
+
+      this.$refs.zoomChart.updateOptions({xaxis: {
+                title: {
+                  text: 'Day/Month',
+                  style: {
+                      color: '#deadfc',
+                      fontSize: '22px',
+                      fontFamily: 'Helvetica, Arial, sans-serif',
+                      fontWeight: 600,
+                      cssClass: 'apexcharts-xaxis-title',
+                  },
+                },
+                type: 'datetime',
+                categories: graphData.date,
+                 labels: {
+                  format: 'dd/MM',
+                  style: {
+                    colors: '#FFFFFF',
+                    fontSize: '16px',
+                    fontFamily: 'Helvetica, Arial, sans-serif',
+                    fontWeight: 400,
+                    cssClass: 'apexcharts-xaxis-label',
+                  },
+                },
+              },})
+
+      this.chartSeries = [{
+        name: 'minted',
+        color: '#6fd2d3',
+        data: graphData.minted
+      },{
+        name: 'burned',
+        color: '#d35bc3',
+        data: graphData.burned
+      }]
+    },
     formatNumber(number) {
       return parseInt(number.toFixed(0)).toLocaleString();
     },
@@ -220,46 +356,6 @@ export default {
         console.log("addCZXPtoMetaMask error:", error);
       }
     },
-    buyCzxp: async function () {
-      //console.log( new web3.utils.BN(this.totalCzxpToBuy).mul(new web3.utils.BN('1000000000000')).toString() );
-      let buyinWei = new web3.utils.BN(this.totalCzxpToBuy)
-        .mul(new web3.utils.BN("100000000000"))
-        .toString();
-
-      await this.CzxpInstance.methods
-        .buy()
-        .send({
-          from: this.coinbase,
-          value: buyinWei,
-        })
-        .then((res) => {
-          //console.log(res.status);
-          if (res.status) {
-            this.updateSale();
-          }
-        })
-        .catch((e) => {
-          console.error(e);
-        });
-    },
-    updateSale: async function () {
-      console.log("Update sale data..");
-      //console.log(await this.CzxpInstance.methods.totalSupply().call());
-      this.zoomWalletsRemaining =
-        1000 - (await this.CzxpInstance.methods.totalContributors().call());
-      this.zoomSold = parseInt(
-        (await this.CzxpInstance.methods.totalZoomPurchased().call()) /
-          1000000000000000000
-      ).toLocaleString();
-      this.totalCzxpToBuy = "";
-      this.movrCost = 0;
-      //console.log("contr.total:",await this.CzxpInstance.methods.contributions(this.coinbase).call());
-      this.myPurchaseTotal = parseInt(
-        await this.CzxpInstance.methods.contributions(this.coinbase).call()
-      );
-
-      this.$store.state.zoomContribution = this.myPurchaseTotal;
-    },
     updateBadge: async function () {
       console.log("ggogogogo");
     },
@@ -274,13 +370,6 @@ export default {
       }
 
       this.movrCost = parseFloat(this.totalCzxpToBuy / 10000000).toFixed(7);
-    },
-  },
-  watch: {
-    ZoombiesInstance(newVal) {
-      if (newVal) {
-        //this.updateSale();
-      }
     },
   },
 };

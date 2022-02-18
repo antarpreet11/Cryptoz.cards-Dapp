@@ -303,11 +303,11 @@ const cardStore = {
               return;
             }
 
-            return rootState.web3.coinbase
+            return rootState.blockChain.walletAddress
               ? await addIsOwnedProp(
                   cardData,
                   CryptozInstance,
-                  rootState.web3.coinbase
+                  rootState.blockChain.walletAddress
                 )
               : cardData;
           })

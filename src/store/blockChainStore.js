@@ -3,8 +3,13 @@ import detectEthereumProvider from "@metamask/detect-provider";
 import zoombiesContractJson from "../contracts/Zoombies.json";
 import zoomContractJson from "../contracts/ZoomToken.json";
 import dAppState from "../dAppStates";
-import { EVENT_TYPES, setupEventWatcher } from "../util/watcherUtil";
+import {
+  EVENT_TYPES,
+  processCardMintedEvent,
+  setupEventWatcher,
+} from "../util/watcherUtil";
 import WebsocketProvider from "../util/WebsocketProvider";
+import { MessageBus } from "../messageBus";
 
 const DEFAULT_BLOCKCHAIN_STATE = {
   ethersCryptozContract: null,
@@ -163,6 +168,62 @@ const subscribeToMetamaskProviderEvents = (metamaskProvider, dispatch) => {
   });
 };
 
+const eventCallback = async (dispatch, eventPayload) => {
+  try {
+    dispatch("events/addEvents", eventPayload, { root: true });
+
+    // Zoom updates
+    if (
+      eventPayload.type === EVENT_TYPES.zoomBurn ||
+      eventPayload.type === EVENT_TYPES.zoomMint
+    ) {
+      dispatch("updateWalletBalances");
+      dispatch("updateUniverseBalances");
+      return;
+    }
+
+    // Booster credit updates
+    if (
+      eventPayload.type === EVENT_TYPES.boosterReward ||
+      eventPayload.type === EVENT_TYPES.dailyReward
+    ) {
+      dispatch("updateWalletBalances");
+      return;
+    }
+
+    // Card updates
+    if (eventPayload.type === EVENT_TYPES.cardMinted) {
+      // Card minted
+      dispatch("updateWalletBalances");
+      dispatch("updateUniverseBalances");
+
+      console.log("Card Minted!");
+      const data = processCardMintedEvent(eventPayload.data.args);
+      const newCard = await dispatch(
+        "crypt/addBoosterCard",
+        {
+          cardId: data.tokenId,
+          cardTypeId: data.cardTypeId,
+          edition: data.editionNumber,
+        },
+        { root: true }
+      );
+
+      if (newCard) {
+        MessageBus.$emit("boosterOpened", newCard);
+      }
+    }
+
+    if (eventPayload.type === EVENT_TYPES.sacrificeNFT) {
+      // sacrifice card
+      dispatch("updateWalletBalances");
+      dispatch("updateUniverseBalances");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const blockchainStore = {
   namespaced: true,
   state: () => DEFAULT_BLOCKCHAIN_STATE,
@@ -237,15 +298,7 @@ const blockchainStore = {
 
         dispatch("setContracts", contracts);
         setupEventWatcher((eventPayload) => {
-          dispatch("events/addEvents", eventPayload, { root: true });
-          if (
-            eventPayload.type === EVENT_TYPES.zoomMint ||
-            eventPayload.type === EVENT_TYPES.packOpened ||
-            eventPayload.type === EVENT_TYPES.cardMinted
-          ) {
-            dispatch("updateWalletBalances");
-            dispatch("updateUniverseBalances");
-          }
+          eventCallback(dispatch, eventPayload);
         }, provider);
       });
 
@@ -266,16 +319,7 @@ const blockchainStore = {
       });
 
       setupEventWatcher((eventPayload) => {
-        dispatch("events/addEvents", eventPayload, { root: true });
-
-        if (
-          eventPayload.type === EVENT_TYPES.zoomMint ||
-          eventPayload.type === EVENT_TYPES.packOpened ||
-          eventPayload.type === EVENT_TYPES.cardMinted
-        ) {
-          dispatch("updateWalletBalances");
-          dispatch("updateUniverseBalances");
-        }
+        eventCallback(dispatch, eventPayload);
       }, rpcProvider.provider);
 
       dispatch("updateWalletBalances");

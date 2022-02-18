@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 
-const devRPC = `wss://wss.api.moonbase.moonbeam.network`;
+const devRPC = `wss://moonbeam-alpha.api.onfinality.io/ws?apikey=${process.env["VUE_APP_MOONBEAM_RPC_API_KEY"]}`;
 const prodRPC = `wss://moonriver.api.onfinality.io/ws?apikey=${process.env["VUE_APP_MOONBEAM_RPC_API_KEY"]}`;
 
 class WebsocketProvider {

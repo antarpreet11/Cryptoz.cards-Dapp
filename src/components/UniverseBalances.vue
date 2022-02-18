@@ -95,10 +95,10 @@ export default {
   },
   computed: {
     fromZoomBalance() {
-      return this.prevZoomBalance || this.getZoomBalance;
+      return this.prevZoomBalance || this.getTotalZoomBalance;
     },
     toZoomBalance() {
-      return this.newZoomBalance || this.getZoomBalance;
+      return this.newZoomBalance || this.getTotalZoomBalance;
     },
     fromNftSupply() {
       return this.prevNftSupply || this.getTotalNftSupply;
@@ -113,13 +113,13 @@ export default {
       return this.newNftTypes || this.getTotalNftTypes;
     },
     ...mapGetters({
-      getZoomBalance: "blockChain/getZoomBalance",
+      getTotalZoomBalance: "blockChain/getTotalZoomBalance",
       getTotalNftSupply: "blockChain/getTotalNftSupply",
       getTotalNftTypes: "blockChain/getTotalNftTypes",
     }),
   },
   watch: {
-    getZoomBalance(newVal, oldVal) {
+    getTotalZoomBalance(newVal, oldVal) {
       this.newZoomBalance = newVal;
       this.prevZoomBalance = oldVal;
       if (oldVal > 0) {

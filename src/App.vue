@@ -166,21 +166,7 @@ export default {
       // and we need provider to be set in child components
       const web3 = new Web3(window.ethereum);
       window.web3 = web3;
-      this.$store.dispatch("blockChain/initBlockchain", {
-        isLocal: isLocal,
-        noMetamaskCallback: () => {
-          this.$bvModal.show("no-web3-modal");
-        },
-      });
-      this.initializeApp();
     }
-
-    // // set this here to be able to debounce it..
-    // // debounce prevents this from showing the "Balance Updated" twice
-    // // when both Cryptoz and Czxp contracts emit an event
-    // this.onBalanceUpdated = debounce(() => {
-    //   showSuccessToast(this, "Balance Updated!");
-    // }, 1000);
 
     MessageBus.$on("connect", () => {
       this.handleConnect();

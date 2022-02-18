@@ -243,10 +243,10 @@
               v-b-tooltip.hover="'Mint 1 random booster NFT'"
               v-b-modal="'open-booster-modal'"
               class="mint-booster-btn btn btn-danger"
-              :disabled="boostersOwned < 1"
+              :disabled="getBoosterCreditOwned < 1"
             >
               <span class="booster-counter">
-                {{ boostersOwned }}
+                {{ getBoosterCreditOwned }}
                 <b-icon-lightning-fill />
               </span>
               Mint Booster NFT
@@ -337,10 +337,8 @@ export default {
       getWalletAddress: "blockChain/getWalletAddress",
       getSignedZoombiesContract: "blockChain/getSignedZoombiesContract",
       getZoomBalance: "blockChain/getZoomBalance",
+      getBoosterCreditOwned: "blockChain/getBoosterCreditOwned",
     }),
-    boostersOwned() {
-      return this.$store.state.boostersOwned.toLocaleString();
-    },
     isWalletConnected() {
       return this.$store.state.dAppState === dAppStates.WALLET_CONNECTED;
     },
@@ -425,15 +423,8 @@ export default {
         const res = await this.getSignedZoombiesContract.buyBoosterAndMintNFT({
           value: "10000000000000000",
         });
-
         this.$store.dispatch("setIsTransactionPending", false);
         await res.wait();
-        const newCard = await this.$store.dispatch("crypt/addBoosterCard", {
-          cardId: res.events.LogCardMinted.returnValues.tokenId,
-          cardTypeId: res.events.LogCardMinted.returnValues.cardTypeId,
-          edition: res.events.LogCardMinted.returnValues.editionNumber,
-        });
-        MessageBus.$emit("boosterOpened", newCard);
       } catch (err) {
         console.error(err);
         showErrorToast(this, "Failed to buy/open booster");
@@ -452,14 +443,6 @@ export default {
         );
         this.$store.dispatch("setIsTransactionPending", false);
         await res.wait();
-
-        const newCard = await this.$store.dispatch("crypt/addBoosterCard", {
-          cardId: res.events.LogCardMinted.returnValues.tokenId,
-          cardTypeId: res.events.LogCardMinted.returnValues.cardTypeId,
-          edition: res.events.LogCardMinted.returnValues.editionNumber,
-        });
-
-        MessageBus.$emit("boosterOpened", newCard);
       } catch (err) {
         console.error(err);
         showErrorToast(this, "Failed to open booster");

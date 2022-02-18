@@ -199,7 +199,7 @@
                   />
                   Mint NFT for
                   {{
-                    getZoomBalance < card.unlock_czxp
+                    getZoomBalance < parseInt(card.unlock_czxp)
                       ? (card.cost * 3).toFixed(3)
                       : card.cost
                   }}
@@ -338,11 +338,10 @@ export default {
     );
   },
   mounted() {
-    if (this.getReadOnlyZoombiesContract) {
-      this.fetchStoreCards();
+    if (this.getAllShopCards.length > 0) {
+      this.setStoreCard();
     }
     window.nowTimer = setInterval(this.setNow, 1000);
-    //console.log(new web3.utils.BN("8").mul(new web3.utils.BN("1000000000000000000")).toString());
   },
   computed: {
     dAppState() {
@@ -350,9 +349,6 @@ export default {
     },
     isWalletConnected() {
       return this.$store.state.dAppState === dAppStates.WALLET_CONNECTED;
-    },
-    web3() {
-      return web3;
     },
     getNowTimeStamp() {
       return this.nowTimeStamp;
@@ -369,7 +365,11 @@ export default {
         return this.pageNext !== null;
       }
     },
-    ...mapGetters(["isLoadingShopCards", "isShopLoadingFinished"]),
+    ...mapGetters([
+      "isLoadingShopCards",
+      "isShopLoadingFinished",
+      "getAllShopCards",
+    ]),
     ...mapGetters({
       getReadOnlyZoombiesContract: "blockChain/getReadOnlyZoombiesContract",
       getWalletAddress: "blockChain/getWalletAddress",
@@ -378,16 +378,23 @@ export default {
       getSignedZoombiesContract: "blockChain/getSignedZoombiesContract",
     }),
   },
+  // watch: {
+  //   getWalletAddress(newVal, oldVal) {
+  //     if (newVal && newVal !== oldVal) {
+  //       this.fetchStoreCards();
+  //     }
+  //   },
+  // },
   watch: {
-    dAppState(newVal) {
-      if (newVal === dAppStates.WALLET_CONNECTED) {
-        this.fetchStoreCards();
+    getAllShopCards(newVal) {
+      if (newVal.length > 0) {
+        this.setStoreCard();
       }
     },
   },
   methods: {
-    fetchStoreCards: async function () {
-      await this.$store.dispatch("fetchStoreCards");
+    setStoreCard: async function () {
+      // await this.$store.dispatch("fetchStoreCards");
 
       const pageStart = this.isCardSorted ? this.sortedPageNext : this.pageNext;
       const newCards = this.$store.getters.getPaginatedShopCards(
@@ -409,12 +416,6 @@ export default {
     },
     setNow() {
       this.nowTimeStamp = Date.now();
-    },
-    getBN(val) {
-      return web3.utils.toWei(val);
-    },
-    weiToEther(wei) {
-      return web3.utils.fromWei(wei, "ether");
     },
     getBuyZoom(val) {
       //unlock * 10 * baseCost   =    val * 10 * 100000000000000
@@ -452,11 +453,6 @@ export default {
         });
 
         let freeCost = 0;
-        if (this.getZoomBalance < parseInt(cardAttributes.unlock_czxp)) {
-          let cardBNValue = new web3.utils.BN(cardAttributes.unlock_czxp);
-          cardBNValue.imul(new web3.utils.BN("10000000000000"));
-          freeCost = cardBNValue.toString();
-        }
 
         const result = await this.getSignedZoombiesContract.getFreeCard(
           cardAttributes.type_id,
@@ -494,9 +490,9 @@ export default {
         });
 
         this.showTransactionModal();
-        let cardBNValue = new web3.utils.BN(
-          web3.utils.toWei(cardAttributes.cost)
-        ).toString();
+        let cardBNValue = ethers.utils
+          .parseEther(cardAttributes.cost)
+          .toString();
 
         //HAck for cemetary wolf
         if (cardAttributes.type_id == 147) {
@@ -508,7 +504,10 @@ export default {
         }
 
         if (this.getZoomBalance < cardAttributes.unlock_czxp) {
-          cardBNValue = web3.utils.toWei((cardAttributes.cost * 3).toFixed(5));
+          cardBNValue = ethers.utils
+            .parseEther((cardAttributes.cost * 3).toFixed(5))
+            .toString();
+
           if (cardAttributes.type_id == 147) {
             cardBNValue = "26999999999999997";
           }
@@ -537,10 +536,12 @@ export default {
           });
         }
       } catch (err) {
+        console.log(err);
         this.$store.dispatch("setCardAsNotBought", {
           cardId: cardAttributes.id,
           isSorted: this.isCardSorted,
         });
+        this.hideTransactionModal();
         if (err.code !== 4001) {
           console.log(err);
           showErrorToast(this, "Failed to mint card");
@@ -571,6 +572,7 @@ export default {
         if (error.code !== 4001) {
           showErrorToast(this, "Failed to mint card");
         }
+        this.hideTransactionModal();
       } finally {
         this.isBuyingBooster = false;
       }

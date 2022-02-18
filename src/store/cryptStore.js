@@ -283,10 +283,6 @@ const cryptStore = {
 
         cryptCards.sort((a, b) => b.id - a.id);
 
-        if (isOwnCrypt) {
-          dispatch("updateCardsOwned", cryptCards.length, { root: true });
-        }
-
         commit(CRYPT_MUTATIONS.SET_CRYPT_CARDS, cryptCards);
       } catch (err) {
         console.error(err);

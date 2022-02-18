@@ -450,9 +450,6 @@ export default {
     ZoomContribution() {
       return this.$store.state.zoomContribution;
     },
-    currentEvent() {
-      return this.$store.state.lastChainEvent;
-    },
     getSponsorRoute() {
       let url;
 
@@ -527,15 +524,6 @@ export default {
     isWalletConnected(value) {
       if (value) {
         this.checkSponsor(this.getWalletAddress);
-      }
-    },
-    currentEvent(newValue, oldValue) {
-      if (newValue !== oldValue && typeof newValue !== "undefined") {
-        if (this.pendingTransaction == newValue.blockHash) {
-          this.showSpinner = false;
-          this.transactionMessage = "Confirmed! Balance updated";
-        }
-        this.getDailyBonusTime();
       }
     },
     getWalletAddress(value) {

@@ -156,14 +156,15 @@ const subscribeToMetamaskProviderEvents = (metamaskProvider, dispatch) => {
     window.location.reload();
   });
 
-  metamaskProvider.on("accountsChanged", (accounts) => {
+  metamaskProvider.on("accountsChanged", async (accounts) => {
     if (accounts.length == 0) {
       console.log("no account connected");
       dispatch("clearBlockchain");
       dispatch("setDAppState", dAppState.NOT_CONNECTED, { root: true });
     } else {
-      dispatch("initBlockchain");
-      dispatch("setDAppState", dAppState.CONNECTED, { root: true });
+      // await dispatch("initBlockchain");
+      // TODO(mchi): reload for now. Figure out a way to update global state without reloading.
+      window.location.reload();
     }
   });
 };
@@ -310,7 +311,6 @@ const blockchainStore = {
         metamaskProviderData.signer
       );
 
-      dispatch("setDAppState", dAppState.WALLET_CONNECTED, { root: true });
       commit(BLOCKCHAIN_MUTATIONS.SET_BLOCKCHAIN, {
         walletAddress: metamaskProviderData.address,
         walletBalance: ethers.utils.formatEther(metamaskProviderData.balance),
@@ -322,8 +322,11 @@ const blockchainStore = {
         eventCallback(dispatch, eventPayload);
       }, rpcProvider.provider);
 
-      dispatch("updateWalletBalances");
-      dispatch("updateUniverseBalances");
+      await dispatch("updateWalletBalances");
+      await dispatch("updateUniverseBalances");
+      dispatch("setDAppState", dAppState.WALLET_CONNECTED, { root: true });
+
+      dispatch("fetchStoreCards", null, { root: true });
     },
 
     async updateWalletBalances({ commit, state }) {

@@ -110,11 +110,12 @@ export default {
       getTotalZoomBalance: "blockChain/getTotalZoomBalance",
       getTotalNftSupply: "blockChain/getTotalNftSupply",
       getTotalNftTypes: "blockChain/getTotalNftTypes",
+      getChainId: "blockChain/getChainId",
     }),
   },
   mounted() {
     if (
-      this.$store.state.web3.chainId == "1285" ||
+      this.getChainId == 1285 ||
       window.location.host == "movr.zoombies.world"
     ) {
       this.onMainNet = true;

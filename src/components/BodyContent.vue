@@ -76,7 +76,9 @@
         <b-row>
           <b-col>
             <div>
-              <div class="graph-title">Moonriver ZOOM Token Inflation</div>
+              <div class="graph-title">Moonriver ZOOM <img src="@/assets/zoomTokenCoin.svg" class="coin-logo" /> Token Inflation</div>
+              The ZOOM inflation chart tracks the amount of ZOOM tokens that have been minted and burned in the last 100 days.<br/>
+              Click and drag a region to zoom in
               <apexchart id="chartContainer" ref="zoomChart" width="100%" type="line" :options="chartOptions" :series="chartSeries"></apexchart>
             </div>
           </b-col>
@@ -139,7 +141,11 @@ export default {
           },
         },
         tooltip: {
-
+          custom: function({series, seriesIndex, dataPointIndex, w}) {
+            return '<div class="arrow_box">' +
+              '<span>' + series[seriesIndex][dataPointIndex] + '</span>' +
+              '</div>'
+          },
           palette: 'palette10',
           x : {
             show: false
@@ -257,7 +263,7 @@ export default {
   },
   methods: {
     getZoomGraph: async function () {
-      const query = `query { zoomPerDays {
+      const query = `query { zoomPerDays(last:100) {
                     nodes{
                       id
                       minted
@@ -434,8 +440,37 @@ export default {
   color: #7EF4F6;
 }
 
-.apexcharts-tooltip .apexcharts-tooltip-series-group {
+.apexcharts-tooltip {
   background: #1c1f50;
   border: 4px solid red;
+}
+
+.arrow_box {
+  position: relative;
+  background: #555;
+  border: 2px solid #000000;
+}
+.arrow_box:after, .arrow_box:before {
+  right: 100%;
+  top: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.arrow_box:after {
+  border-color: rgba(85, 85, 85, 0);
+  border-right-color: #555;
+  border-width: 10px;
+  margin-top: -10px;
+}
+.arrow_box:before {
+  border-color: rgba(0, 0, 0, 0);
+  border-right-color: #000000;
+  border-width: 13px;
+  margin-top: -13px;
 }
 </style>

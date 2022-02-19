@@ -73,7 +73,8 @@
             ></b-img-lazy>
           </b-col>
         </b-row>
-        <b-row>
+        <div class="d-lg-none d-xl-block">View this website on a larger screen to see the Zoom inflation graphs</div>
+        <b-row class="d-none d-sm-block">
           <b-col>
             <div>
               <div class="graph-title">Moonriver ZOOM <img src="@/assets/zoomTokenCoin.svg" class="coin-logo" /> Token Inflation</div>
@@ -163,6 +164,40 @@ export default {
           custom: undefined,
           fillSeriesColor: true,
         },
+        responsive: [{
+            breakpoint: 400,
+            options: {
+              height: '400',
+              legend: {
+                position: "bottom"
+              },
+              xaxis: {
+                title: {
+                  style: {
+                      color: '#deadfc',
+                      fontSize: '12px',
+                      fontFamily: 'Helvetica, Arial, sans-serif',
+                      fontWeight: 300,
+                      cssClass: 'apexcharts-xaxis-title',
+                  },
+                  axisTicks: {
+                       show: false,
+                  },
+                },
+              },
+              yaxis: {
+                title: {
+                  style: {
+                    color: '#deadfc',
+                    fontSize: '12px',
+                    fontFamily: 'Helvetica, Arial, sans-serif',
+                    fontWeight: 300,
+                    cssClass: 'apexcharts-yaxis-title',
+                  },
+                },
+              },
+            },
+        }],
         xaxis: {
           title: {
             text: 'Day/Month',

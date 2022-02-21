@@ -4,7 +4,7 @@
       <b-container fluid class="text-center">
         <b-row>
           <b-col>
-            <div v-if="getWalletAddress">
+            <div v-if="metamaskInstalled">
               <b-col sm="12" md="12">
                 <b-button
                   v-b-modal.sponsor-modal
@@ -108,6 +108,8 @@ import { BButton, BContainer, BRow, BCol, BImgLazy } from "bootstrap-vue";
 import { mapGetters } from "vuex";
 import apexchart from "vue-apexcharts";
 import { ethers } from "ethers";
+import { isMetamaskInstalled } from "../store/blockChainStore";
+
 export default {
   name: "BodyContent",
   components: {
@@ -293,6 +295,9 @@ export default {
       getTotalNftTypes: "blockChain/getTotalNftTypes",
       getChainId: "blockChain/getChainId",
     }),
+    metamaskInstalled: () => {
+      return isMetamaskInstalled();
+    },
   },
   mounted() {
     if (

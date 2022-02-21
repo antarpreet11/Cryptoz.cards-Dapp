@@ -762,7 +762,7 @@ export default {
           );
           showSuccessToast(this, "Card(s) sacrificed.");
         }
-      } catch (error) {
+      } catch (err) {
         if (err.code !== 4001) {
           console.log(err);
           showErrorToast(this, "Failed to sacrifice card(s)");
@@ -802,7 +802,7 @@ export default {
 
           showSuccessToast(this, "Card Gifted.");
         }
-      } catch (error) {
+      } catch (err) {
         if (err.code !== 4001) {
           console.log("Error: ", err);
         }

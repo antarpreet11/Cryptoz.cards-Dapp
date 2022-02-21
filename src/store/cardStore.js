@@ -1,4 +1,4 @@
-import { getCardType } from "../util/cardUtil";
+import { addIsOwnedProp, getCard, getCardType } from "../util/cardUtil";
 import { dynamicSort, getRarity, soldOutSort } from "../helpers";
 
 const typeIdsOnChain = [];
@@ -102,62 +102,6 @@ export const CARD_MUTATIONS = {
   SET_CARD_NOT_BOUGHT: "SET_CARD_NOT_BOUGHT",
   SET_CARD_EDITION: "SET_CARD_EDITION",
   CLEAR_STORE_CARDS: "CLEAR_STORE_CARDS",
-};
-
-export const RARITY_CLASSES = {
-  Common: "card-bg card-bg-6",
-  Uncommon: "card-bg card-bg-5",
-  Rare: "card-bg card-bg-4",
-  Epic: "card-bg card-bg-3",
-  Platinum: "card-bg card-bg-2",
-  Diamond: "card-bg card-bg-1",
-};
-
-const getCard = async (cardId, CryptozInstance) => {
-  const res = await getCardType(cardId);
-  if (!res) {
-    console.log(`Failed to fetch card ${cardId}.json`);
-    return;
-  }
-
-  let cardObj = { ...res };
-
-  cardObj.id = cardId;
-
-  if (res.attributes[3].value !== "Store") {
-    return;
-  }
-
-  // using for..of here so I can use continue
-  for (const attribute of res.attributes) {
-    if (attribute.trait_type === "rarity") {
-      cardObj["rarity"] = RARITY_CLASSES[attribute.value];
-      continue;
-    }
-    cardObj[attribute.trait_type] = attribute.value;
-  }
-
-  const edition = await CryptozInstance.cardTypeToEdition(cardObj.id);
-
-  cardObj.edition_current = parseInt(edition);
-
-  // Set soldOut flag first
-  if (cardObj.edition_current == cardObj.edition_total) {
-    cardObj.soldOut = 1;
-  } else {
-    cardObj.soldOut = 0;
-  }
-
-  const t = await CryptozInstance.storeReleaseTime(cardObj.id);
-  cardObj.release_time = t;
-  return cardObj;
-};
-
-const addIsOwnedProp = async (card, CryptozInstance, walletAddress) => {
-  const isOwned = await CryptozInstance.cardTypesOwned(walletAddress, card.id);
-  card.isOwned = isOwned;
-
-  return card;
 };
 
 const cardStore = {

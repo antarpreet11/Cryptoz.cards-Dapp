@@ -6,6 +6,7 @@ import dAppState from "../dAppStates";
 import {
   EVENT_TYPES,
   processCardMintedEvent,
+  processTransferEvent,
   setupEventWatcher,
 } from "../util/watcherUtil";
 import WebsocketProvider from "../util/WebsocketProvider";
@@ -171,6 +172,13 @@ const subscribeToMetamaskProviderEvents = (metamaskProvider, dispatch) => {
 
 const eventCallback = async (dispatch, eventPayload) => {
   try {
+    if (eventPayload.type === EVENT_TYPES.transfer) {
+      const data = processTransferEvent(eventPayload.data.args);
+      if (data === null) {
+        return;
+      }
+    }
+
     dispatch("events/addEvents", eventPayload, { root: true });
 
     // Zoom updates

@@ -1,6 +1,6 @@
 import { getCardType } from "../util/cardUtil";
 import { dynamicSort, getRarity } from "../helpers";
-import { RARITY_CLASSES } from "./cardStore";
+import { RARITY_CLASSES } from "../util/cardUtil";
 import _ from "lodash";
 
 export const ORIGIN_CRITERIA = {

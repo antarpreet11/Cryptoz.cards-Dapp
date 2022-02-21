@@ -98,7 +98,7 @@ import { BTab, BTabs, BFormSelect } from "bootstrap-vue";
 import { getCardSets } from "../util/cardUtil";
 import { v4 as uuidv4 } from "uuid";
 import OwnedCardContent from "./OwnedCardContent.vue";
-import { RARITY_CLASSES } from "../store/cardStore";
+import { RARITY_CLASSES } from "../util/cardUtil";
 
 export default {
   name: "CardSets",

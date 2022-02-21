@@ -87,6 +87,23 @@
         Join Discord to learn more!
       </a>
     </div>
+    <div v-else-if="eventType === getEventTypes.transfer && transferCardData">
+      <p>
+        <router-link :to="computeWalletLink(transferCardData.from)">
+          {{ createDottedAddress(transferCardData.from) }}
+        </router-link>
+        transferred NFT
+        <span :class="transferCardData.rarityClass"
+          >{{ transferCardData.cardName }} #{{
+            transferCardData.currentEdition
+          }}
+        </span>
+        to
+        <router-link :to="computeWalletLink(transferCardData.to)">
+          {{ createDottedAddress(transferCardData.to) }}
+        </router-link>
+      </p>
+    </div>
     <div
       v-else-if="eventType === getEventTypes.sacrificeNFT && sacrificedCardData"
     >
@@ -119,9 +136,11 @@ import {
   processDailyRewardEvent,
   processRewardBoosterEvent,
   processSacrificeNFTEvent,
+  processTransferEvent,
 } from "../util/watcherUtil";
 import { ethers } from "ethers";
-import { getCardType } from "../util/cardUtil";
+import { getCardType, getNftByTokenId } from "../util/cardUtil";
+import { mapGetters } from "vuex";
 
 export default {
   name: "EventNotification",
@@ -150,6 +169,8 @@ export default {
           return "NFT Sacrificed";
         case EVENT_TYPES.cardTypeLoaded:
           return "Card type loaded";
+        case EVENT_TYPES.transfer:
+          return "Zoombies Transfered";
         default:
           return null;
       }
@@ -194,12 +215,16 @@ export default {
 
       return processRewardBoosterEvent(data);
     },
+    ...mapGetters({
+      getReadOnlyZoombiesContract: "blockChain/getReadOnlyZoombiesContract",
+    }),
   },
   data() {
     return {
       isLoadingCardInfo: true,
       cardMintedData: null,
       sacrificedCardData: null,
+      transferCardData: null,
     };
   },
   async mounted() {
@@ -209,6 +234,10 @@ export default {
 
     if (this.eventType === EVENT_TYPES.sacrificeNFT) {
       await this.computeSacrificedNFTMessage();
+    }
+
+    if (this.eventType === EVENT_TYPES.transfer) {
+      await this.computeTransferNFTMessage();
     }
   },
   methods: {
@@ -311,6 +340,29 @@ export default {
 
       this.cardMintedData = extractedInfo;
       this.isLoadingCardInfo = false;
+    },
+    computeTransferNFTMessage: async function () {
+      const data = this.eventData.args;
+      const transferData = processTransferEvent(data);
+
+      const cardInfo = await getNftByTokenId(
+        transferData.tokenId,
+        this.getReadOnlyZoombiesContract
+      );
+
+      const rarity = cardInfo.cardData.attributes.filter((attribute) => {
+        if (attribute.trait_type === "rarity") return true;
+        return false;
+      })[0].value;
+      const rarityClass = this.computeRarityClass(rarity.toLowerCase());
+
+      this.transferCardData = {
+        from: transferData.fromAddress,
+        to: transferData.toAddress,
+        cardName: cardInfo.cardData.name,
+        currentEdition: cardInfo.currentEdition,
+        rarityClass,
+      };
     },
     computeSacrificedNFTMessage: async function () {
       const data = this.eventData.args;

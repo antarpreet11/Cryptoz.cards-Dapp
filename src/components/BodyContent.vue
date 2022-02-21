@@ -144,13 +144,14 @@ export default {
         chart: {
           id: "vuechart-example",
           zoom: {
-            type: "x",
             enabled: true,
+            type: 'x',
             autoScaleYaxis: true,
           },
           toolbar: {
             autoSelected: "zoom",
           },
+          type: 'line',
         },
         legend: {
           fontSize: "22px",
@@ -185,7 +186,7 @@ export default {
           custom: undefined,
           fillSeriesColor: true,
         },
-        responsive: [
+/*        responsive: [
           {
             breakpoint: 400,
             options: {
@@ -221,7 +222,8 @@ export default {
             },
           },
         ],
-        xaxis: {
+  */      xaxis: {
+          tickPlacement: 'on',
           title: {
             text: "Day/Month",
             style: {

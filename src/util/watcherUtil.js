@@ -30,6 +30,7 @@ export const EVENT_TYPES = {
   cardTypeLoaded: "cardTypeLoaded",
   cardMinted: "cardMinted",
   packOpened: "packOpened",
+  transfer: "transfer",
 };
 
 const zoomTokenEvents = [
@@ -85,6 +86,14 @@ const zoombiesEvents = [
       topics: [ethers.utils.id("LogDailyReward(address,uint256)")],
     },
     eventType: EVENT_TYPES.dailyReward,
+  },
+  {
+    eventName: "Transfer Event",
+    filter: {
+      address: zoombiesContractAddress,
+      topics: [ethers.utils.id("Transfer(address,address,uint256)")],
+    },
+    eventType: EVENT_TYPES.transfer,
   },
   // {
   //   eventName: "Sponsor Reward Event",
@@ -194,5 +203,25 @@ export const processCardMintedEvent = (data) => {
     tokenId,
     cardTypeId,
     editionNumber,
+  };
+};
+
+export const processTransferEvent = (data) => {
+  const fromAddress = data[0];
+  const toAddress = data[1];
+
+  if (
+    fromAddress === ethers.constants.AddressZero ||
+    toAddress === ethers.constants.AddressZero
+  ) {
+    return null;
+  }
+
+  const tokenId = ethers.BigNumber.from(data[2]).toNumber();
+
+  return {
+    fromAddress,
+    toAddress,
+    tokenId,
   };
 };

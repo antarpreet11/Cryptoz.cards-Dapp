@@ -10,8 +10,8 @@
       <event-notification
         v-for="event in getEvents"
         :key="uniqueId()"
-        :eventType="event.type"
-        :eventData="event.data"
+        :event-type="event.type"
+        :event-data="event.data"
       ></event-notification>
     </div>
   </div>

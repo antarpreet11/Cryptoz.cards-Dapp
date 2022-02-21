@@ -120,23 +120,39 @@ export default {
     },
   },
   beforeCreate() {
-    if (window.web3 && window.ethereum) {
+    if (window.ethereum) {
       this.$store.dispatch("blockChain/initBlockchain", {
         isLocal: isLocal,
         noMetamaskCallback: () => {
           this.$bvModal.show("no-web3-modal");
         },
       });
+    } else {
+      // Setup listener for mobile
+      window.addEventListener(
+        "ethereum#initialized",
+        () => {
+          this.$store.dispatch("blockChain/initBlockchain", {
+            isLocal: isLocal,
+            noMetamaskCallback: () => {
+              this.$bvModal.show("no-web3-modal");
+            },
+          });
+        },
+        {
+          once: true,
+        }
+      );
     }
   },
   async created() {
-    if (window.web3 && window.ethereum) {
-      // this needs to be set in beforeCreate because vue lifecycle
-      // is Parent create -> child create -> child mount -> parent mount
-      // and we need provider to be set in child components
-      const web3 = new Web3(window.ethereum);
-      window.web3 = web3;
-    }
+    // if (window.web3 && window.ethereum) {
+    //   // this needs to be set in beforeCreate because vue lifecycle
+    //   // is Parent create -> child create -> child mount -> parent mount
+    //   // and we need provider to be set in child components
+    //   const web3 = new Web3(window.ethereum);
+    //   window.web3 = web3;
+    // }
 
     MessageBus.$on("connect", () => {
       this.$store.dispatch("blockChain/initBlockchain", {

@@ -74,7 +74,11 @@
           </b-col>
         </b-row>
         <div class="d-md-none">
-          View this website on a larger screen to see the Zoom inflation graphs
+          <h3>View this website on a larger screen to view the Zoom inflation graphs</h3>
+          <br />
+          Over the previous 100 days:<br/>
+          <strong>Total ZOOM minted:</strong> {{totalZoomMinted}}<br />
+          <strong>Total ZOOM Burned:</strong> {{totalZoomBurned}}
         </div>
         <b-row class="d-none d-md-block">
           <b-col>
@@ -130,6 +134,8 @@ export default {
       onMainNet: false,
       oldTotalZoom: 0,
       oldTotalNft: 0,
+      totalZoomMinted : 'Loading...',
+      totalZoomBurned : 'Loading...',
       graphData: Object(),
       chartOptions: {
         markers: {
@@ -351,15 +357,23 @@ export default {
       );
       const res = await result.json();
       let graphData = new Object({ date: [], minted: [], burned: [] });
+      this.totalZoomMinted = ethers.BigNumber.from("0");
+      this.totalZoomBurned = ethers.BigNumber.from("0");
 
       res.data.zoomPerDays.nodes.forEach((i) => {
         graphData.date.push(parseInt(i.id));
         const minted = ethers.utils.formatEther(i.minted);
         const burned = ethers.utils.formatEther(i.burned);
-
+        //mobile
+        this.totalZoomMinted = this.totalZoomMinted.add(ethers.utils.parseUnits(minted));
+        this.totalZoomBurned = this.totalZoomBurned.add(ethers.utils.parseUnits(burned));
+        
         graphData.minted.push(parseInt(minted));
         graphData.burned.push(parseInt(burned));
       });
+      //For mobile only
+      this.totalZoomMinted = parseInt(ethers.utils.formatEther(this.totalZoomMinted)).toLocaleString();
+      this.totalZoomBurned = parseInt(ethers.utils.formatEther(this.totalZoomBurned)).toLocaleString();
 
       this.$refs.zoomChart.updateOptions({
         xaxis: {

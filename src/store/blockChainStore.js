@@ -275,6 +275,17 @@ const blockchainStore = {
      * }
      */
     async initBlockchain({ commit, state, dispatch }, payload) {
+      // Setup listener for mobile
+      window.addEventListener(
+        "ethereum#initialized",
+        () => {
+          dispatch("initBlockchain");
+        },
+        {
+          once: true,
+        }
+      );
+
       const metamaskProviderData = await setupMetamaskProvider();
       if (!metamaskProviderData) {
         payload.noMetamaskCallback();

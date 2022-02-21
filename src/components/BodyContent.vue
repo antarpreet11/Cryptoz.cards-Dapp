@@ -73,14 +73,28 @@
             ></b-img-lazy>
           </b-col>
         </b-row>
-        <div class="d-lg-none d-xl-block">View this website on a larger screen to see the Zoom inflation graphs</div>
-        <b-row class="d-none d-sm-block">
+        <div class="d-md-none">
+          View this website on a larger screen to see the Zoom inflation graphs
+        </div>
+        <b-row class="d-none d-md-block">
           <b-col>
             <div>
-              <div class="graph-title">Moonriver ZOOM <img src="@/assets/zoomTokenCoin.svg" class="coin-logo" /> Token Inflation</div>
-              The ZOOM inflation chart tracks the amount of ZOOM tokens that have been minted and burned in the last 100 days.<br/>
+              <div class="graph-title">
+                Moonriver ZOOM
+                <img src="@/assets/zoomTokenCoin.svg" class="coin-logo" /> Token
+                Inflation
+              </div>
+              The ZOOM inflation chart tracks the amount of ZOOM tokens that
+              have been minted and burned in the last 100 days.<br />
               Click and drag a region to zoom in
-              <apexchart id="chartContainer" ref="zoomChart" width="100%" type="line" :options="chartOptions" :series="chartSeries"></apexchart>
+              <apexchart
+                id="chartContainer"
+                ref="zoomChart"
+                width="100%"
+                type="line"
+                :options="chartOptions"
+                :series="chartSeries"
+              ></apexchart>
             </div>
           </b-col>
         </b-row>
@@ -92,7 +106,8 @@
 <script>
 import { BButton, BContainer, BRow, BCol, BImgLazy } from "bootstrap-vue";
 import { mapGetters } from "vuex";
-import apexchart from 'vue-apexcharts'
+import apexchart from "vue-apexcharts";
+import { ethers } from "ethers";
 export default {
   name: "BodyContent",
   components: {
@@ -118,45 +133,49 @@ export default {
         markers: {
           size: 3,
           strokeWidth: 2,
-          strokeColors: '#fff',
+          strokeColors: "#fff",
           hover: {
-            sizeOffset: 6
+            sizeOffset: 6,
           },
-          colors: ['#325d5e', '#602958'],
+          colors: ["#325d5e", "#602958"],
         },
         chart: {
-          id: 'vuechart-example',
+          id: "vuechart-example",
           zoom: {
-            type: 'x',
+            type: "x",
             enabled: true,
-            autoScaleYaxis: true
+            autoScaleYaxis: true,
           },
           toolbar: {
-            autoSelected: 'zoom'
+            autoSelected: "zoom",
           },
         },
         legend: {
-          fontSize: '22px',
+          fontSize: "22px",
           labels: {
-            useSeriesColors: true
+            useSeriesColors: true,
           },
         },
         tooltip: {
-          custom: function({series, seriesIndex, dataPointIndex, w}) {
-            return '<div class="arrow_box">' +
-              '<span>' + series[seriesIndex][dataPointIndex] + '</span>' +
-              '</div>'
+          custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+            return (
+              '<div class="arrow_box">' +
+              "<span>" +
+              series[seriesIndex][dataPointIndex] +
+              "</span>" +
+              "</div>"
+            );
           },
-          palette: 'palette10',
-          x : {
-            show: false
+          palette: "palette10",
+          x: {
+            show: false,
           },
           onDatasetHover: {
             highlightDataSeries: true,
           },
           style: {
-            fontSize: '18px',
-            fontFamily: 'Helvetica, Arial, sans-serif',
+            fontSize: "18px",
+            fontFamily: "Helvetica, Arial, sans-serif",
           },
           followCursor: true,
           shared: true,
@@ -164,99 +183,104 @@ export default {
           custom: undefined,
           fillSeriesColor: true,
         },
-        responsive: [{
+        responsive: [
+          {
             breakpoint: 400,
             options: {
-              height: '400',
+              height: "400",
               legend: {
-                position: "bottom"
+                position: "bottom",
               },
               xaxis: {
                 title: {
                   style: {
-                      color: '#deadfc',
-                      fontSize: '12px',
-                      fontFamily: 'Helvetica, Arial, sans-serif',
-                      fontWeight: 300,
-                      cssClass: 'apexcharts-xaxis-title',
+                    color: "#deadfc",
+                    fontSize: "12px",
+                    fontFamily: "Helvetica, Arial, sans-serif",
+                    fontWeight: 300,
+                    cssClass: "apexcharts-xaxis-title",
                   },
                   axisTicks: {
-                       show: false,
+                    show: false,
                   },
                 },
               },
               yaxis: {
                 title: {
                   style: {
-                    color: '#deadfc',
-                    fontSize: '12px',
-                    fontFamily: 'Helvetica, Arial, sans-serif',
+                    color: "#deadfc",
+                    fontSize: "12px",
+                    fontFamily: "Helvetica, Arial, sans-serif",
                     fontWeight: 300,
-                    cssClass: 'apexcharts-yaxis-title',
+                    cssClass: "apexcharts-yaxis-title",
                   },
                 },
               },
             },
-        }],
+          },
+        ],
         xaxis: {
           title: {
-            text: 'Day/Month',
+            text: "Day/Month",
             style: {
-                color: '#deadfc',
-                fontSize: '22px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                cssClass: 'apexcharts-xaxis-title',
+              color: "#deadfc",
+              fontSize: "22px",
+              fontFamily: "Helvetica, Arial, sans-serif",
+              fontWeight: 600,
+              cssClass: "apexcharts-xaxis-title",
             },
           },
-          type: 'datetime',
+          type: "datetime",
           categories: [],
-           labels: {
-            format: 'dd/MM',
+          labels: {
+            format: "dd/MM",
             style: {
-              colors: '#FFFFFF',
-              fontSize: '16px',
-              fontFamily: 'Helvetica, Arial, sans-serif',
+              colors: "#FFFFFF",
+              fontSize: "16px",
+              fontFamily: "Helvetica, Arial, sans-serif",
               fontWeight: 400,
-              cssClass: 'apexcharts-xaxis-label',
+              cssClass: "apexcharts-xaxis-label",
             },
           },
         },
         yaxis: {
           title: {
-            text: 'ZOOM Tokens',
+            text: "ZOOM Tokens",
             style: {
-              color: '#deadfc',
-              fontSize: '22px',
-              fontFamily: 'Helvetica, Arial, sans-serif',
+              color: "#deadfc",
+              fontSize: "22px",
+              fontFamily: "Helvetica, Arial, sans-serif",
               fontWeight: 600,
-              cssClass: 'apexcharts-yaxis-title',
+              cssClass: "apexcharts-yaxis-title",
             },
           },
-          type: 'numeric',
+          type: "numeric",
           labels: {
             style: {
-              colors: '#FFFFFF',
-              fontSize: '12px',
-              fontFamily: 'Helvetica, Arial, sans-serif',
+              colors: "#FFFFFF",
+              fontSize: "12px",
+              fontFamily: "Helvetica, Arial, sans-serif",
               fontWeight: 400,
-              cssClass: 'apexcharts-yaxis-label',
+              cssClass: "apexcharts-yaxis-label",
             },
-            formatter: function(val) {
+            formatter: function (val) {
               return parseInt(val).toLocaleString();
             },
           },
         },
       },
-      chartSeries: [{
-        name: 'minted',
-        color: '#17a2b8',
-        data: [1,2,3]
-      },{
-        name: 'burned',
-        color: '#f566e2',
-        data: [7,6,4]
-      }]
+      chartSeries: [
+        {
+          name: "minted",
+          color: "#17a2b8",
+          data: [1, 2, 3],
+        },
+        {
+          name: "burned",
+          color: "#f566e2",
+          data: [7, 6, 4],
+        },
+      ],
     };
   },
   computed: {
@@ -279,7 +303,7 @@ export default {
     } else {
       this.onMainNet = false;
     }
-    this.graphData = new Object({"date":[], "minted": [], "burned":[]});
+    this.graphData = new Object({ date: [], minted: [], burned: [] });
     this.getZoomGraph();
   },
   watch: {
@@ -305,62 +329,71 @@ export default {
                       burned
                     }
                   }}`;
-      const result = await fetch('https://api.subquery.network/sq/ryanprice/zoombies-moonriver', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          query
-        })
-      });
+      const result = await fetch(
+        "https://api.subquery.network/sq/ryanprice/zoombies-moonriver",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            query,
+          }),
+        }
+      );
       const res = await result.json();
-      let graphData = new Object({"date":[], "minted": [], "burned":[]});
+      let graphData = new Object({ date: [], minted: [], burned: [] });
 
-      res.data.zoomPerDays.nodes.forEach( i => {
+      res.data.zoomPerDays.nodes.forEach((i) => {
         graphData.date.push(parseInt(i.id));
-        graphData.minted.push(parseInt(i.minted/1000000000000000000)); // maybe use BN ?
-        graphData.burned.push(parseInt(i.burned/1000000000000000000));
+        const minted = ethers.utils.formatEther(i.minted);
+        const burned = ethers.utils.formatEther(i.burned);
+
+        graphData.minted.push(parseInt(minted));
+        graphData.burned.push(parseInt(burned));
       });
 
       this.$refs.zoomChart.updateOptions({
-              xaxis: {
-                title: {
-                  text: 'Day/Month',
-                  style: {
-                      color: '#deadfc',
-                      fontSize: '22px',
-                      fontFamily: 'Helvetica, Arial, sans-serif',
-                      fontWeight: 600,
-                      cssClass: 'apexcharts-xaxis-title',
-                  },
-                },
-                type: 'datetime',
-                categories: graphData.date,
-                 labels: {
-                  format: 'dd/MM',
-                  style: {
-                    colors: '#FFFFFF',
-                    fontSize: '16px',
-                    fontFamily: 'Helvetica, Arial, sans-serif',
-                    fontWeight: 400,
-                    cssClass: 'apexcharts-xaxis-label',
-                  },
-                },
-              },
-      })
+        xaxis: {
+          title: {
+            text: "Day/Month",
+            style: {
+              color: "#deadfc",
+              fontSize: "22px",
+              fontFamily: "Helvetica, Arial, sans-serif",
+              fontWeight: 600,
+              cssClass: "apexcharts-xaxis-title",
+            },
+          },
+          type: "datetime",
+          categories: graphData.date,
+          labels: {
+            format: "dd/MM",
+            style: {
+              colors: "#FFFFFF",
+              fontSize: "16px",
+              fontFamily: "Helvetica, Arial, sans-serif",
+              fontWeight: 400,
+              cssClass: "apexcharts-xaxis-label",
+            },
+          },
+        },
+      });
 
       //Update the model for the series
-      this.chartSeries = [{
-        name: 'minted',
-        color: '#17a2b8',
-        data: graphData.minted
-      },{
-        name: 'burned',
-        color: '#f566e2',
-        data: graphData.burned
-      }]
+      this.chartSeries = [
+        {
+          name: "minted",
+          color: "#17a2b8",
+          data: graphData.minted,
+        },
+        {
+          name: "burned",
+          color: "#f566e2",
+          data: graphData.burned,
+        },
+      ];
     },
     formatNumber(number) {
       return parseInt(number.toFixed(0)).toLocaleString();
@@ -472,7 +505,7 @@ export default {
   font-size: 32px;
   font-weight: 500;
   line-height: 1.2;
-  color: #7EF4F6;
+  color: #7ef4f6;
 }
 
 .apexcharts-tooltip {
@@ -485,7 +518,8 @@ export default {
   background: #555;
   border: 2px solid #000000;
 }
-.arrow_box:after, .arrow_box:before {
+.arrow_box:after,
+.arrow_box:before {
   right: 100%;
   top: 50%;
   border: solid transparent;

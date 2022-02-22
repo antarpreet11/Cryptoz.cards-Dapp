@@ -342,11 +342,11 @@ const blockchainStore = {
 
       if (!walletAddress || !contracts) return;
 
-      const { readOnlyZoomContract, readOnlyZoombiesContract } = contracts;
+      const { signedZoomContract, signedZoombiesContract } = contracts;
 
-      const zoomBalancePromise = readOnlyZoomContract.balanceOf(walletAddress);
-      const nftOwnedPromise = readOnlyZoombiesContract.balanceOf(walletAddress);
-      const boosterCreditPromise = readOnlyZoombiesContract.boosterCreditsOwned(
+      const zoomBalancePromise = signedZoomContract.balanceOf(walletAddress);
+      const nftOwnedPromise = signedZoombiesContract.balanceOf(walletAddress);
+      const boosterCreditPromise = signedZoombiesContract.boosterCreditsOwned(
         walletAddress
       );
 
@@ -366,11 +366,11 @@ const blockchainStore = {
     async updateUniverseBalances({ commit, state }) {
       const { contracts } = state;
       if (!contracts) return;
-      const { readOnlyZoomContract, readOnlyZoombiesContract } = contracts;
+      const { signedZoomContract, signedZoombiesContract } = contracts;
 
-      const totalCzxpPromise = readOnlyZoomContract.totalSupply();
-      const totalTypesPromise = readOnlyZoombiesContract.totalCardTypes();
-      const totalCryptozPromise = readOnlyZoombiesContract.totalSupply();
+      const totalCzxpPromise = signedZoomContract.totalSupply();
+      const totalTypesPromise = signedZoombiesContract.totalCardTypes();
+      const totalCryptozPromise = signedZoombiesContract.totalSupply();
 
       const [totalCzxp, totalTypes, totalCryptoz] = await Promise.all([
         totalCzxpPromise,

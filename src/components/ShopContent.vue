@@ -371,7 +371,6 @@ export default {
       "getAllShopCards",
     ]),
     ...mapGetters({
-      getReadOnlyZoombiesContract: "blockChain/getReadOnlyZoombiesContract",
       getWalletAddress: "blockChain/getWalletAddress",
       getBalance: "blockChain/getBalance",
       getZoomBalance: "blockChain/getZoomBalance",

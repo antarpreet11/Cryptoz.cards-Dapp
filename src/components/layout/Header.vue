@@ -256,7 +256,9 @@
         />
         <span
           >{{
-            onMainNet ? getBalance.toFixed(4) : getBalance.toFixed(3) + " DEV"
+            onMainNet
+              ? getBalance.toFixed(4)
+              : getBalance.toFixed(3) + `${onMainNet ? " MOVR" : " DEV"}`
           }}
         </span>
       </div>
@@ -497,9 +499,8 @@ export default {
     ...mapGetters({
       getWalletAddress: "blockChain/getWalletAddress",
       getBalance: "blockChain/getBalance",
-      getReadOnlyZoomContract: "blockChain/getReadOnlyZoomContract",
+      getSignedZoomContract: "blockChain/getSignedZoomContract",
       getSignedZoombiesContract: "blockChain/getSignedZoombiesContract",
-      getReadOnlyZoombiesContract: "blockChain/getReadOnlyZoombiesContract",
     }),
   },
   data() {
@@ -563,10 +564,8 @@ export default {
       this.showShareMyLink = false;
     },
     checkSponsor: async function (address) {
-      if (this.getReadOnlyZoombiesContract && address) {
-        const sponsor = await this.getReadOnlyZoombiesContract.sponsors(
-          address
-        );
+      if (this.getSignedZoombiesContract && address) {
+        const sponsor = await this.getSignedZoombiesContract.sponsors(address);
         this.mySponsor = parseInt(sponsor, 16) ? sponsor : null;
         if (sponsor && sponsor !== baseAddress) {
           this.shouldShowSponsor = false;
@@ -615,8 +614,8 @@ export default {
         });
     },
     getDailyBonusTime: async function () {
-      if (this.getReadOnlyZoombiesContract && this.getWalletAddress) {
-        const res = await this.getReadOnlyZoombiesContract.getTimeToDailyBonus(
+      if (this.getSignedZoombiesContract && this.getWalletAddress) {
+        const res = await this.getSignedZoombiesContract.getTimeToDailyBonus(
           this.getWalletAddress
         );
 
@@ -657,7 +656,7 @@ export default {
       return moment(_timeStamp).format("MMM D, h:mm a");
     },
     getZoomContributionStatus: async function () {
-      const contract = this.getReadOnlyZoomContract;
+      const contract = this.getSignedZoomContract;
       const zoomContribution = await contract.contributions(
         this.getWalletAddress
       );

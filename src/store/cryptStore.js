@@ -255,7 +255,7 @@ const cryptStore = {
         commit(CRYPT_MUTATIONS.LOADING_CRYPT_CARDS);
 
         const CryptozInstance =
-          rootState.blockChain.contracts.readOnlyZoombiesContract;
+          rootState.blockChain.contracts.signedZoombiesContract;
 
         const balanceOfOwner = await CryptozInstance.balanceOf(addressToLoad);
 

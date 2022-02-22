@@ -240,7 +240,7 @@ const cardStore = {
     async fetchStoreCards({ commit, rootState }) {
       try {
         const CryptozInstance =
-          rootState.blockChain.contracts.readOnlyZoombiesContract;
+          rootState.blockChain.contracts.signedZoombiesContract;
 
         commit(CARD_MUTATIONS.LOADING_SHOP_CARDS);
 

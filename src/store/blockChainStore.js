@@ -11,6 +11,7 @@ import {
 } from "../util/watcherUtil";
 import WebsocketProvider from "../util/WebsocketProvider";
 import { MessageBus } from "../messageBus";
+import { isLocal } from "../util/constants/networks";
 
 const DEFAULT_BLOCKCHAIN_STATE = {
   ethersCryptozContract: null,
@@ -66,11 +67,6 @@ const prodChainParam = {
   blockExplorerUrls: ["https://moonriver.moonscan.io/"],
 };
 
-const isLocal =
-  process.env.NODE_ENV === "development" ||
-  window.location.host !== "movr.zoombies.world";
-// const isLocal = false;
-
 const setupMetamaskProvider = async () => {
   try {
     const metamaskProvider = await detectEthereumProvider({
@@ -101,6 +97,7 @@ const setupMetamaskProvider = async () => {
         network,
         signer,
         provider: metamaskProvider,
+        etherWrappedProvider: etherWrapper,
       };
     }
 
@@ -306,9 +303,6 @@ const blockchainStore = {
         );
 
         dispatch("setContracts", contracts);
-        setupEventWatcher((eventPayload) => {
-          eventCallback(dispatch, eventPayload);
-        }, provider);
       });
 
       rpcProvider.init();
@@ -328,7 +322,7 @@ const blockchainStore = {
 
       setupEventWatcher((eventPayload) => {
         eventCallback(dispatch, eventPayload);
-      }, rpcProvider.provider);
+      }, metamaskProviderData.etherWrappedProvider);
 
       await dispatch("updateWalletBalances");
       await dispatch("updateUniverseBalances");

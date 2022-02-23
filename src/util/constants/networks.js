@@ -27,3 +27,8 @@ export const NETWORKS = {
  '0': 'Internal testing network'
 }
 */
+
+export const isLocal =
+  process.env.NODE_ENV === "development" ||
+  window.location.host !== "movr.zoombies.world";
+// export const isLocal = false;

@@ -64,16 +64,10 @@ import RealtimeEvents from "@/components/RealtimeEvents.vue";
 
 import Lottie from "vue-lottie";
 import animationData from "./assets/NotificationLottie.json";
-
-const Web3 = require("web3");
 import "./main.css";
 
 import { mapGetters } from "vuex";
-
-const isLocal =
-  process.env.NODE_ENV === "development" ||
-  window.location.host !== "movr.zoombies.world";
-// const isLocal = false;
+import { isLocal } from "./util/constants/networks";
 
 export default {
   name: "App",

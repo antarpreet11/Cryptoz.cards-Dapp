@@ -3,10 +3,7 @@ import { ethers } from "ethers";
 import zoomTokenContractJson from "../contracts/ZoomToken.json";
 import zoombiesContractJson from "../contracts/Zoombies.json";
 
-const isLocal =
-  process.env.NODE_ENV === "development" ||
-  window.location.host !== "movr.zoombies.world";
-// const isLocal = false;
+import { isLocal } from "./constants/networks";
 
 const networkId = isLocal ? 1287 : 1285;
 

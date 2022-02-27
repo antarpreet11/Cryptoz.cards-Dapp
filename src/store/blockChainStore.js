@@ -82,7 +82,9 @@ const setupMetamaskProvider = async () => {
         params: [isLocal ? devChainParam : prodChainParam],
       });
 
-      const etherWrapper = new ethers.providers.Web3Provider(metamaskProvider);
+      const etherWrapper = new ethers.providers.Web3Provider(window.ethereum);
+      await etherWrapper.send("eth_requestAccounts", []);
+
       const signer = etherWrapper.getSigner();
 
       const [address, balance, network] = await Promise.all([
@@ -313,11 +315,12 @@ const blockchainStore = {
         metamaskProviderData.signer
       );
 
+      dispatch("setContracts", contracts);
+
       commit(BLOCKCHAIN_MUTATIONS.SET_BLOCKCHAIN, {
         walletAddress: metamaskProviderData.address,
         walletBalance: ethers.utils.formatEther(metamaskProviderData.balance),
         chainId: metamaskProviderData.network.chainId,
-        contracts: contracts,
       });
 
       setupEventWatcher((eventPayload) => {

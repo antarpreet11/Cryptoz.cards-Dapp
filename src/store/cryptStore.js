@@ -34,6 +34,14 @@ const DEFAULT_CRYPT_STATE = {
   selectedCryptCards: [],
 };
 
+const getOwnerNfts = async (contract, address, index) => {
+  const tokenId = await contract.tokenOfOwnerByIndex(address, index);
+
+  const card = await getCryptCard(tokenId.toNumber(), contract);
+
+  return card;
+};
+
 const sortCards = (sortParam, cards) => {
   switch (sortParam.param) {
     case "edition_number":
@@ -259,27 +267,20 @@ const cryptStore = {
 
         const balanceOfOwner = await CryptozInstance.balanceOf(addressToLoad);
 
-        if (balanceOfOwner === 0) {
+        if (balanceOfOwner.toNumber() === 0) {
           console.log("Current address doesn't have any cards.");
           commit(CRYPT_MUTATIONS.SET_CRYPT_CARDS, []);
           return;
         }
 
-        let tokensOfOwner = [];
-        for (let l = 0; l < balanceOfOwner; l++) {
-          const nftTokenId = await CryptozInstance.tokenOfOwnerByIndex(
-            addressToLoad,
-            l
+        const getOwnerNftsPromises = [];
+        for (let i = 0; i < balanceOfOwner.toNumber(); i++) {
+          getOwnerNftsPromises.push(
+            getOwnerNfts(CryptozInstance, addressToLoad, i)
           );
-
-          tokensOfOwner.push(nftTokenId);
         }
 
-        const cryptCards = await Promise.all(
-          tokensOfOwner.map((token) =>
-            getCryptCard(parseInt(token), CryptozInstance)
-          )
-        );
+        const cryptCards = await Promise.all(getOwnerNftsPromises);
 
         cryptCards.sort((a, b) => b.id - a.id);
 

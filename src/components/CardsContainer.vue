@@ -503,7 +503,7 @@ export default {
     cardsBeingSacrificed(val) {
       console.log({ cardsBeingSacrificed: val });
     },
-    getReadOnlyZoombiesContract(newVal) {
+    getSignedZoombiesContract(newVal) {
       if (newVal && this.addressToLoad && !this.isCryptLoaded) {
         this.fetchCryptCards();
       }

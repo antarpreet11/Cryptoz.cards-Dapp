@@ -76,15 +76,14 @@ export const getCard = async (cardId, CryptozInstance) => {
   return cardObj;
 };
 
-export const addIsOwnedProp = async (card, CryptozInstance, walletAddress) => {
+export const isCardOwned = async (card, CryptozInstance, walletAddress) => {
   try {
     const isOwned = await CryptozInstance.cardTypesOwned(
       walletAddress,
       card.id
     );
-    card.isOwned = isOwned;
 
-    return card;
+    return isOwned;
   } catch (error) {
     console.error("Failed to add is owned prop: ", error);
   }

@@ -1,4 +1,4 @@
-import { addIsOwnedProp, getCard, getCardType } from "../util/cardUtil";
+import { isCardOwned, getCard, getCardType } from "../util/cardUtil";
 import { dynamicSort, getRarity, soldOutSort } from "../helpers";
 
 const typeIdsOnChain = [];
@@ -239,25 +239,32 @@ const cardStore = {
     },
     async fetchStoreCards({ commit, rootState }) {
       try {
-        const CryptozInstance =
-          rootState.blockChain.contracts.signedZoombiesContract;
-
         commit(CARD_MUTATIONS.LOADING_SHOP_CARDS);
 
         const results = await Promise.all(
           typeIdsOnChain.map(async (id) => {
-            const cardData = await getCard(id, CryptozInstance);
+            const cardData = await getCard(
+              id,
+              rootState.blockChain.contracts.signedZoombiesContract
+            );
             if (!cardData) {
               return;
             }
 
-            return rootState.blockChain.walletAddress
-              ? await addIsOwnedProp(
-                  cardData,
-                  CryptozInstance,
-                  rootState.blockChain.walletAddress
-                )
-              : cardData;
+            if (rootState.blockChain.walletAddress) {
+              const isOwned = await isCardOwned(
+                cardData,
+                rootState.blockChain.contracts.signedZoombiesContract,
+                rootState.blockChain.walletAddress
+              );
+
+              return {
+                ...cardData,
+                isOwned,
+              };
+            }
+
+            return cardData;
           })
         );
         const storeCards = results.filter((result) => result !== undefined);

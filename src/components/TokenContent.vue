@@ -209,7 +209,7 @@ export default {
       load_state: -1, //This is the loading state, -1 = loading state,0 - token doesn't exist, 1 = token is valid
       owner: "Loading..",
       token_id: "",
-      minted_date: "Tuesday, September 21, 2021 at 1:12:42 AM EDT",
+      minted_date: "Fetching...",
       card: {
         id: null,
         name: "Loading...",
@@ -236,7 +236,6 @@ export default {
       chartSeries: [70],
       chartOptions: {
         chart: {
-
           type: 'radialBar',
         },
         plotOptions: {
@@ -293,6 +292,45 @@ export default {
     }
   },
   methods: {
+    querySubGraph: async function () {
+      const query = `query {
+                        logCardMinteds(
+                          filter:{
+                            tokenId: {
+                              equalTo: "`+this.token_id+`"
+                            },
+                          }
+                        ){
+                          nodes {
+                            tokenId
+                            blockTimestamp
+                            buyer
+                            cardTypeId
+                            editionNumber
+                          }
+                        }
+                      }`;
+                      console.log(query);
+      const result = await fetch(
+        "https://api.subquery.network/sq/ryanprice/zoombies-moonriver__cnlhb",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            query,
+          }),
+        }
+      );
+      const res = await result.json();
+      const nftData = res.data.logCardMinteds.nodes[0];
+      console.log("QUERY res:",res.data.logCardMinteds.nodes[0]);
+
+      this.minted_date = new Date(nftData.blockTimestamp).toLocaleString();
+
+    },
     loadCard: async function (token_id) {
       if (!this.getReadOnlyZoombiesContract) return;
       try {
@@ -305,7 +343,7 @@ export default {
           this.load_state = 0;
           return;
         }
-
+        this.querySubGraph();
         this.edition_current = parseInt(res[1]);
         this.getCardData(cardTypeId);
         const owner = await this.getReadOnlyZoombiesContract.ownerOf(token_id);

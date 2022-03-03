@@ -28,7 +28,18 @@
             </div>
           </div>
           <div v-else class="row">
-            <div id="card-wrapper">
+            <div class="col-3 text-center"><br/>
+              <h4>Card Scarcity Rating</h4>
+              Most Scarce = 100<br/>
+              [GRAPH HERE]<br/>
+              <span>Valuation Data:</span><br/>
+              <strong>Total in Edition:</strong> Unlimited<br/>
+              <strong>Total Minted:</strong> 499<br/>
+              <strong>Total Sacrificed:</strong> 60<br/>
+              <strong>Total in circulation:</strong> 439<br/>
+
+            </div>
+            <div id="card-wrapper" class="col-4">
               <OwnedCardContent
                 :id="card.id"
                 :key="card.id"
@@ -49,7 +60,7 @@
                 :is_single_card_view="true"
               />
             </div>
-            <div id="stats-container">
+            <div id="stats-container" class="col">
               <div class="flex-row">
                 <div class="text-right font-weight-bold label">Owner:</div>
                 <div>
@@ -60,7 +71,15 @@
               </div>
               <div class="flex-row">
                 <div class="text-right font-weight-bold label">
-                  Zoombies Token #:
+                  Date Minted:
+                </div>
+                <div class="">
+                  {{ minted_date }}
+                </div>
+              </div>
+              <div class="flex-row">
+                <div class="text-right font-weight-bold label">
+                  Zoombies NFT Token:
                 </div>
                 <div class="">
                   {{ token_id }}
@@ -92,7 +111,9 @@
                   {{ released_date }}
                 </div>
               </div>
-              <div class="flex-row">
+
+
+              <div class="flex-row mt-2">
                 <div class="text-right font-weight-bold label">
                   Zombie Type:
                 </div>
@@ -177,6 +198,7 @@ export default {
       load_state: -1, //This is the loading state, -1 = loading state,0 - token doesn't exist, 1 = token is valid
       owner: "Loading..",
       token_id: "",
+      minted_date: "",
       card: {
         id: null,
         name: "Loading...",

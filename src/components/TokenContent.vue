@@ -29,10 +29,19 @@
           </div>
           <div v-else class="row">
             <div class="col-sm text-center"><br/>
-              <h4>Card Scarcity Rating</h4>
-              Most Scarce = 100<br/>
-              [GRAPH HERE]<br/>
-              <span>Valuation Data:</span><br/>
+              <h4 class="valuation-label">Card Scarcity Rating</h4>
+              Most Scarce = 100
+
+              <apexchart
+                id="chartContainer"
+                ref="scarcityChart"
+                width="100%"
+                type="radialBar"
+                :options="chartOptions"
+                :series="chartSeries"
+              ></apexchart>
+
+              <span class="valuation-label">Valuation Data:</span><br/>
               <strong>Total in Edition:</strong> Unlimited<br/>
               <strong>Total Minted:</strong> 499<br/>
               <strong>Total Sacrificed:</strong> 60<br/>
@@ -79,22 +88,22 @@
               </div>
               <div class="flex-row">
                 <div class="text-right font-weight-bold label">
-                  Zoombies NFT Token:
+                  NFT #:
                 </div>
                 <div class="">
                   {{ token_id }}
                 </div>
               </div>
               <div class="flex-row">
-                <div class="text-right font-weight-bold label">Editon:</div>
-                <div class="">
-                  {{ edition_current }}
-                </div>
-              </div>
-              <div class="flex-row">
                 <div class="text-right font-weight-bold label">Card Name:</div>
                 <div class="">
                   {{ card.name }}
+                </div>
+              </div>
+              <div class="flex-row">
+                <div class="text-right font-weight-bold label">Editon:</div>
+                <div class="">
+                  {{ edition_current }}
                 </div>
               </div>
               <div class="flex-row">
@@ -176,6 +185,7 @@
 import axios from "axios";
 import OwnedCardContent from "@/components/OwnedCardContent.vue";
 import dAppStates from "@/dAppStates";
+import apexchart from "vue-apexcharts";
 import {
   BButton,
   BInputGroup,
@@ -192,6 +202,7 @@ export default {
     BInputGroup,
     BFormInput,
     BInputGroupAppend,
+    apexchart,
   },
   data() {
     return {
@@ -222,6 +233,33 @@ export default {
       etherscan_token_id:
         "https://blockscout.moonriver.moonbeam.network/tokens/",
       tokenToSearch: "",
+      chartSeries: [70],
+      chartOptions: {
+        chart: {
+
+          type: 'radialBar',
+        },
+        plotOptions: {
+          radialBar: {
+            hollow: {
+              margin: 10,
+              size: '40%',
+            },
+            dataLabels: {
+              show: true,
+              name: {
+                show: true,
+                fontSize: '36px',
+                fontWeight: 900,
+              },
+              value: {
+                show: false
+              }
+            },
+          },
+        },
+        labels: ['70'],
+      },
     };
   },
   computed: {
@@ -424,5 +462,11 @@ a {
   font-size: 18px;
   font-weight: 500;
   margin-top: 20px;
+}
+
+.valuation-label {
+  color: #7ef4f6;
+  font-weight: bold;
+  font-size: 1.5em;
 }
 </style>

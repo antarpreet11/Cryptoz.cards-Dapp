@@ -28,7 +28,7 @@
             </div>
           </div>
           <div v-else class="row">
-            <div class="col-3 text-center"><br/>
+            <div class="col-sm text-center"><br/>
               <h4>Card Scarcity Rating</h4>
               Most Scarce = 100<br/>
               [GRAPH HERE]<br/>
@@ -39,7 +39,7 @@
               <strong>Total in circulation:</strong> 439<br/>
 
             </div>
-            <div id="card-wrapper" class="col-4">
+            <div id="card-wrapper" class="col-sm">
               <OwnedCardContent
                 :id="card.id"
                 :key="card.id"
@@ -60,7 +60,7 @@
                 :is_single_card_view="true"
               />
             </div>
-            <div id="stats-container" class="col">
+            <div id="stats-container" class="col-sm">
               <div class="flex-row">
                 <div class="text-right font-weight-bold label">Owner:</div>
                 <div>
@@ -198,7 +198,7 @@ export default {
       load_state: -1, //This is the loading state, -1 = loading state,0 - token doesn't exist, 1 = token is valid
       owner: "Loading..",
       token_id: "",
-      minted_date: "",
+      minted_date: "Tuesday, September 21, 2021 at 1:12:42 AM EDT",
       card: {
         id: null,
         name: "Loading...",

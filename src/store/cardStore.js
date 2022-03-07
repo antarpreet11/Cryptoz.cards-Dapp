@@ -255,8 +255,6 @@ const cardStore = {
                 rootState.blockChain.walletAddress
               );
 
-              console.log("isOwned: ", isOwned);
-
               return {
                 ...cardData,
                 isOwned,

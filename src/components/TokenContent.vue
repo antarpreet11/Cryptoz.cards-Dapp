@@ -489,7 +489,7 @@ export default {
         res.data.attributes.cost = "Booster";
       }
 
-      this.edition_max = res.data.attributes.edition_total;
+      this.edition_max = (res.data.attributes.edition_total == 0) ? 'Unlimited' : res.data.attributes.edition_total;
       this.card = res.data;
       this.card.id = this.token_id;
       this.load_state = 1;

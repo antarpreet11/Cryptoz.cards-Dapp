@@ -20,6 +20,8 @@ class WebsocketProvider {
       this.isLocal ? devRPC : prodRPC
     );
 
+    this.signer = this.provider.getSigner()
+
     this.defWsOpen = this.provider._websocket.onopen;
     this.defWsClose = this.provider._websocket.onclose;
 

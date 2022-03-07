@@ -421,7 +421,7 @@ export default {
         this.$store.dispatch("setIsTransactionPending", true);
         this.setLastMintTime();
         const res = await this.getSignedZoombiesContract.buyBoosterAndMintNFT({
-          value: "10000000000000000",
+          value: ethers.utils.parseEther('0.01').toString(),
         });
         this.$store.dispatch("setIsTransactionPending", false);
         await res.wait();

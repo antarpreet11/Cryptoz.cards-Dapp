@@ -377,13 +377,6 @@ export default {
       getSignedZoombiesContract: "blockChain/getSignedZoombiesContract",
     }),
   },
-  // watch: {
-  //   getWalletAddress(newVal, oldVal) {
-  //     if (newVal && newVal !== oldVal) {
-  //       this.fetchStoreCards();
-  //     }
-  //   },
-  // },
   watch: {
     getAllShopCards(newVal) {
       if (newVal.length > 0) {
@@ -393,8 +386,6 @@ export default {
   },
   methods: {
     setStoreCard: async function () {
-      // await this.$store.dispatch("fetchStoreCards");
-
       const pageStart = this.isCardSorted ? this.sortedPageNext : this.pageNext;
       const newCards = this.$store.getters.getPaginatedShopCards(
         this.pageSize,
@@ -517,7 +508,7 @@ export default {
         }
 
         const result = await this.getSignedZoombiesContract.buyCard(
-          cardAttributes.type_id,
+          parseInt(cardAttributes.type_id),
           {
             value: cardBNValue.toString(),
           }

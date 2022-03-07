@@ -14,10 +14,8 @@ import { MessageBus } from "../messageBus";
 import { isLocal } from "../util/constants/networks";
 
 const DEFAULT_BLOCKCHAIN_STATE = {
-  ethersCryptozContract: null,
   metamaskContract: null,
   walletAddress: null,
-  walletBalance: null,
   chainId: null,
   contracts: {
     readOnlyZoomContract: null,
@@ -29,6 +27,7 @@ const DEFAULT_BLOCKCHAIN_STATE = {
   zoomBalance: 0,
   nftOwned: 0,
   boosterCreditOwned: 0,
+  walletBalance: null,
 
   // universe balances
   totalZoomBalance: 0,
@@ -63,11 +62,11 @@ const prodChainParam = {
     symbol: "MOVR",
     decimals: 18,
   },
-  rpcUrls: ["https://rpc.api.moonriver.moonbeam.network"],
+  rpcUrls: ["https://rpc.moonriver.moonbeam.network"],
   blockExplorerUrls: ["https://moonriver.moonscan.io/"],
 };
 
-const setupMetamaskProvider = async () => {
+const setupMetamask = async () => {
   try {
     const metamaskProvider = await detectEthereumProvider({
       mustBeMetaMask: true,
@@ -109,7 +108,7 @@ const setupMetamaskProvider = async () => {
   }
 };
 
-const createContracts = (chainId, rpcProvider, signer) => {
+const createContracts = (chainId, signer, provider) => {
   const zoombiesContractAddress =
     zoombiesContractJson.networks[chainId].address;
   const zoomTokenContractAddress = zoomContractJson.networks[chainId].address;
@@ -117,7 +116,7 @@ const createContracts = (chainId, rpcProvider, signer) => {
   const readOnlyZoombiesContract = new ethers.Contract(
     zoombiesContractAddress,
     zoombiesContractJson.abi,
-    rpcProvider
+    provider
   );
   const signedZoombiesContract = new ethers.Contract(
     zoombiesContractAddress,
@@ -128,7 +127,7 @@ const createContracts = (chainId, rpcProvider, signer) => {
   const readOnlyZoomContract = new ethers.Contract(
     zoomTokenContractAddress,
     zoomContractJson.abi,
-    rpcProvider
+    provider
   );
 
   const signedZoomContract = new ethers.Contract(
@@ -265,6 +264,7 @@ const blockchainStore = {
       state.zoomBalance = payload.zoomBalance;
       state.nftOwned = payload.nftOwned;
       state.boosterCreditOwned = payload.boosterCreditOwned;
+      state.walletBalance = payload.walletBalance;
     },
     [BLOCKCHAIN_MUTATIONS.SET_UNIVERSE_BALANCES](state, payload) {
       state.totalZoomBalance = payload.totalZoomBalance;
@@ -282,37 +282,43 @@ const blockchainStore = {
      * }
      */
     async initBlockchain({ commit, state, dispatch }, payload) {
-      const metamaskProviderData = await setupMetamaskProvider();
+      const metamaskProviderData = await setupMetamask();
       if (!metamaskProviderData) {
         payload.noMetamaskCallback();
+        return;
       }
+
       subscribeToMetamaskProviderEvents(
         metamaskProviderData.provider,
         dispatch
       );
 
-      const rpcProvider = new WebsocketProvider(isLocal, (provider) => {
-        /**
-         * After websocket reconnects:
-         * - Set new contracts
-         * - watch events with new provider
-         */
+      // const websocketProvider = new WebsocketProvider(isLocal, (provider) => {
+      //   /**
+      //    * After websocket reconnects:
+      //    * - Set new contracts
+      //    * - watch events with new provider
+      //    */
+      //    setupEventWatcher((eventPayload) => {
+      //     eventCallback(dispatch, eventPayload);
+      //   }, provider);
+      // });
 
-        const contracts = createContracts(
-          metamaskProviderData.network.chainId,
-          provider,
-          metamaskProviderData.signer
-        );
+      // websocketProvider.init();
 
-        dispatch("setContracts", contracts);
-      });
-
-      rpcProvider.init();
+      const providerUrl = `https://moonriver.api.onfinality.io/rpc?apikey=2c862d3c-611b-42fb-be0c-638f60da7993`;
+      const jsonRpcProvider = new ethers.providers.JsonRpcBatchProvider(
+        providerUrl,
+        {
+          chainId: 1285,
+          name: "moonriver",
+        }
+      );
 
       const contracts = createContracts(
         metamaskProviderData.network.chainId,
-        rpcProvider.provider,
-        metamaskProviderData.signer
+        metamaskProviderData.signer,
+        jsonRpcProvider
       );
 
       dispatch("setContracts", contracts);
@@ -323,9 +329,10 @@ const blockchainStore = {
         chainId: metamaskProviderData.network.chainId,
       });
 
+
       setupEventWatcher((eventPayload) => {
         eventCallback(dispatch, eventPayload);
-      }, metamaskProviderData.etherWrappedProvider);
+      }, jsonRpcProvider);
 
       await dispatch("updateWalletBalances");
       await dispatch("updateUniverseBalances");
@@ -341,22 +348,34 @@ const blockchainStore = {
 
       const { signedZoomContract, signedZoombiesContract } = contracts;
 
+      const etherWrapper = new ethers.providers.Web3Provider(window.ethereum);
+      await etherWrapper.send("eth_requestAccounts", []);
+
+      const signer = etherWrapper.getSigner();
+
       const zoomBalancePromise = signedZoomContract.balanceOf(walletAddress);
       const nftOwnedPromise = signedZoombiesContract.balanceOf(walletAddress);
       const boosterCreditPromise = signedZoombiesContract.boosterCreditsOwned(
         walletAddress
       );
 
-      const [zoomBalance, nftOwned, boosterCreditOwned] = await Promise.all([
+      const [
+        zoomBalance,
+        nftOwned,
+        boosterCreditOwned,
+        walletBalance,
+      ] = await Promise.all([
         zoomBalancePromise,
         nftOwnedPromise,
         boosterCreditPromise,
+        signer.getBalance(),
       ]);
 
       commit(BLOCKCHAIN_MUTATIONS.SET_WALLET_BALANCES, {
         zoomBalance: ethers.utils.formatEther(zoomBalance),
         nftOwned: nftOwned.toNumber(),
         boosterCreditOwned: boosterCreditOwned.toNumber(),
+        walletBalance: ethers.utils.formatEther(walletBalance),
       });
     },
 

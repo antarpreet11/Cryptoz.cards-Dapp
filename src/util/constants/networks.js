@@ -28,7 +28,7 @@ export const NETWORKS = {
 }
 */
 
-export const isLocal =
-  process.env.NODE_ENV === "development" ||
-  window.location.host !== "movr.zoombies.world";
-// export const isLocal = false;
+// export const isLocal =
+//   process.env.NODE_ENV === "development" ||
+//   window.location.host !== "movr.zoombies.world";
+export const isLocal = false;

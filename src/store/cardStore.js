@@ -254,9 +254,11 @@ const cardStore = {
             if (rootState.blockChain.walletAddress) {
               const isOwned = await isCardOwned(
                 cardData,
-                rootState.blockChain.contracts.signedZoombiesContract,
+                rootState.blockChain.contracts.readOnlyZoombiesContract,
                 rootState.blockChain.walletAddress
               );
+
+              console.log("isOwned: ", isOwned);
 
               return {
                 ...cardData,

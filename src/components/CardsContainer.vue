@@ -503,11 +503,6 @@ export default {
     cardsBeingSacrificed(val) {
       console.log({ cardsBeingSacrificed: val });
     },
-    getSignedZoombiesContract(newVal) {
-      if (newVal && this.addressToLoad && !this.isCryptLoaded) {
-        this.fetchCryptCards();
-      }
-    },
     isWalletConnected(val) {
       if (val && !this.isCryptLoaded) {
         this.fetchCryptCards();

@@ -306,7 +306,7 @@ const blockchainStore = {
 
       // websocketProvider.init();
 
-      const providerUrl = `https://moonriver.api.onfinality.io/rpc?apikey=2c862d3c-611b-42fb-be0c-638f60da7993`;
+      const providerUrl = `https://moonriver.api.onfinality.io/rpc?apikey=${process.env["VUE_APP_MOONBEAM_RPC_API_KEY"]}`;
       const jsonRpcProvider = new ethers.providers.JsonRpcBatchProvider(
         providerUrl,
         {
@@ -328,7 +328,6 @@ const blockchainStore = {
         walletBalance: ethers.utils.formatEther(metamaskProviderData.balance),
         chainId: metamaskProviderData.network.chainId,
       });
-
 
       setupEventWatcher((eventPayload) => {
         eventCallback(dispatch, eventPayload);

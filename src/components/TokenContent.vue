@@ -172,8 +172,21 @@
               </div>
             </div>
           </div>
-          <div class="description">
+          <div class="description mb-5">
             {{ card.attributes.description }}
+          </div>
+          <h3>Zoombie NFT #{{token_id}} Transfer History</h3>
+          <div class="flex-row">
+            <b-table
+              stacked="sm"
+              bordered
+              striped
+              hover
+              caption-top
+              head-variant="dark"
+              table-variant="primary"
+              :items="items"
+            ></b-table>
           </div>
         </div>
       </div>
@@ -191,6 +204,7 @@ import {
   BInputGroup,
   BFormInput,
   BInputGroupAppend,
+  BTable,
 } from "bootstrap-vue";
 import { mapGetters } from "vuex";
 
@@ -198,6 +212,7 @@ export default {
   name: "TokenContent",
   components: {
     OwnedCardContent,
+    BTable,
     BButton,
     BInputGroup,
     BFormInput,
@@ -263,6 +278,13 @@ export default {
         },
         labels: ['70'],
       },
+      items: [
+        {
+          date_transferred: "Loading...",
+          from: 'Loading...',
+          to: 'Loading...',
+        },
+      ],
     };
   },
   computed: {
@@ -303,10 +325,9 @@ export default {
                             tokenId: {
                               equalTo: "${this.token_id}"
                             }
-                          }, orderBy : BLOCK_NUMBER_ASC
+                          }, orderBy : BLOCK_NUMBER_DESC
                         ){
                           nodes {
-                            tokenId
                             blockTimestamp
                             from
                             to
@@ -369,6 +390,8 @@ export default {
         this.total_minted = res.data.logCardMinteds.nodes.length;
         this.total_sacrificed = res.data.logSacrificeNFTs.nodes.length;
         this.total_circulation = this.total_minted - this.total_sacrificed;
+
+        this.items = res.data.nftTransfers.nodes;
 
       }catch(e){
         window.alert("There was a fatal error contacting SubQuery Servers,Please let us know in the Cardinal Entertainment Discord #support channel");

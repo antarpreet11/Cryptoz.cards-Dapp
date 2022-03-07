@@ -241,14 +241,11 @@ const cardStore = {
       try {
         commit(CARD_MUTATIONS.LOADING_SHOP_CARDS);
 
-        console.log("typeIdsOnChain:",typeIdsOnChain);
-
         const results = await Promise.all(
           typeIdsOnChain.map(async (id) => {
             const cardData = await getCard(
               id,
               rootState.blockChain.contracts.signedZoombiesContract
-              //rootState.blockChain.contracts.readOnlyZoombiesContract
             );
             if (!cardData) {
               return;

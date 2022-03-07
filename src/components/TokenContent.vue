@@ -298,12 +298,26 @@ export default {
   methods: {
     querySubGraph: async function (cardTypeId) {
       const query = `query {
+                        nftTransfers(
+                          filter:{
+                            tokenId: {
+                              equalTo: "${this.token_id}"
+                            }
+                          }, orderBy : BLOCK_NUMBER_ASC
+                        ){
+                          nodes {
+                            tokenId
+                            blockTimestamp
+                            from
+                            to
+                          }
+                        }
                         logCardMinteds(
                           filter:{
                             cardTypeId: {
-                              equalTo: `+cardTypeId+`
+                              equalTo: ${cardTypeId}
                             },
-                          }
+                          }, orderBy : BLOCK_NUMBER_ASC
                         ){
                           nodes {
                             tokenId
@@ -316,7 +330,7 @@ export default {
                         logSacrificeNFTs(
                           filter: {
                             cardTypeId: {
-                              equalTo: "`+cardTypeId+`"
+                              equalTo: "${cardTypeId}"
                             },
                           }
                         ){

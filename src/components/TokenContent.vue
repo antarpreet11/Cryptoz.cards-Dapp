@@ -366,7 +366,7 @@ export default {
                         }
                       }`;
 
-      const graphEndPoint = (isLocal) ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph" : "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph" ;
+      const graphEndPoint = (isLocal) ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph" : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver" ;
 
       try {
         const result = await fetch(
@@ -398,7 +398,7 @@ export default {
 
       }catch(e){
         window.alert("There was a fatal error contacting SubQuery Servers,Please let us know in the Cardinal Entertainment Discord #support channel");
-        console.log("SubQuery fecth error:",e);
+        console.log("SubQuery fetch error:",e);
         return;
       }
     },

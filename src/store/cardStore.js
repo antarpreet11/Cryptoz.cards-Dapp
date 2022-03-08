@@ -222,9 +222,6 @@ const cardStore = {
   actions: {
     async setCurrentEdition({ commit, rootState }, payload) {
       try {
-        const CryptozInstance =
-          rootState.blockChain.contracts.readOnlyZoombiesContract;
-
         const { cardId, edition, isSorted } = payload;
         const parsedId = parseInt(cardId);
 
@@ -245,7 +242,7 @@ const cardStore = {
           typeIdsOnChain.map(async (id) => {
             const cardData = await getCard(
               id,
-              rootState.blockChain.contracts.signedZoombiesContract
+              rootState.blockChain.contracts.readOnlyZoombiesContract
             );
             if (!cardData) {
               return;
@@ -254,7 +251,7 @@ const cardStore = {
             if (rootState.blockChain.walletAddress) {
               const isOwned = await isCardOwned(
                 cardData,
-                rootState.blockChain.contracts.signedZoombiesContract,
+                rootState.blockChain.contracts.readOnlyZoombiesContract,
                 rootState.blockChain.walletAddress
               );
 

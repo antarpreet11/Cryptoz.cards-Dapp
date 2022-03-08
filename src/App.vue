@@ -12,7 +12,7 @@
         :options="defaultOptions"
         :height="100"
         :width="80"
-        v-on:animCreated="handleAnimation"
+        @animCreated="handleAnimation"
       ></lottie>
     </b-button>
     <b-sidebar
@@ -90,6 +90,16 @@ export default {
       },
     };
   },
+  async created() {
+    MessageBus.$on("connect", () => {
+      this.$store.dispatch("blockChain/initBlockchain", {
+        isLocal: isLocal,
+        noMetamaskCallback: () => {
+          this.$bvModal.show("no-web3-modal");
+        },
+      });
+    });
+  },
   computed: {
     events() {
       return this.$store.state.events.events;
@@ -138,24 +148,6 @@ export default {
         }
       );
     }
-  },
-  async created() {
-    // if (window.web3 && window.ethereum) {
-    //   // this needs to be set in beforeCreate because vue lifecycle
-    //   // is Parent create -> child create -> child mount -> parent mount
-    //   // and we need provider to be set in child components
-    //   const web3 = new Web3(window.ethereum);
-    //   window.web3 = web3;
-    // }
-
-    MessageBus.$on("connect", () => {
-      this.$store.dispatch("blockChain/initBlockchain", {
-        isLocal: isLocal,
-        noMetamaskCallback: () => {
-          this.$bvModal.show("no-web3-modal");
-        },
-      });
-    });
   },
   async mounted() {
     // Twitter library - footer follow button uses it

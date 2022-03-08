@@ -23,7 +23,7 @@
     "bootstrap-vue": "^2.0.0-rc.27",
     "chart.js": "2",
     "core-js": "^3.6.5",
-    "ethers": "^5.1.0",
+    "ethers": "^5.5.4",
     "font-awesome": "^4.7.0",
     "fortmatic": "^0.8.2",
     "lodash": "^4.17.21",

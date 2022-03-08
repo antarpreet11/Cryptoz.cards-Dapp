@@ -280,7 +280,7 @@ import debounce from "lodash/debounce";
 import SortDropdown from "@/components/SortDropdown.vue";
 import OwnedCardContent from "@/components/OwnedCardContent";
 import CryptTable from "@/components/CryptTable";
-import { showSuccessToast } from "../util/showToast";
+import { showErrorToast, showSuccessToast } from "../util/showToast";
 import { FILTER_TYPES } from "../store/cryptStore";
 import {
   BButton,
@@ -502,11 +502,6 @@ export default {
   watch: {
     cardsBeingSacrificed(val) {
       console.log({ cardsBeingSacrificed: val });
-    },
-    getSignedZoombiesContract(newVal) {
-      if (newVal && this.addressToLoad && !this.isCryptLoaded) {
-        this.fetchCryptCards();
-      }
     },
     isWalletConnected(val) {
       if (val && !this.isCryptLoaded) {

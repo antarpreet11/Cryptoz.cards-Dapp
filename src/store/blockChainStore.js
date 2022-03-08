@@ -354,11 +354,11 @@ const blockchainStore = {
     async updateUniverseBalances({ commit, state }) {
       const { contracts } = state;
       if (!contracts) return;
-      const { readOnlyZoomContract, readOnlyZoombiesContract } = contracts;
+      const { signedZoomContract, signedZoombiesContract } = contracts;
 
-      const totalCzxpPromise = readOnlyZoomContract.totalSupply();
-      const totalTypesPromise = readOnlyZoombiesContract.totalCardTypes();
-      const totalCryptozPromise = readOnlyZoombiesContract.totalSupply();
+      const totalCzxpPromise = signedZoomContract.totalSupply();
+      const totalTypesPromise = signedZoombiesContract.totalCardTypes();
+      const totalCryptozPromise = signedZoombiesContract.totalSupply();
 
       const [totalCzxp, totalTypes, totalCryptoz] = await Promise.all([
         totalCzxpPromise,

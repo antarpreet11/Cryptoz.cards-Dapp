@@ -365,7 +365,7 @@ export default {
   },
   mounted() {
     this.$store.dispatch("crypt/setSelectedCards", []);
-    if (this.getSignedZoombiesContract && this.addressToLoad) {
+    if (this.getReadOnlyZoombiesContract && this.addressToLoad) {
       this.fetchCryptCards();
     }
 

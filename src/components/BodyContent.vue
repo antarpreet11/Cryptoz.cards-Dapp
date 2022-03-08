@@ -74,11 +74,14 @@
           </b-col>
         </b-row>
         <div class="d-md-none">
-          <h3>View this website on a larger screen to view the Zoom inflation graphs</h3>
+          <h3>
+            View this website on a larger screen to view the Zoom inflation
+            graphs
+          </h3>
           <br />
-          Over the previous 100 days:<br/>
-          <strong>Total ZOOM minted:</strong> {{totalZoomMinted}}<br />
-          <strong>Total ZOOM Burned:</strong> {{totalZoomBurned}}
+          Over the previous 100 days:<br />
+          <strong>Total ZOOM minted:</strong> {{ totalZoomMinted }}<br />
+          <strong>Total ZOOM Burned:</strong> {{ totalZoomBurned }}
         </div>
         <b-row class="d-none d-md-block">
           <b-col>
@@ -134,8 +137,8 @@ export default {
       onMainNet: false,
       oldTotalZoom: 0,
       oldTotalNft: 0,
-      totalZoomMinted : 'Loading...',
-      totalZoomBurned : 'Loading...',
+      totalZoomMinted: "Loading...",
+      totalZoomBurned: "Loading...",
       graphData: Object(),
       chartOptions: {
         markers: {
@@ -151,13 +154,13 @@ export default {
           id: "vuechart-example",
           zoom: {
             enabled: true,
-            type: 'x',
+            type: "x",
             autoScaleYaxis: true,
           },
           toolbar: {
             autoSelected: "zoom",
           },
-          type: 'line',
+          type: "line",
         },
         legend: {
           fontSize: "22px",
@@ -192,7 +195,7 @@ export default {
           custom: undefined,
           fillSeriesColor: true,
         },
-/*        responsive: [
+        /*        responsive: [
           {
             breakpoint: 400,
             options: {
@@ -228,8 +231,8 @@ export default {
             },
           },
         ],
-  */      xaxis: {
-          tickPlacement: 'on',
+  */ xaxis: {
+          tickPlacement: "on",
           title: {
             text: "Day/Month",
             style: {
@@ -296,7 +299,6 @@ export default {
   computed: {
     ...mapGetters({
       getWalletAddress: "blockChain/getWalletAddress",
-      getSignedZoomContract: "blockChain/getSignedZoomContract",
       getZoomBalance: "blockChain/getZoomBalance",
       getTotalZoomBalance: "blockChain/getTotalZoomBalance",
       getTotalNftSupply: "blockChain/getTotalNftSupply",
@@ -365,15 +367,23 @@ export default {
         const minted = ethers.utils.formatEther(i.minted);
         const burned = ethers.utils.formatEther(i.burned);
         //mobile
-        this.totalZoomMinted = this.totalZoomMinted.add(ethers.utils.parseUnits(minted));
-        this.totalZoomBurned = this.totalZoomBurned.add(ethers.utils.parseUnits(burned));
-        
+        this.totalZoomMinted = this.totalZoomMinted.add(
+          ethers.utils.parseUnits(minted)
+        );
+        this.totalZoomBurned = this.totalZoomBurned.add(
+          ethers.utils.parseUnits(burned)
+        );
+
         graphData.minted.push(parseInt(minted));
         graphData.burned.push(parseInt(burned));
       });
       //For mobile only
-      this.totalZoomMinted = parseInt(ethers.utils.formatEther(this.totalZoomMinted)).toLocaleString();
-      this.totalZoomBurned = parseInt(ethers.utils.formatEther(this.totalZoomBurned)).toLocaleString();
+      this.totalZoomMinted = parseInt(
+        ethers.utils.formatEther(this.totalZoomMinted)
+      ).toLocaleString();
+      this.totalZoomBurned = parseInt(
+        ethers.utils.formatEther(this.totalZoomBurned)
+      ).toLocaleString();
 
       this.$refs.zoomChart.updateOptions({
         xaxis: {

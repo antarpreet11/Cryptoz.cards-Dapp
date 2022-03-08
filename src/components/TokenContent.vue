@@ -195,6 +195,7 @@
 </template>
 
 <script>
+import { isLocal } from "../util/constants/networks";
 import axios from "axios";
 import OwnedCardContent from "@/components/OwnedCardContent.vue";
 import dAppStates from "@/dAppStates";
@@ -364,10 +365,12 @@ export default {
                           }
                         }
                       }`;
-//console.log(query);
+
+      const graphEndPoint = (isLocal) ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph" : "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph" ;
+
       try {
         const result = await fetch(
-          "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph__cnlhb",
+          graphEndPoint,
           {
             method: "POST",
             headers: {

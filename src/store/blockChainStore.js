@@ -179,32 +179,9 @@ const eventCallback = async (dispatch, eventPayload) => {
 
     dispatch("events/addEvents", eventPayload, { root: true });
 
-    // Zoom updates
-    if (
-      eventPayload.type === EVENT_TYPES.zoomBurn ||
-      eventPayload.type === EVENT_TYPES.zoomMint
-    ) {
-      dispatch("updateWalletBalances");
-      dispatch("updateUniverseBalances");
-      return;
-    }
-
-    // Booster credit updates
-    if (
-      eventPayload.type === EVENT_TYPES.boosterReward ||
-      eventPayload.type === EVENT_TYPES.dailyReward
-    ) {
-      dispatch("updateWalletBalances");
-      return;
-    }
-
-    // Card updates
     if (eventPayload.type === EVENT_TYPES.cardMinted) {
       // Card minted
-      dispatch("updateWalletBalances");
-      dispatch("updateUniverseBalances");
 
-      console.log("Card Minted!");
       const data = processCardMintedEvent(eventPayload.data.args);
       const newCard = await dispatch(
         "crypt/addBoosterCard",
@@ -221,11 +198,8 @@ const eventCallback = async (dispatch, eventPayload) => {
       }
     }
 
-    if (eventPayload.type === EVENT_TYPES.sacrificeNFT) {
-      // sacrifice card
-      dispatch("updateWalletBalances");
-      dispatch("updateUniverseBalances");
-    }
+    dispatch("updateWalletBalances");
+    dispatch("updateUniverseBalances");
   } catch (error) {
     console.error(error);
   }
@@ -293,32 +267,31 @@ const blockchainStore = {
         dispatch
       );
 
-      // const websocketProvider = new WebsocketProvider(isLocal, (provider) => {
-      //   /**
-      //    * After websocket reconnects:
-      //    * - Set new contracts
-      //    * - watch events with new provider
-      //    */
-      //    setupEventWatcher((eventPayload) => {
-      //     eventCallback(dispatch, eventPayload);
-      //   }, provider);
-      // });
+      const websocketProvider = new WebsocketProvider(isLocal, (provider) => {
+        /**
+         * After websocket reconnects:
+         * - Set new contracts
+         * - watch events with new provider
+         */
+        setupEventWatcher((eventPayload) => {
+          eventCallback(dispatch, eventPayload);
+        }, provider);
 
-      // websocketProvider.init();
+        const contracts = createContracts(
+          metamaskProviderData.network.chainId,
+          metamaskProviderData.signer,
+          provider
+        );
 
-      const providerUrl = `https://moonriver.api.onfinality.io/rpc?apikey=${process.env["VUE_APP_MOONBEAM_RPC_API_KEY"]}`;
-      const jsonRpcProvider = new ethers.providers.JsonRpcBatchProvider(
-        providerUrl,
-        {
-          chainId: 1285,
-          name: "moonriver",
-        }
-      );
+        dispatch("setContracts", contracts);
+      });
+
+      websocketProvider.init();
 
       const contracts = createContracts(
         metamaskProviderData.network.chainId,
         metamaskProviderData.signer,
-        jsonRpcProvider
+        websocketProvider.provider
       );
 
       dispatch("setContracts", contracts);
@@ -331,7 +304,7 @@ const blockchainStore = {
 
       setupEventWatcher((eventPayload) => {
         eventCallback(dispatch, eventPayload);
-      }, jsonRpcProvider);
+      }, websocketProvider.provider);
 
       await dispatch("updateWalletBalances");
       await dispatch("updateUniverseBalances");

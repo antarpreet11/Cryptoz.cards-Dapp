@@ -11,7 +11,7 @@ class WebsocketProvider {
 
     this.keepAliveInterval = undefined;
 
-    this.isLocal = isLocal || true;
+    this.isLocal = isLocal;
     this.reconnectionCallback = reconnectionCallback || undefined;
   }
 
@@ -20,7 +20,7 @@ class WebsocketProvider {
       this.isLocal ? devRPC : prodRPC
     );
 
-    this.signer = this.provider.getSigner()
+    this.signer = this.provider.getSigner();
 
     this.defWsOpen = this.provider._websocket.onopen;
     this.defWsClose = this.provider._websocket.onclose;

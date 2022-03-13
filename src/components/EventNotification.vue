@@ -7,7 +7,7 @@
           {{ createDottedAddress(zoomMinted.toAddress) }}
         </router-link>
         <span class="zoom-minted-text">received</span>
-        {{ zoomMinted.zoomAmount }}
+        +{{ zoomMinted.zoomAmount }}
         <img
           class="zoom-token-icon"
           alt="zoom coin"

@@ -28,7 +28,27 @@
             </div>
           </div>
           <div v-else class="row">
-            <div id="card-wrapper">
+            <div class="col-sm text-center"><br/>
+              <h4 class="valuation-label">Card Scarcity Rating</h4>
+              Most Scarce = 100
+
+              <apexchart
+                id="chartContainer"
+                ref="scarcityChart"
+                width="100%"
+                type="radialBar"
+                :options="chartOptions"
+                :series="chartSeries"
+              ></apexchart>
+
+              <span class="valuation-label">Valuation Data:</span><br/>
+              <strong>Edition Maximum:</strong> {{edition_max}}<br/>
+              <strong>Total in circulation:</strong> {{total_circulation}}<br/>
+              <strong>Total Minted:</strong> {{total_minted}}<br/>
+              <strong>Total Sacrificed:</strong> {{total_sacrificed}}<br/>
+
+            </div>
+            <div id="card-wrapper" class="col-sm">
               <OwnedCardContent
                 :id="card.id"
                 :key="card.id"
@@ -49,7 +69,7 @@
                 :is_single_card_view="true"
               />
             </div>
-            <div id="stats-container">
+            <div id="stats-container" class="col-sm">
               <div class="flex-row">
                 <div class="text-right font-weight-bold label">Owner:</div>
                 <div>
@@ -60,22 +80,30 @@
               </div>
               <div class="flex-row">
                 <div class="text-right font-weight-bold label">
-                  Zoombies Token #:
+                  Date Minted:
+                </div>
+                <div class="">
+                  {{ minted_date }}
+                </div>
+              </div>
+              <div class="flex-row">
+                <div class="text-right font-weight-bold label">
+                  NFT #:
                 </div>
                 <div class="">
                   {{ token_id }}
                 </div>
               </div>
               <div class="flex-row">
-                <div class="text-right font-weight-bold label">Editon:</div>
-                <div class="">
-                  {{ edition_current }}
-                </div>
-              </div>
-              <div class="flex-row">
                 <div class="text-right font-weight-bold label">Card Name:</div>
                 <div class="">
                   {{ card.name }}
+                </div>
+              </div>
+              <div class="flex-row">
+                <div class="text-right font-weight-bold label">Edition:</div>
+                <div class="">
+                  {{ edition_current }}
                 </div>
               </div>
               <div class="flex-row">
@@ -92,7 +120,9 @@
                   {{ released_date }}
                 </div>
               </div>
-              <div class="flex-row">
+
+
+              <div class="flex-row mt-2">
                 <div class="text-right font-weight-bold label">
                   Zombie Type:
                 </div>
@@ -142,8 +172,21 @@
               </div>
             </div>
           </div>
-          <div class="description">
+          <div class="description mb-5">
             {{ card.attributes.description }}
+          </div>
+          <h3>Zoombie NFT #{{token_id}} Transfer History</h3>
+          <div class="flex-row">
+            <b-table
+              stacked="sm"
+              bordered
+              striped
+              hover
+              caption-top
+              head-variant="dark"
+              table-variant="primary"
+              :items="items"
+            ></b-table>
           </div>
         </div>
       </div>
@@ -152,14 +195,17 @@
 </template>
 
 <script>
+import { isLocal } from "../util/constants/networks";
 import axios from "axios";
 import OwnedCardContent from "@/components/OwnedCardContent.vue";
 import dAppStates from "@/dAppStates";
+import apexchart from "vue-apexcharts";
 import {
   BButton,
   BInputGroup,
   BFormInput,
   BInputGroupAppend,
+  BTable,
 } from "bootstrap-vue";
 import { mapGetters } from "vuex";
 
@@ -167,16 +213,23 @@ export default {
   name: "TokenContent",
   components: {
     OwnedCardContent,
+    BTable,
     BButton,
     BInputGroup,
     BFormInput,
     BInputGroupAppend,
+    apexchart,
   },
   data() {
     return {
       load_state: -1, //This is the loading state, -1 = loading state,0 - token doesn't exist, 1 = token is valid
       owner: "Loading..",
       token_id: "",
+      minted_date: "Fetching...",
+      edition_max: "Fetching...",
+      total_minted: "Fetching...",
+      total_sacrificed: "Fetching...",
+      total_circulation: "Fetching...",
       card: {
         id: null,
         name: "Loading...",
@@ -200,6 +253,39 @@ export default {
       etherscan_token_id:
         "https://blockscout.moonriver.moonbeam.network/tokens/",
       tokenToSearch: "",
+      chartSeries: [70],
+      chartOptions: {
+        chart: {
+          type: 'radialBar',
+        },
+        plotOptions: {
+          radialBar: {
+            hollow: {
+              margin: 10,
+              size: '40%',
+            },
+            dataLabels: {
+              show: true,
+              name: {
+                show: true,
+                fontSize: '36px',
+                fontWeight: 900,
+              },
+              value: {
+                show: false
+              }
+            },
+          },
+        },
+        labels: ['??'],
+      },
+      items: [
+        {
+          date_transferred: "Loading...",
+          from: 'Loading...',
+          to: 'Loading...',
+        },
+      ],
     };
   },
   computed: {
@@ -233,6 +319,89 @@ export default {
     }
   },
   methods: {
+    querySubGraph: async function (cardTypeId) {
+      const query = `query {
+                        nftTransfers(
+                          filter:{
+                            tokenId: {
+                              equalTo: "${this.token_id}"
+                            }
+                          }, orderBy : BLOCK_NUMBER_DESC
+                        ){
+                          nodes {
+                            blockTimestamp
+                            from
+                            to
+                          }
+                        }
+                        logCardMinteds(
+                          filter:{
+                            cardTypeId: {
+                              equalTo: ${cardTypeId}
+                            },
+                          }, orderBy : BLOCK_NUMBER_ASC
+                        ){
+                          nodes {
+                            tokenId
+                            blockTimestamp
+                            buyer
+                            cardTypeId
+                            editionNumber
+                          }
+                        }
+                        logSacrificeNFTs(
+                          filter: {
+                            cardTypeId: {
+                              equalTo: "${cardTypeId}"
+                            },
+                          }
+                        ){
+                          nodes{
+                            tokenId
+                            blockTimestamp
+                            owner
+                            cardTypeId
+                            zoomGained
+                          }
+                        }
+                      }`;
+
+      const graphEndPoint = (isLocal) ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph" : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver" ;
+
+      try {
+        const result = await fetch(
+          graphEndPoint,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({
+              query,
+            }),
+          }
+        );
+        const res = await result.json();
+        console.log("QUERY res:",res);
+        //Filter the result set for this token
+        const found = res.data.logCardMinteds.nodes.find(element => element.tokenId == this.token_id);
+
+        console.log(cardTypeId,this.token_id,found);
+
+        this.minted_date = new Date(found.blockTimestamp).toLocaleString();
+        this.total_minted = res.data.logCardMinteds.nodes.length;
+        this.total_sacrificed = res.data.logSacrificeNFTs.nodes.length;
+        this.total_circulation = this.total_minted - this.total_sacrificed;
+
+        this.items = res.data.nftTransfers.nodes;
+
+      }catch(e){
+        window.alert("There was a fatal error contacting SubQuery Servers,Please let us know in the Cardinal Entertainment Discord #support channel");
+        console.log("SubQuery fetch error:",e);
+        return;
+      }
+    },
     loadCard: async function (token_id) {
       if (!this.getReadOnlyZoombiesContract) return;
       try {
@@ -245,7 +414,7 @@ export default {
           this.load_state = 0;
           return;
         }
-
+        this.querySubGraph(cardTypeId);
         this.edition_current = parseInt(res[1]);
         this.getCardData(cardTypeId);
         const owner = await this.getReadOnlyZoombiesContract.ownerOf(token_id);
@@ -323,6 +492,7 @@ export default {
         res.data.attributes.cost = "Booster";
       }
 
+      this.edition_max = (res.data.attributes.edition_total == 0) ? 'Unlimited' : res.data.attributes.edition_total;
       this.card = res.data;
       this.card.id = this.token_id;
       this.load_state = 1;
@@ -402,5 +572,11 @@ a {
   font-size: 18px;
   font-weight: 500;
   margin-top: 20px;
+}
+
+.valuation-label {
+  color: #7ef4f6;
+  font-weight: bold;
+  font-size: 1.5em;
 }
 </style>

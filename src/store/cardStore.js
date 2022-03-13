@@ -83,7 +83,7 @@ typeIdsOnChain.push(450, 451, 452, 453, 454, 455, 459, 461, 462, 463);
 typeIdsOnChain.push(473, 475, 476, 477, 483, 484, 489, 497);
 typeIdsOnChain.push(498, 499, 504, 505, 508, 509, 510, 515, 516, 521, 522, 523);
 typeIdsOnChain.push(525, 526, 527, 528, 530);
-typeIdsOnChain.push(545, 546, 547, 548, 549, 550);
+//typeIdsOnChain.push(545, 546, 547, 548, 549, 550);
 
 const DEFAULT_CARD_STATE = {
   allShopCards: [],

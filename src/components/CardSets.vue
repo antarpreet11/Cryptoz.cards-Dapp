@@ -35,20 +35,11 @@
           >
             <div class="tab-content">
               <h3>Card Set: {{ cardset.cardSetName }}</h3>
-              <div class="d-inline">
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input check-owned" type="checkbox" id="inlineCheckbox1" value="option1">
-                  <label class="form-check-label check-owned" for="inlineCheckbox1">Owned</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-                  <label class="form-check-label check-not-owned" for="inlineCheckbox2">Not Owned</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
-                  <label class="form-check-label check-not-minted" for="inlineCheckbox3">Never Minted</label>
-                </div>
-              </div>
+              <b-form-group>
+                <b-form-checkbox class="check-owned" size="lg" inline>Owned</b-form-checkbox>
+                <b-form-checkbox class="check-not-owned" size="lg" inline>Not Owned</b-form-checkbox>
+                <b-form-checkbox size="lg" inline>Never Minted</b-form-checkbox>
+              </b-form-group>
               <div class="tab-content-cards">
                 <owned-card-content
                   v-for="card in cardset.cards"
@@ -108,7 +99,7 @@
 </template>
 
 <script>
-import { BTab, BTabs, BFormSelect } from "bootstrap-vue";
+import { BTab, BTabs, BFormSelect, BFormGroup, BFormCheckbox } from "bootstrap-vue";
 import { getCardSets } from "../util/cardUtil";
 import { v4 as uuidv4 } from "uuid";
 import OwnedCardContent from "./OwnedCardContent.vue";
@@ -120,6 +111,8 @@ export default {
     BTab,
     BTabs,
     BFormSelect,
+    BFormGroup,
+    BFormCheckbox,
     OwnedCardContent,
   },
   props: ["query"],
@@ -132,6 +125,7 @@ export default {
       cardSetTabClass: "card-set-tab",
       mobileSelectedTab: null,
       enlargedCard: null,
+      selected: [],
     };
   },
   computed: {

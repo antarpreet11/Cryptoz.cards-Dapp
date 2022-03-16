@@ -35,6 +35,20 @@
           >
             <div class="tab-content">
               <h3>Card Set: {{ cardset.cardSetName }}</h3>
+              <div class="d-inline">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input check-owned" type="checkbox" id="inlineCheckbox1" value="option1">
+                  <label class="form-check-label check-owned" for="inlineCheckbox1">Owned</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                  <label class="form-check-label check-not-owned" for="inlineCheckbox2">Not Owned</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
+                  <label class="form-check-label check-not-minted" for="inlineCheckbox3">Never Minted</label>
+                </div>
+              </div>
               <div class="tab-content-cards">
                 <owned-card-content
                   v-for="card in cardset.cards"
@@ -168,6 +182,79 @@ export default {
     this.fetchCardSets();
   },
   methods: {
+    querySubGraph: async function() {
+      const query = `query {
+                        nftTransfers(
+                          filter:{
+                            tokenId: {
+                              equalTo: "${this.token_id}"
+                            }
+                          }, orderBy : BLOCK_NUMBER_DESC
+                        ){
+                          nodes {
+                            blockTimestamp
+                            from
+                            to
+                          }
+                        }
+                        logCardMinteds(
+                          filter:{
+                            cardTypeId: {
+                              equalTo: ${cardTypeId}
+                            },
+                          }, orderBy : BLOCK_NUMBER_ASC
+                        ){
+                          nodes {
+                            tokenId
+                            blockTimestamp
+                            buyer
+                            cardTypeId
+                            editionNumber
+                          }
+                        }
+                        logSacrificeNFTs(
+                          filter: {
+                            cardTypeId: {
+                              equalTo: "${cardTypeId}"
+                            },
+                          }
+                        ){
+                          nodes{
+                            tokenId
+                            blockTimestamp
+                            owner
+                            cardTypeId
+                            zoomGained
+                          }
+                        }
+                      }`;
+
+      const graphEndPoint = (isLocal) ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph" : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver" ;
+
+      try {
+        const result = await fetch(
+          graphEndPoint,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({
+              query,
+            }),
+          }
+        );
+        const res = await result.json();
+        console.log("QUERY res:",res);
+
+
+      }catch(e){
+        window.alert("There was a fatal error contacting SubQuery Servers,Please let us know in the Cardinal Entertainment Discord #support channel");
+        console.log("SubQuery fetch error:",e);
+        return;
+      }
+    },
     async fetchCardSets() {
       const cardSets = await getCardSets();
       const transformedCardSets = Object.keys(cardSets).map((key) => {
@@ -316,5 +403,20 @@ export default {
       row-gap: 24px;
     }
   }
+}
+
+.form-check-input {
+  width: 16px;
+  height: 16px;
+}
+
+.check-owned {
+  color: #7EF4F6;
+}
+.check-not-owned {
+  color: #F566E2;
+}
+.check-not-minted {
+  color: #cccccc;
 }
 </style>

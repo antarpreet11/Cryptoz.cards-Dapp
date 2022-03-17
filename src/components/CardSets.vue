@@ -176,55 +176,19 @@ export default {
     this.fetchCardSets();
   },
   methods: {
-    querySubGraph: async function() {
+    async querySubGraph() {
       const query = `query {
-                        nftTransfers(
-                          filter:{
-                            tokenId: {
-                              equalTo: "${this.token_id}"
-                            }
-                          }, orderBy : BLOCK_NUMBER_DESC
-                        ){
-                          nodes {
-                            blockTimestamp
-                            from
-                            to
-                          }
-                        }
-                        logCardMinteds(
-                          filter:{
-                            cardTypeId: {
-                              equalTo: ${cardTypeId}
-                            },
-                          }, orderBy : BLOCK_NUMBER_ASC
-                        ){
-                          nodes {
-                            tokenId
-                            blockTimestamp
-                            buyer
-                            cardTypeId
-                            editionNumber
-                          }
-                        }
-                        logSacrificeNFTs(
-                          filter: {
-                            cardTypeId: {
-                              equalTo: "${cardTypeId}"
-                            },
-                          }
-                        ){
-                          nodes{
-                            tokenId
-                            blockTimestamp
-                            owner
-                            cardTypeId
-                            zoomGained
-                          }
-                        }
-                      }`;
+        mintedTypes(orderBy:CARD_TYPE_ID_ASC){
+          nodes {
+          id
+          blockTimestamp
+          cardTypeId
+          }
+        }
+      }`;
 
-      const graphEndPoint = (isLocal) ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph" : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver" ;
-
+      //const graphEndPoint = (isLocal) ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph" : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver" ;
+      const graphEndPoint = "https://api.subquery.network/sq/ryanprice/zoombies-moonriver__cnlhb";
       try {
         const result = await fetch(
           graphEndPoint,
@@ -241,6 +205,7 @@ export default {
         );
         const res = await result.json();
         console.log("QUERY res:",res);
+        return res.data.mintedTypes.nodes;
 
 
       }catch(e){
@@ -250,6 +215,7 @@ export default {
       }
     },
     async fetchCardSets() {
+      const mintedTypes = await this.querySubGraph();
       const cardSets = await getCardSets();
       const transformedCardSets = Object.keys(cardSets).map((key) => {
         const cards = cardSets[key].sort((a, b) => {
@@ -261,6 +227,12 @@ export default {
 
           return 0;
         });
+
+        // add on the type is minted property
+        cards.forEach((item, i) => {
+          item.isMinted = ( undefined == mintedTypes.find(e => e.id == item.id)) ? false : true;
+        });
+
         const cardSetName = key;
         return {
           cardSetName,

@@ -101,6 +101,7 @@ export default {
     "observer",
     "is_plat",
     "used_in_cardsets",
+    "isMinted"
   ],
   components: {
     BIconLink45deg,
@@ -306,8 +307,8 @@ export default {
 
 .back-container {
   position: absolute;
-  top: 29%;
-  bottom: 14%;
+  top: 35%;
+  bottom: 16%;
   left: 8%;
   right: 7%;
   background-color: rgba(200, 200, 200, 0.7);
@@ -432,7 +433,7 @@ export default {
   .mr-logo {
     max-width: 50%;
     position: relative;
-    top: 32px;
+    top: 65px;
   }
 }
 </style>

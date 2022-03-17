@@ -289,7 +289,7 @@ export default {
   font-weight: bold;
   left: 21%;
   right: 21%;
-  bottom: 4%;
+  bottom: 4.5%;
   height: 7%;
   text-align: left;
   display: flex;
@@ -419,14 +419,14 @@ export default {
   .mr-logo {
     max-width: 50%;
     position: relative;
-    top: 25px;
+    top: 36px;
   }
 }
 @media screen and (min-width: 768px) {
   .mr-logo {
     max-width: 50%;
     position: relative;
-    top: 24px;
+    top: 36px;
   }
 }
 @media screen and (min-width: 1024px) {

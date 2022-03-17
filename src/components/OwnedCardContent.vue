@@ -40,6 +40,12 @@
             scale="1.3"
           />
         </div>
+        <div
+          v-if="!is_minted"
+          class="minted-label"
+          >
+            NEVER MINTED
+        </div>
       </div>
       <div class="back card-bg card-bg-back-bsc">
         <div class="back-container">
@@ -101,7 +107,7 @@ export default {
     "observer",
     "is_plat",
     "used_in_cardsets",
-    "isMinted"
+    "is_minted"
   ],
   components: {
     BIconLink45deg,
@@ -413,6 +419,16 @@ export default {
 
 .card-booster-shop-icon {
   color: #000000;
+}
+
+.minted-label {
+  position: absolute;
+  top: 17%;
+  background-color: #6c757d4f;
+  border-radius: 2px;
+  border: 2px solid black;
+  width: 100%;
+  height: 7%;
 }
 
 @media screen and (max-width: 768px) {

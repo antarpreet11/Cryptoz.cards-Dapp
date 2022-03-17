@@ -60,6 +60,7 @@
                   :cset="card.card_set"
                   :is_plat="card.rarity === '2'"
                   :used_in_cardsets="true"
+                  :is_minted="card.isMinted"
                 >
                 </owned-card-content>
               </div>

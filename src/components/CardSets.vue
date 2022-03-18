@@ -107,6 +107,7 @@
 </template>
 
 <script>
+import { isLocal } from "../util/constants/networks";
 import {
   BTab,
   BTabs,
@@ -216,8 +217,7 @@ export default {
       }`;
 
       //const graphEndPoint = (isLocal) ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph" : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver" ;
-      const graphEndPoint =
-        "https://api.subquery.network/sq/ryanprice/zoombies-moonriver__cnlhb";
+      const graphEndPoint = (isLocal) ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph" : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver__cnlhb";
       try {
         const result = await fetch(graphEndPoint, {
           method: "POST",

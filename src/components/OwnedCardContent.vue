@@ -40,6 +40,16 @@
             scale="1.3"
           />
         </div>
+        <div v-if="is_owned && used_in_cardsets" class="owned-label">OWNED</div>
+        <div v-else-if="is_minted && used_in_cardsets" class="not-owned-label">
+          NOT OWNED
+        </div>
+        <div
+          v-else-if="!is_minted && used_in_cardsets"
+          class="not-minted-label"
+        >
+          NEVER MINTED
+        </div>
       </div>
       <div class="back card-bg card-bg-back-bsc">
         <div class="back-container">
@@ -101,6 +111,8 @@ export default {
     "observer",
     "is_plat",
     "used_in_cardsets",
+    "is_minted",
+    "is_owned",
   ],
   components: {
     BIconLink45deg,
@@ -288,7 +300,7 @@ export default {
   font-weight: bold;
   left: 21%;
   right: 21%;
-  bottom: 4%;
+  bottom: 4.5%;
   height: 7%;
   text-align: left;
   display: flex;
@@ -306,8 +318,8 @@ export default {
 
 .back-container {
   position: absolute;
-  top: 29%;
-  bottom: 14%;
+  top: 35%;
+  bottom: 16%;
   left: 8%;
   right: 7%;
   background-color: rgba(200, 200, 200, 0.7);
@@ -414,25 +426,54 @@ export default {
   color: #000000;
 }
 
+.not-minted-label,
+.owned-label,
+.not-owned-label {
+  position: absolute;
+  top: 17%;
+  border-radius: 2px;
+  border: 2px solid black;
+  width: 100%;
+  height: 15%;
+  font-size: 1.5rem;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+}
+
+.owned-label {
+  background-color: #7ef4f6;
+}
+
+.not-minted-label {
+  background-color: #6c757d4f;
+}
+
+.not-owned-label {
+  background-color: #f566e2;
+}
+
 @media screen and (max-width: 768px) {
   .mr-logo {
     max-width: 50%;
     position: relative;
-    top: 25px;
+    top: 36px;
   }
 }
 @media screen and (min-width: 768px) {
   .mr-logo {
     max-width: 50%;
     position: relative;
-    top: 24px;
+    top: 36px;
   }
 }
 @media screen and (min-width: 1024px) {
   .mr-logo {
     max-width: 50%;
     position: relative;
-    top: 32px;
+    top: 65px;
   }
 }
 </style>

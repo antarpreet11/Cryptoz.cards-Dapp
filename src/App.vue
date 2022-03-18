@@ -106,7 +106,6 @@ export default {
     },
     ...mapGetters({
       getWalletAddress: "blockChain/getWalletAddress",
-      getBalance: "blockChain/getBalance",
     }),
   },
   watch: {

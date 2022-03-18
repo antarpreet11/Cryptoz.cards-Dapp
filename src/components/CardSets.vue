@@ -35,6 +35,15 @@
           >
             <div class="tab-content">
               <h3>Card Set: {{ cardset.cardSetName }}</h3>
+              <b-form-group>
+                <b-form-checkbox class="check-owned" size="lg" inline
+                  >Owned</b-form-checkbox
+                >
+                <b-form-checkbox class="check-not-owned" size="lg" inline
+                  >Not Owned</b-form-checkbox
+                >
+                <b-form-checkbox size="lg" inline>Never Minted</b-form-checkbox>
+              </b-form-group>
               <div class="tab-content-cards">
                 <owned-card-content
                   v-for="card in cardset.cards"
@@ -55,6 +64,8 @@
                   :cset="card.card_set"
                   :is_plat="card.rarity === '2'"
                   :used_in_cardsets="true"
+                  :is_minted="card.isMinted"
+                  :is_owned="card.isOwned"
                 >
                 </owned-card-content>
               </div>
@@ -85,6 +96,8 @@
             :cset="card.card_set"
             :is_plat="card.rarity === '2'"
             :used_in_cardsets="true"
+            :is_minted="card.isMinted"
+            :is_owned="card.isOwned"
           >
           </owned-card-content>
         </div>
@@ -94,11 +107,18 @@
 </template>
 
 <script>
-import { BTab, BTabs, BFormSelect } from "bootstrap-vue";
+import {
+  BTab,
+  BTabs,
+  BFormSelect,
+  BFormGroup,
+  BFormCheckbox,
+} from "bootstrap-vue";
 import { getCardSets } from "../util/cardUtil";
 import { v4 as uuidv4 } from "uuid";
 import OwnedCardContent from "./OwnedCardContent.vue";
 import { RARITY_CLASSES } from "../util/cardUtil";
+import { mapGetters } from "vuex";
 
 export default {
   name: "CardSets",
@@ -106,6 +126,8 @@ export default {
     BTab,
     BTabs,
     BFormSelect,
+    BFormGroup,
+    BFormCheckbox,
     OwnedCardContent,
   },
   props: ["query"],
@@ -118,6 +140,7 @@ export default {
       cardSetTabClass: "card-set-tab",
       mobileSelectedTab: null,
       enlargedCard: null,
+      selected: [],
     };
   },
   computed: {
@@ -163,12 +186,60 @@ export default {
 
       return [];
     },
+    ...mapGetters({
+      getCryptCards: "crypt/getAllCryptCards",
+      isCryptLoaded: "crypt/isCryptLoaded",
+    }),
+  },
+  watch: {
+    isCryptLoaded(val) {
+      if (val) {
+        this.fetchCardSets();
+      }
+    },
   },
   mounted() {
-    this.fetchCardSets();
+    if (this.isCryptLoaded) {
+      this.fetchCardSets();
+    }
   },
   methods: {
+    async querySubGraph() {
+      const query = `query {
+        mintedTypes(orderBy:CARD_TYPE_ID_ASC){
+          nodes {
+          id
+          blockTimestamp
+          cardTypeId
+          }
+        }
+      }`;
+
+      //const graphEndPoint = (isLocal) ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph" : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver" ;
+      const graphEndPoint =
+        "https://api.subquery.network/sq/ryanprice/zoombies-moonriver__cnlhb";
+      try {
+        const result = await fetch(graphEndPoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            query,
+          }),
+        });
+        const res = await result.json();
+        // console.log("QUERY res:", res);
+        return res.data.mintedTypes.nodes;
+      } catch (e) {
+        // window.alert("There was a fatal error contacting SubQuery Servers,Please let us know in the Cardinal Entertainment Discord #support channel");
+        console.error("SubQuery fetch error:", e);
+        return;
+      }
+    },
     async fetchCardSets() {
+      const mintedTypes = await this.querySubGraph();
       const cardSets = await getCardSets();
       const transformedCardSets = Object.keys(cardSets).map((key) => {
         const cards = cardSets[key].sort((a, b) => {
@@ -180,10 +251,32 @@ export default {
 
           return 0;
         });
+
+        // add on the type is minted property
+        const cardsWithMinted = cards.map((card) => {
+          const isCardMinted =
+            mintedTypes.filter((type) => type.id === card.id).length > 0;
+          const ownedCards = this.getCryptCards;
+
+          const isCardOwned =
+            ownedCards.filter((ownedCard) => card.id === ownedCard.type_id)
+              .length > 0;
+
+          if (card.id === "445") {
+            console.log(isCardOwned, card.id, card.name);
+          }
+
+          return {
+            ...card,
+            isMinted: isCardMinted,
+            isOwned: isCardOwned,
+          };
+        });
+
         const cardSetName = key;
         return {
           cardSetName,
-          cards,
+          cards: cardsWithMinted,
           id: uuidv4(),
         };
       });
@@ -316,5 +409,20 @@ export default {
       row-gap: 24px;
     }
   }
+}
+
+.form-check-input {
+  width: 16px;
+  height: 16px;
+}
+
+.check-owned {
+  color: #7ef4f6;
+}
+.check-not-owned {
+  color: #f566e2;
+}
+.check-not-minted {
+  color: #cccccc;
 }
 </style>

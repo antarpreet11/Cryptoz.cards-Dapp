@@ -255,7 +255,7 @@ const cryptStore = {
       commit(CRYPT_MUTATIONS.SACRIFICE_CRYPT_CARDS, payload);
     },
     async loadCryptCards({ commit, dispatch, rootState }, payload) {
-      const { addressToLoad, isOwnCrypt } = payload;
+      const { addressToLoad } = payload;
       if (!addressToLoad) {
         return;
       }
@@ -373,6 +373,7 @@ const cryptStore = {
     },
     isLoadingCrypt: (state) => state.isLoadingCrypt,
     isCryptLoaded: (state) => state.cryptLoaded,
+    getAllCryptCards: (state) => state.allCryptCards,
   },
 };
 

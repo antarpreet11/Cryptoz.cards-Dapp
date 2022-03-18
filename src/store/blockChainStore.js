@@ -311,6 +311,11 @@ const blockchainStore = {
       dispatch("setDAppState", dAppState.WALLET_CONNECTED, { root: true });
 
       dispatch("fetchStoreCards", null, { root: true });
+      dispatch(
+        "crypt/loadCryptCards",
+        { addressToLoad: metamaskProviderData.address },
+        { root: true }
+      );
     },
 
     async updateWalletBalances({ commit, state }) {

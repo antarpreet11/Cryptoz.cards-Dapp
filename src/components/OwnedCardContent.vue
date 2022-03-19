@@ -443,6 +443,14 @@ export default {
   opacity: 0.8;
 }
 
+@media screen and (max-width: 768px) {
+  .not-minted-label,
+  .owned-label,
+  .not-owned-label {
+    font-size: 1rem;
+  }
+}
+
 .owned-label {
   background-color: #7ef4f6;
 }

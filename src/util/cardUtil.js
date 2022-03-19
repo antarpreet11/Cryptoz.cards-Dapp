@@ -1,4 +1,5 @@
 import axios from "axios";
+import { isLocal } from "./constants/networks";
 
 export const RARITY_CLASSES = {
   Common: "card-bg card-bg-6",
@@ -106,5 +107,40 @@ export const getNftByTokenId = async (tokenId, zoombiesContract) => {
     };
   } catch (error) {
     console.error("Failed to get nft by tokenID: ", tokenId, error);
+  }
+};
+
+export const querySubGraph = async () => {
+  const query = `query {
+    mintedTypes(orderBy:CARD_TYPE_ID_ASC){
+      nodes {
+      id
+      blockTimestamp
+      cardTypeId
+      }
+    }
+  }`;
+
+  const graphEndPoint = isLocal
+    ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph"
+    : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver__cnlhb";
+
+  try {
+    const result = await fetch(graphEndPoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        query,
+      }),
+    });
+    const res = await result.json();
+    return res.data.mintedTypes.nodes;
+  } catch (e) {
+    // window.alert("There was a fatal error contacting SubQuery Servers,Please let us know in the Cardinal Entertainment Discord #support channel");
+    console.error("SubQuery fetch error:", e);
+    return;
   }
 };

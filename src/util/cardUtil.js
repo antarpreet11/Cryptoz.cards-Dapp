@@ -123,7 +123,7 @@ export const querySubGraph = async () => {
 
   const graphEndPoint = isLocal
     ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph"
-    : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver__cnlhb";
+    : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver";
 
   try {
     const result = await fetch(graphEndPoint, {

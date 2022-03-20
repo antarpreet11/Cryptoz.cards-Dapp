@@ -16,11 +16,11 @@
       </p>
     </div>
 
-    <div v-if="isLoadingCardset" class="loading-cardset">
+    <div v-if="!isCardsetLoaded" class="loading-cardset">
       <b-spinner variant="light"></b-spinner>
     </div>
     <div v-else>
-      <div v-if="cardSets" class="card-set-tablist-wrapper">
+      <div class="card-set-tablist-wrapper">
         <b-tabs
           active-nav-item-class="font-weight-bold info"
           :nav-class="cardSetTabClass"
@@ -29,20 +29,30 @@
           vertical
         >
           <b-tab
-            v-for="cardset in sortedCardSets"
+            v-for="cardset in getFilteredCardsets"
             :key="cardset.id"
             :title="cardset.cardSetName"
           >
             <div class="tab-content">
               <h3>Card Set: {{ cardset.cardSetName }}</h3>
               <b-form-group>
-                <b-form-checkbox class="check-owned" size="lg" inline
+                <b-form-checkbox
+                  v-model="ownedChecked"
+                  class="check-owned"
+                  size="lg"
+                  inline
                   >Owned</b-form-checkbox
                 >
-                <b-form-checkbox class="check-not-owned" size="lg" inline
+                <b-form-checkbox
+                  v-model="notOwnedChecked"
+                  class="check-not-owned"
+                  size="lg"
+                  inline
                   >Not Owned</b-form-checkbox
                 >
-                <b-form-checkbox size="lg" inline>Never Minted</b-form-checkbox>
+                <b-form-checkbox v-model="neverMintedChecked" size="lg" inline
+                  >Never Minted</b-form-checkbox
+                >
               </b-form-group>
               <div class="tab-content-cards">
                 <owned-card-content
@@ -73,7 +83,7 @@
           </b-tab>
         </b-tabs>
       </div>
-      <div v-if="cardSets" class="card-set-list-wrapper-mobile">
+      <div class="card-set-list-wrapper-mobile">
         <b-form-select v-model="mobileSelectedTab" :options="cardSetOptions">
         </b-form-select>
         <div class="mobile-cards-wrapper">
@@ -107,7 +117,6 @@
 </template>
 
 <script>
-import { isLocal } from "../util/constants/networks";
 import {
   BTab,
   BTabs,
@@ -115,10 +124,9 @@ import {
   BFormGroup,
   BFormCheckbox,
 } from "bootstrap-vue";
-import { getCardSets } from "../util/cardUtil";
-import { v4 as uuidv4 } from "uuid";
 import OwnedCardContent from "./OwnedCardContent.vue";
 import { RARITY_CLASSES } from "../util/cardUtil";
+import { CardsetFilters } from "../store/cardsetStore";
 import { mapGetters } from "vuex";
 
 export default {
@@ -134,20 +142,17 @@ export default {
   props: ["query"],
   data() {
     return {
-      msg: "Here we go, here we go",
-      wagerSample: 0,
-      isLoadingCardset: true,
-      cardSets: null,
       cardSetTabClass: "card-set-tab",
-      mobileSelectedTab: null,
-      enlargedCard: null,
-      selected: [],
+      mobileSelectedTab: 0,
+      ownedChecked: false,
+      notOwnedChecked: false,
+      neverMintedChecked: false,
     };
   },
   computed: {
     cardSetOptions: function () {
-      if (this.cardSets) {
-        const sortedCardsets = this.cardSets
+      if (this.getAllCardsets) {
+        const sortedCardsets = this.getAllCardsets
           .map((cardset) => cardset.cardSetName)
           .sort();
 
@@ -161,28 +166,10 @@ export default {
 
       return [];
     },
-    sortedCardSets: function () {
-      if (this.cardSets) {
-        const sortedCardSet = this.cardSets;
-
-        return sortedCardSet.sort((a, b) => {
-          if (a.cardSetName < b.cardSetName) {
-            return -1;
-          } else if (a.cardSetName > b.cardSetName) {
-            return 1;
-          }
-
-          return 0;
-        });
-      }
-
-      return [];
-    },
     getCurrentlySelectedCardSet: function () {
-      if (this.mobileSelectedTab !== null && this.cardSets !== null) {
+      if (this.mobileSelectedTab !== null) {
         const index = parseInt(this.mobileSelectedTab);
-
-        return this.cardSets[index];
+        return this.$store.getters["cardset/getFilteredCardsetByIndex"](index);
       }
 
       return [];
@@ -190,101 +177,48 @@ export default {
     ...mapGetters({
       getCryptCards: "crypt/getAllCryptCards",
       isCryptLoaded: "crypt/isCryptLoaded",
+      getFilteredCardsets: "cardset/getFilteredCardsets",
+      getAllCardsets: "cardset/getAllCardsets",
+      isCardsetLoaded: "cardset/isCardsetLoaded",
     }),
   },
   watch: {
     isCryptLoaded(val) {
       if (val) {
-        this.fetchCardSets();
+        this.$store.dispatch("cardset/fetchAllCardSets");
+      }
+    },
+    ownedChecked(val) {
+      if (val) {
+        this.$store.dispatch("cardset/setFilter", CardsetFilters.owned);
+      } else {
+        this.$store.dispatch("cardset/removeFilter", CardsetFilters.owned);
+      }
+    },
+    notOwnedChecked(val) {
+      if (val) {
+        this.$store.dispatch("cardset/setFilter", CardsetFilters.notOwned);
+      } else {
+        this.$store.dispatch("cardset/removeFilter", CardsetFilters.notOwned);
+      }
+    },
+    neverMintedChecked(val) {
+      if (val) {
+        this.$store.dispatch("cardset/setFilter", CardsetFilters.neverMinted);
+      } else {
+        this.$store.dispatch(
+          "cardset/removeFilter",
+          CardsetFilters.neverMinted
+        );
       }
     },
   },
   mounted() {
     if (this.isCryptLoaded) {
-      this.fetchCardSets();
+      this.$store.dispatch("cardset/fetchAllCardSets");
     }
   },
   methods: {
-    async querySubGraph() {
-      const query = `query {
-        mintedTypes(orderBy:CARD_TYPE_ID_ASC){
-          nodes {
-          id
-          blockTimestamp
-          cardTypeId
-          }
-        }
-      }`;
-
-      //const graphEndPoint = (isLocal) ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph" : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver" ;
-      const graphEndPoint = (isLocal) ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph" : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver__cnlhb";
-      try {
-        const result = await fetch(graphEndPoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            query,
-          }),
-        });
-        const res = await result.json();
-        // console.log("QUERY res:", res);
-        return res.data.mintedTypes.nodes;
-      } catch (e) {
-        // window.alert("There was a fatal error contacting SubQuery Servers,Please let us know in the Cardinal Entertainment Discord #support channel");
-        console.error("SubQuery fetch error:", e);
-        return;
-      }
-    },
-    async fetchCardSets() {
-      const mintedTypes = await this.querySubGraph();
-      const cardSets = await getCardSets();
-      const transformedCardSets = Object.keys(cardSets).map((key) => {
-        const cards = cardSets[key].sort((a, b) => {
-          if (parseInt(a.rarity) < parseInt(b.rarity)) {
-            return -1;
-          } else if (parseInt(a.rarity) > parseInt(b.rarity)) {
-            return 1;
-          }
-
-          return 0;
-        });
-
-        // add on the type is minted property
-        const cardsWithMinted = cards.map((card) => {
-          const isCardMinted =
-            mintedTypes.filter((type) => type.id === card.id).length > 0;
-          const ownedCards = this.getCryptCards;
-
-          const isCardOwned =
-            ownedCards.filter((ownedCard) => card.id === ownedCard.type_id)
-              .length > 0;
-
-          if (card.id === "445") {
-            console.log(isCardOwned, card.id, card.name);
-          }
-
-          return {
-            ...card,
-            isMinted: isCardMinted,
-            isOwned: isCardOwned,
-          };
-        });
-
-        const cardSetName = key;
-        return {
-          cardSetName,
-          cards: cardsWithMinted,
-          id: uuidv4(),
-        };
-      });
-
-      this.cardSets = transformedCardSets;
-      this.mobileSelectedTab = 0;
-      this.isLoadingCardset = false;
-    },
     getCardImageUrl(svg) {
       return `https://zoombies.world/card-gen/assets/${svg}`;
     },

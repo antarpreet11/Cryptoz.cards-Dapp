@@ -85,6 +85,16 @@
         </div>
         <b-row class="d-none d-md-block">
           <b-col>
+            <apexchart
+              id="barChartContainer"
+              ref="rarityChart"
+              width="100%"
+              type="bar"
+              :options="barChartOptions"
+              :series="barChartSeries"
+            ></apexchart>
+          </b-col>
+          <b-col>
             <div>
               <div class="graph-title">
                 Moonriver ZOOM
@@ -140,6 +150,12 @@ export default {
       totalZoomMinted: "Loading...",
       totalZoomBurned: "Loading...",
       graphData: Object(),
+      barChartOptions: {
+          chart: {
+            type: 'bar',
+            stacked: true
+          },
+        },
       chartOptions: {
         markers: {
           size: 3,
@@ -282,6 +298,21 @@ export default {
           },
         },
       },
+      barChartSeries : [
+        {
+          name: 'EPIC',
+          data: [44, 55, 41, 67, 22, 43, 23]
+        }, {
+          name: 'RARE',
+          data: [13, 23, 20, 8, 13, 27, 12]
+        }, {
+          name: 'UNCOMMON',
+          data: [11, 17, 15, 15, 21, 14,456]
+        }, {
+          name: 'COMMON',
+          data: [21, 7, 25, 13, 22, 8,345]
+        },
+      ],
       chartSeries: [
         {
           name: "minted",

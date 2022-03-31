@@ -155,6 +155,12 @@ export default {
             type: 'bar',
             stacked: true
           },
+          xaxis: {
+          type: 'datetime',
+          categories: ['01/01/2011 GMT', '01/02/2011 GMT', '01/03/2011 GMT', '01/04/2011 GMT',
+            '01/05/2011 GMT', '01/06/2011 GMT','01/07/2011 GMT'
+          ],
+        },
         },
       chartOptions: {
         markers: {
@@ -307,10 +313,10 @@ export default {
           data: [13, 23, 20, 8, 13, 27, 12]
         }, {
           name: 'UNCOMMON',
-          data: [11, 17, 15, 15, 21, 14,456]
+          data: [11, 17, 15, 15, 21, 14,46]
         }, {
           name: 'COMMON',
-          data: [21, 7, 25, 13, 22, 8,345]
+          data: [21, 7, 25, 13, 22, 8,34]
         },
       ],
       chartSeries: [

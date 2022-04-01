@@ -79,7 +79,13 @@ const cardsetStore = {
   },
   actions: {
     async fetchAllCardSets({ commit, rootState }, payload) {
-      const mintedTypes = await querySubGraph();
+      let mintedTypes = await querySubGraph(0);
+      mintedTypes = mintedTypes.concat(await querySubGraph(100));
+      mintedTypes = mintedTypes.concat(await querySubGraph(200));
+      mintedTypes = mintedTypes.concat(await querySubGraph(300));
+      mintedTypes = mintedTypes.concat(await querySubGraph(400));
+      mintedTypes = mintedTypes.concat(await querySubGraph(500));
+
       const cardSets = await getCardSets();
 
       const transformedCardSets = Object.keys(cardSets).map((key) => {

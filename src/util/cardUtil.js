@@ -110,9 +110,9 @@ export const getNftByTokenId = async (tokenId, zoombiesContract) => {
   }
 };
 
-export const querySubGraph = async () => {
+export const querySubGraph = async (offset) => {
   const query = `query {
-    mintedTypes(orderBy:CARD_TYPE_ID_ASC){
+    mintedTypes(orderBy:CARD_TYPE_ID_ASC,offset:${offset}){
       nodes {
       id
       blockTimestamp

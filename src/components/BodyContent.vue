@@ -92,26 +92,41 @@
                 <img src="https://zoombies.world/images/dapp/zoombies_card_back.svg" width="40%" />
               </b-col>
               <b-col class="col-8  text-left">
-                4569<br/>
-                Cards Minted - 24 hrs<br/><br/>
-                459<br/>
-                Cards Burned - 24 hrs
+                <h3 class="zoombies-font">
+                  4,569<br/>
+                  NFTs Minted - 24 hrs<br/><br/>
+                  459<br/>
+                  NFTs Burned - 24 hrs
+                </h3>
               </b-col>
             </b-row>
           </b-col>
           <b-col class="col-6">
             <b-row align-v="center" align-h="start">
               <b-col class="col-4 text-right">
-                <img src="https://zoombies.world/images/zoombies_coin.svg" width="40%" /><br/><br/>
+                <img src="https://zoombies.world/images/zoombies_coin.svg" width="40%" /><br/><br/><br/>
                 <img src="https://zoombies.world/images/zoombies_coin.svg" width="40%" />
               </b-col>
               <b-col class="col-8 text-left">
-                4,569,000<br/>
-                ZOOM Minted - 24 hrs<br/><br/>
-                1,459,000<br/>
-                ZOOM Burned - 24 hrs
+                <h3 class="zoombies-font">
+                  4,569,000<br/>
+                  ZOOM Minted - 24 hrs<br/><br/>
+                  1,459,000<br/>
+                  ZOOM Burned - 24 hrs
+                </h3>
               </b-col>
             </b-row>
+          </b-col>
+        </b-row>
+
+        <b-row class="">
+          <b-col class="mx-auto">
+            <h3 class="zoombies-font text-left">Last 5 NFTs Minted</h3>
+            <img src="https://zoombies.world/nft-image/19205" width="10%" />
+            <img src="https://zoombies.world/nft-image/19206" width="10%" />
+            <img src="https://zoombies.world/nft-image/19207" width="10%" />
+            <img src="https://zoombies.world/nft-image/19208" width="10%" />
+            <img src="https://zoombies.world/nft-image/19209" width="10%" />
           </b-col>
         </b-row>
 

@@ -84,6 +84,18 @@
           <strong>Total ZOOM Burned:</strong> {{ totalZoomBurned }}
         </div>
         <b-row class="d-none d-md-block">
+          <b-row align-v="center" align-h="center" style="border:4px solid #7df4f6; padding:0px">
+            <b-col>
+              Minted Boosters
+            </b-col>
+            <b-col>
+            <b-dropdown text="Mar. 15-31, 2022" block variant="primary" class="m-2">
+              <b-dropdown-item href="#">Mar. 1-14, 2022</b-dropdown-item>
+              <b-dropdown-item href="#">Feb. 15-30, 2022</b-dropdown-item>
+              <b-dropdown-item href="#">Feb. 1-15, 2022</b-dropdown-item>
+            </b-dropdown>
+            </b-col>
+          </b-row>
           <b-col>
             <apexchart
               id="barChartContainer"
@@ -115,13 +127,28 @@
             </div>
           </b-col>
         </b-row>
+        <b-row align-v="center" align-h="start">
+          <b-col>
+            4569<br/>
+            Cards Minted - 24 hrs<br/><br/>
+            459<br/>
+            Cards Burned - 24 hrs
+          </b-col>
+          <b-col>
+            4,569,000<br/>
+            ZOOM Minted - 24 hrs<br/><br/>
+            1,459,000<br/>
+            ZOOM Burned - 24 hrs
+          </b-col>
+        </b-row>
+
       </b-container>
     </main>
   </div>
 </template>
 
 <script>
-import { BButton, BContainer, BRow, BCol, BImgLazy } from "bootstrap-vue";
+import { BButton, BDropdown, BDropdownItem, BContainer, BRow, BCol, BImgLazy } from "bootstrap-vue";
 import { mapGetters } from "vuex";
 import apexchart from "vue-apexcharts";
 import { ethers } from "ethers";
@@ -131,6 +158,8 @@ export default {
   name: "BodyContent",
   components: {
     BButton,
+    BDropdown,
+    BDropdownItem,
     BContainer,
     BRow,
     BCol,

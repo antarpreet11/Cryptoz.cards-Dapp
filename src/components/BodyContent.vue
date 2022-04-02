@@ -120,9 +120,11 @@
         </b-row>
 
         <b-row class="">
-          <b-col class="mx-auto">
+          <b-col align-h="start" class="mx-auto">
             <h3 class="zoombies-font text-left">Last 5 NFTs Minted</h3>
-            <img src="https://zoombies.world/nft-image/19205" width="10%" />
+            <router-link to="/view/1920">
+              <img src="https://moonbase.zoombies.world/nft-image/1920" width="10%" />
+            </router-link>
             <img src="https://zoombies.world/nft-image/19206" width="10%" />
             <img src="https://zoombies.world/nft-image/19207" width="10%" />
             <img src="https://zoombies.world/nft-image/19208" width="10%" />

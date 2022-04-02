@@ -83,6 +83,38 @@
           <strong>Total ZOOM minted:</strong> {{ totalZoomMinted }}<br />
           <strong>Total ZOOM Burned:</strong> {{ totalZoomBurned }}
         </div>
+
+        <b-row align-v="center" align-h="start">
+          <b-col class="col-6">
+            <b-row align-v="center" align-h="start">
+              <b-col class="col-4  text-right">
+                <img src="https://zoombies.world/images/dapp/zoombies_card_back.svg" width="40%" /><br/>
+                <img src="https://zoombies.world/images/dapp/zoombies_card_back.svg" width="40%" />
+              </b-col>
+              <b-col class="col-8  text-left">
+                4569<br/>
+                Cards Minted - 24 hrs<br/><br/>
+                459<br/>
+                Cards Burned - 24 hrs
+              </b-col>
+            </b-row>
+          </b-col>
+          <b-col class="col-6">
+            <b-row align-v="center" align-h="start">
+              <b-col class="col-4 text-right">
+                <img src="https://zoombies.world/images/zoombies_coin.svg" width="40%" /><br/><br/>
+                <img src="https://zoombies.world/images/zoombies_coin.svg" width="40%" />
+              </b-col>
+              <b-col class="col-8 text-left">
+                4,569,000<br/>
+                ZOOM Minted - 24 hrs<br/><br/>
+                1,459,000<br/>
+                ZOOM Burned - 24 hrs
+              </b-col>
+            </b-row>
+          </b-col>
+        </b-row>
+
         <b-row class="d-none d-md-block">
           <b-row align-v="center" align-h="center" style="border:4px solid #7df4f6; padding:0px">
             <b-col>
@@ -125,20 +157,6 @@
                 :series="chartSeries"
               ></apexchart>
             </div>
-          </b-col>
-        </b-row>
-        <b-row align-v="center" align-h="start">
-          <b-col>
-            4569<br/>
-            Cards Minted - 24 hrs<br/><br/>
-            459<br/>
-            Cards Burned - 24 hrs
-          </b-col>
-          <b-col>
-            4,569,000<br/>
-            ZOOM Minted - 24 hrs<br/><br/>
-            1,459,000<br/>
-            ZOOM Burned - 24 hrs
           </b-col>
         </b-row>
 

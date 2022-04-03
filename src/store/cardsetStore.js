@@ -1,4 +1,4 @@
-import { getCardSets, querySubGraph } from "../util/cardUtil";
+import { getCardSets, queryMintedTypes } from "../util/cardUtil";
 import { v4 as uuidv4 } from "uuid";
 
 const DEFAULT_STATE = {
@@ -79,7 +79,8 @@ const cardsetStore = {
   },
   actions: {
     async fetchAllCardSets({ commit, rootState }, payload) {
-      const mintedTypes = await querySubGraph();
+      const mintedTypes = await queryMintedTypes();
+
       const cardSets = await getCardSets();
 
       const transformedCardSets = Object.keys(cardSets).map((key) => {

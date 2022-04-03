@@ -168,7 +168,7 @@ const subscribeToMetamaskProviderEvents = (metamaskProvider, dispatch) => {
   });
 };
 
-const eventCallback = async (dispatch, eventPayload) => {
+const eventCallback = async (dispatch, eventPayload, state) => {
   try {
     if (eventPayload.type === EVENT_TYPES.transfer) {
       const data = processTransferEvent(eventPayload.data.args);
@@ -183,18 +183,20 @@ const eventCallback = async (dispatch, eventPayload) => {
       // Card minted
 
       const data = processCardMintedEvent(eventPayload.data.args);
-      const newCard = await dispatch(
-        "crypt/addBoosterCard",
-        {
-          cardId: data.tokenId,
-          cardTypeId: data.cardTypeId,
-          edition: data.editionNumber,
-        },
-        { root: true }
-      );
+      if (data.address === state.walletAddress) {
+        const newCard = await dispatch(
+          "crypt/addBoosterCard",
+          {
+            cardId: data.tokenId,
+            cardTypeId: data.cardTypeId,
+            edition: data.editionNumber,
+          },
+          { root: true }
+        );
 
-      if (newCard) {
-        MessageBus.$emit("boosterOpened", newCard);
+        if (newCard) {
+          MessageBus.$emit("boosterOpened", newCard);
+        }
       }
     }
 
@@ -274,7 +276,7 @@ const blockchainStore = {
          * - watch events with new provider
          */
         setupEventWatcher((eventPayload) => {
-          eventCallback(dispatch, eventPayload);
+          eventCallback(dispatch, eventPayload, state);
         }, provider);
 
         const contracts = createContracts(
@@ -303,7 +305,7 @@ const blockchainStore = {
       });
 
       setupEventWatcher((eventPayload) => {
-        eventCallback(dispatch, eventPayload);
+        eventCallback(dispatch, eventPayload, state);
       }, websocketProvider.provider);
 
       await dispatch("updateWalletBalances");

@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { BigNumber } from '@ethersproject/bignumber'
 import detectEthereumProvider from "@metamask/detect-provider";
 import zoombiesContractJson from "../contracts/Zoombies.json";
 import zoomContractJson from "../contracts/ZoomToken.json";
@@ -62,7 +63,7 @@ const prodChainParam = {
     symbol: "MOVR",
     decimals: 18,
   },
-  rpcUrls: ["https://rpc.moonriver.moonbeam.network"],
+  rpcUrls: ["https://rpc.api.moonriver.moonbeam.network"],
   blockExplorerUrls: ["https://moonriver.moonscan.io/"],
 };
 
@@ -425,3 +426,11 @@ export const isMetamaskInstalled = () => {
   const { ethereum } = window;
   return Boolean(ethereum && ethereum.isMetaMask);
 };
+
+/**
+ * Returns the gas value plus a margin for unexpected or variable gas costs
+ * @param value the gas value to pad
+ */
+export function calculateGasMargin(value) {
+  return value.mul(120).div(100)
+}

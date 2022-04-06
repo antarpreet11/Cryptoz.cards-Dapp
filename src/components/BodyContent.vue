@@ -109,9 +109,9 @@
               </b-col>
               <b-col class="col-8 text-left">
                 <h3 class="zoombies-font">
-                  4,569,000<br/>
+                  {{zoomMinted24Hrs}}<br/>
                   ZOOM Minted - 24 hrs<br/><br/>
-                  1,459,000<br/>
+                  {{zoomBurned24Hrs}}<br/>
                   ZOOM Burned - 24 hrs
                 </h3>
               </b-col>
@@ -213,6 +213,8 @@ export default {
       oldTotalNft: 0,
       totalZoomMinted: "Loading...",
       totalZoomBurned: "Loading...",
+      zoomMinted24Hrs: "Loading...",
+      zoomBurned24Hrs: "Loading...",
       graphData: Object(),
       barChartOptions: {
           chart: {
@@ -438,15 +440,29 @@ export default {
   },
   methods: {
     getZoomGraph: async function () {
-      const query = `query { zoomPerDays(last:100) {
-                    nodes{
-                      id
-                      minted
-                      burned
-                    }
-                  }}`;
+      const query = `query {
+                      zoomPerDays(last:100) {
+                        nodes{
+                          id
+                          minted
+                          burned
+                        }
+                      }
+                      rarityPerDays(last:100) {
+                        nodes {
+                          id
+                          diamond
+                          platinum
+                          epic
+                          rare
+                          uncommon
+                          common
+                        }
+                      }
+                    }`;
       const result = await fetch(
-        "https://api.subquery.network/sq/ryanprice/zoombies-moonriver",
+        //"https://api.subquery.network/sq/ryanprice/zoombies-moonriver",
+        "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph__cnlhb",
         {
           method: "POST",
           headers: {
@@ -459,6 +475,14 @@ export default {
         }
       );
       const res = await result.json();
+  console.log(res.data.zoomPerDays.nodes[99]);
+
+    this.zoomMinted24Hrs = ethers.utils.commify(ethers.utils.formatEther(res.data.zoomPerDays.nodes[99].minted));
+    this.zoomBurned24Hrs = ethers.utils.commify(ethers.utils.formatEther(res.data.zoomPerDays.nodes[99].burned));
+
+  console.log("res",res.data.rarityPerDays.nodes);
+
+      //Shape the zoomMinted and burned totals
       let graphData = new Object({ date: [], minted: [], burned: [] });
       this.totalZoomMinted = ethers.BigNumber.from("0");
       this.totalZoomBurned = ethers.BigNumber.from("0");

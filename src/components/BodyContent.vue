@@ -136,10 +136,10 @@
               Minted Boosters
             </b-col>
             <b-col>
-            <b-dropdown text="Mar. 15-31, 2022" block variant="primary" class="m-2">
-              <b-dropdown-item href="#">Mar. 1-14, 2022</b-dropdown-item>
-              <b-dropdown-item href="#">Feb. 15-30, 2022</b-dropdown-item>
-              <b-dropdown-item href="#">Feb. 1-15, 2022</b-dropdown-item>
+            <b-dropdown text="Select Range" block variant="primary" class="m-2">
+              <b-dropdown-item v-for="date in mintedBoostersDateRange" @change="`console.log(date[0])`">
+                {{date[0]}} - {{date[1]}}
+              </b-dropdown-item>
             </b-dropdown>
             </b-col>
           </b-row>
@@ -493,15 +493,80 @@ export default {
         }
       );
       const res = await result.json();
-console.log(res);
+//console.log(res);
 //console.log("rarity",res.data.rarityPerDays.nodes);
+
+
+      let rarityCount = new Object({ date: [], diamond: [], platinum: [], epic: [], rare: [], uncommon: [], common: [] });
+      //shape the data for the column chart. the 4 series and the date array
+      res.data.rarityPerDays.nodes.forEach((item, i) => {
+        //console.log(item);
+        rarityCount['date'].push(item.id);
+        rarityCount['diamond'].push(item.diamond);
+        rarityCount['platinum'].push(item.platinum);
+        rarityCount['epic'].push(item.epic);
+        rarityCount['rare'].push(item.rare);
+        rarityCount['uncommon'].push(item.uncommon);
+        rarityCount['common'].push(item.common);
+      });
+
+      console.log(rarityCount);
+
+      //shape the data for dropdown for Minted Boosters 7 items -- 14 day items
+
+      var d = new Date();
+      const from = d.setDate(d.getDate()-98);
+      //const from = new Date("2022-03-29T08:08:20.794Z");
+      //const to = new Date("2020-09-24T08:08:20.794Z");
+      const to = new Date();
+
+      // Convert date string to dd/mm/yyyy format
+      const buildDateString = (date) => {
+        const day = date.getDate().toString().padStart(2, "0");
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const year = date.getFullYear();
+
+        return `${day}.${month}.${year}`;
+      }
+
+      // Increase date by x amount of days
+      const increaseDays = (date, amount) => new Date(date.setDate(date.getDate() + amount));
+
+      // Get all weeks in given period
+      const buildWeeks = (start, end) => {
+        const weeks = [];
+        let current = new Date(start);
+
+        while(current < end) {
+          // Get start of the week
+          const beginOfWeek = new Date(current);
+          // Get end of the week
+          let endOfWeek = increaseDays(current, 6);
+          // If there are less then 7 days left before the end, use the end.
+          endOfWeek = endOfWeek > end ? end : endOfWeek;
+
+          // Add week to our collection
+          weeks.push([buildDateString(beginOfWeek), buildDateString(endOfWeek)]);
+
+          current = increaseDays(current, 1);
+        }
+
+        return weeks;
+      }
+
+      const weeks = buildWeeks(from, to);
+
+      //weeks.forEach(([start, end]) => console.log(`${start} - ${end}`));
+
+      //bind to dropdown
+      this.mintedBoostersDateRange = weeks;
+
 
       //Last 5 NFTs minted
       res.data.logCardMinteds.nodes.forEach((i) => {
           this.lastFiveNFTs.push(i.tokenId);
       })
 
-      console.log(this.lastFiveNFTs);
       this.NftsMinted24Hrs = ethers.utils.commify(res.data.nFTPerDays.nodes[res.data.nFTPerDays.nodes.length-1].minted);
       this.NftsBurned24Hrs = ethers.utils.commify(res.data.nFTPerDays.nodes[res.data.nFTPerDays.nodes.length-1].burned);
       this.zoomMinted24Hrs = ethers.utils.commify(ethers.utils.formatEther(res.data.zoomPerDays.nodes[res.data.zoomPerDays.nodes.length-1].minted));

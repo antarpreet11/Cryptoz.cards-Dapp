@@ -93,10 +93,10 @@
               </b-col>
               <b-col class="col-8  text-left">
                 <h3 class="zoombies-font">
-                  4,569<br/>
-                  NFTs Minted - 24 hrs<br/><br/>
-                  459<br/>
-                  NFTs Burned - 24 hrs
+                  {{NftsMinted24Hrs}}<br/>
+                  NFTs Minted - Last 24 hrs<br/><br/>
+                  {{NftsBurned24Hrs}}<br/>
+                  NFTs Burned - Last 24 hrs
                 </h3>
               </b-col>
             </b-row>
@@ -110,9 +110,9 @@
               <b-col class="col-8 text-left">
                 <h3 class="zoombies-font">
                   {{zoomMinted24Hrs}}<br/>
-                  ZOOM Minted - 24 hrs<br/><br/>
+                  ZOOM Minted - Last 24 hrs<br/><br/>
                   {{zoomBurned24Hrs}}<br/>
-                  ZOOM Burned - 24 hrs
+                  ZOOM Burned - Last 24 hrs
                 </h3>
               </b-col>
             </b-row>
@@ -215,6 +215,8 @@ export default {
       totalZoomBurned: "Loading...",
       zoomMinted24Hrs: "Loading...",
       zoomBurned24Hrs: "Loading...",
+      NftsMinted24Hrs: "Loading...",
+      NftsBurned24Hrs: "Loading...",
       graphData: Object(),
       barChartOptions: {
           chart: {
@@ -441,6 +443,13 @@ export default {
   methods: {
     getZoomGraph: async function () {
       const query = `query {
+                      nFTPerDays(last:1) {
+                        nodes {
+                        id
+                        minted
+                        burned
+                        }
+                      }
                       zoomPerDays(last:100) {
                         nodes{
                           id
@@ -475,12 +484,13 @@ export default {
         }
       );
       const res = await result.json();
-  console.log(res.data.zoomPerDays.nodes[99]);
+console.log(res);
+//console.log("rarity",res.data.rarityPerDays.nodes);
 
-    this.zoomMinted24Hrs = ethers.utils.commify(ethers.utils.formatEther(res.data.zoomPerDays.nodes[99].minted));
-    this.zoomBurned24Hrs = ethers.utils.commify(ethers.utils.formatEther(res.data.zoomPerDays.nodes[99].burned));
-
-  console.log("res",res.data.rarityPerDays.nodes);
+      this.NftsMinted24Hrs = ethers.utils.commify(res.data.nFTPerDays.nodes[res.data.nFTPerDays.nodes.length-1].minted);
+      this.NftsBurned24Hrs = ethers.utils.commify(res.data.nFTPerDays.nodes[res.data.nFTPerDays.nodes.length-1].burned);
+      this.zoomMinted24Hrs = ethers.utils.commify(ethers.utils.formatEther(res.data.zoomPerDays.nodes[res.data.zoomPerDays.nodes.length-1].minted));
+      this.zoomBurned24Hrs = ethers.utils.commify(ethers.utils.formatEther(res.data.zoomPerDays.nodes[res.data.zoomPerDays.nodes.length-1].burned));
 
       //Shape the zoomMinted and burned totals
       let graphData = new Object({ date: [], minted: [], burned: [] });

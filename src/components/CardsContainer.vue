@@ -276,6 +276,7 @@
 <script>
 import Vue from "vue";
 import { ethers } from "ethers";
+import {calculateGasMargin} from "../store/blockChainStore";
 import debounce from "lodash/debounce";
 import SortDropdown from "@/components/SortDropdown.vue";
 import OwnedCardContent from "@/components/OwnedCardContent";
@@ -742,8 +743,12 @@ export default {
           Vue.set(this.cardsBeingSacrificed, id, true);
         });
 
-        const sacrificeRes = await this.getSignedZoombiesContract.sacrificeNFTs(
+        const gasEstimate = await this.getSignedZoombiesContract.estimateGas.sacrificeNFTs(
           ids
+        );
+
+        const sacrificeRes = await this.getSignedZoombiesContract.sacrificeNFTs(
+          ids, {gasLimit: calculateGasMargin(gasEstimate)}
         );
         this.$store.dispatch("setIsTransactionPending", false);
         await sacrificeRes.wait();
@@ -773,10 +778,16 @@ export default {
         Vue.set(this.cardsBeingGifted, id, true);
         this.$store.dispatch("setIsTransactionPending", true);
 
-        const giftRes = await this.getSignedZoombiesContract.transferFrom(
+        const gasEstimate = await this.getSignedZoombiesContract.estimateGas.transferFrom(
           this.getWalletAddress,
           this.receivingWallet,
           id
+        );
+
+        const giftRes = await this.getSignedZoombiesContract.transferFrom(
+          this.getWalletAddress,
+          this.receivingWallet,
+          id,{gasLimit: calculateGasMargin(gasEstimate)}
         );
 
         this.$store.dispatch("setIsTransactionPending", false);

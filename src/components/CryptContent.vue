@@ -305,6 +305,7 @@ import dAppStates from "@/dAppStates";
 import { MessageBus } from "@/messageBus";
 import { mapGetters } from "vuex";
 import { ethers } from "ethers";
+import {calculateGasMargin} from "../store/blockChainStore";
 
 export default {
   name: "CryptContent",
@@ -393,10 +394,18 @@ export default {
           .parseEther((0.01 * parseInt(this.totalCreditsToBuy)).toString())
           .toString();
 
+        const gasEstimate = await this.getSignedZoombiesContract.estimateGas.buyBoosterCredits(
+          parseInt(this.totalCreditsToBuy),
+          {
+            value: totalBoostersCost.toString(),
+          }
+        );
+
         const res = await this.getSignedZoombiesContract.buyBoosterCredits(
           parseInt(this.totalCreditsToBuy),
           {
             value: totalBoostersCost.toString(),
+            gasLimit: calculateGasMargin(gasEstimate)
           }
         );
 
@@ -420,8 +429,14 @@ export default {
       try {
         this.$store.dispatch("setIsTransactionPending", true);
         this.setLastMintTime();
+
+        const gasEstimate = await this.getSignedZoombiesContract.estimateGas.buyBoosterAndMintNFT({
+          value: ethers.utils.parseEther('0.01').toString(),
+        });
+
         const res = await this.getSignedZoombiesContract.buyBoosterAndMintNFT({
           value: ethers.utils.parseEther('0.01').toString(),
+          gasLimit: calculateGasMargin(gasEstimate)
         });
         this.$store.dispatch("setIsTransactionPending", false);
         await res.wait();
@@ -438,8 +453,12 @@ export default {
         this.$store.dispatch("setIsTransactionPending", true);
         this.$bvModal.hide("open-booster-modal");
 
-        const res = await this.getSignedZoombiesContract.mintBoosterNFT(
+        const gasEstimate = await this.getSignedZoombiesContract.estimateGas.mintBoosterNFT(
           this.wagerAmount
+        );
+
+        const res = await this.getSignedZoombiesContract.mintBoosterNFT(
+          this.wagerAmount,{gasLimit: calculateGasMargin(gasEstimate)}
         );
         this.$store.dispatch("setIsTransactionPending", false);
         await res.wait();

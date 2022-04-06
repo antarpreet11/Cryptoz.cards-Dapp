@@ -124,7 +124,7 @@
             <h3 class="zoombies-font text-left">Last 5 NFTs Minted</h3>
             <span v-for="tokenId in lastFiveNFTs">
               <router-link :to="`/view/${tokenId}`">
-                <img :src="`https://moonbase.zoombies.world/nft-image/${tokenId}`" width="10%" />
+                <img :src="`https://moonbase.zoombies.world/nft-image/${tokenId}`" width="13%" />
               </router-link>
             </span>
           </b-col>
@@ -186,6 +186,7 @@ import { mapGetters } from "vuex";
 import apexchart from "vue-apexcharts";
 import { ethers } from "ethers";
 import { isMetamaskInstalled } from "../store/blockChainStore";
+import { isLocal } from "../util/constants/networks";
 
 export default {
   name: "BodyContent",
@@ -216,6 +217,7 @@ export default {
       zoomBurned24Hrs: "Loading...",
       NftsMinted24Hrs: "Loading...",
       NftsBurned24Hrs: "Loading...",
+      mintedBoostersDateRange: [],
       graphData: Object(),
       barChartOptions: {
           chart: {
@@ -473,9 +475,12 @@ export default {
                         }
                       }
                     }`;
-      const result = await fetch(
-        //"https://api.subquery.network/sq/ryanprice/zoombies-moonriver",
-        "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph__cnlhb",
+
+      const graphEndPoint = isLocal
+        ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph__cnlhb"
+        : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver";
+
+      const result = await fetch(graphEndPoint,
         {
           method: "POST",
           headers: {

@@ -122,13 +122,11 @@
         <b-row class="">
           <b-col align-h="start" class="mx-auto">
             <h3 class="zoombies-font text-left">Last 5 NFTs Minted</h3>
-            <router-link to="/view/1920">
-              <img src="https://moonbase.zoombies.world/nft-image/1920" width="10%" />
-            </router-link>
-            <img src="https://zoombies.world/nft-image/19206" width="10%" />
-            <img src="https://zoombies.world/nft-image/19207" width="10%" />
-            <img src="https://zoombies.world/nft-image/19208" width="10%" />
-            <img src="https://zoombies.world/nft-image/19209" width="10%" />
+            <span v-for="tokenId in lastFiveNFTs">
+              <router-link :to="`/view/${tokenId}`">
+                <img :src="`https://moonbase.zoombies.world/nft-image/${tokenId}`" width="10%" />
+              </router-link>
+            </span>
           </b-col>
         </b-row>
 
@@ -211,6 +209,7 @@ export default {
       onMainNet: false,
       oldTotalZoom: 0,
       oldTotalNft: 0,
+      lastFiveNFTs: [],
       totalZoomMinted: "Loading...",
       totalZoomBurned: "Loading...",
       zoomMinted24Hrs: "Loading...",
@@ -443,6 +442,11 @@ export default {
   methods: {
     getZoomGraph: async function () {
       const query = `query {
+                      logCardMinteds(orderBy:BLOCK_NUMBER_ASC,last:5) {
+                        nodes {
+                          tokenId
+                        }
+                      }
                       nFTPerDays(last:1) {
                         nodes {
                         id
@@ -487,6 +491,12 @@ export default {
 console.log(res);
 //console.log("rarity",res.data.rarityPerDays.nodes);
 
+      //Last 5 NFTs minted
+      res.data.logCardMinteds.nodes.forEach((i) => {
+          this.lastFiveNFTs.push(i.tokenId);
+      })
+
+      console.log(this.lastFiveNFTs);
       this.NftsMinted24Hrs = ethers.utils.commify(res.data.nFTPerDays.nodes[res.data.nFTPerDays.nodes.length-1].minted);
       this.NftsBurned24Hrs = ethers.utils.commify(res.data.nFTPerDays.nodes[res.data.nFTPerDays.nodes.length-1].burned);
       this.zoomMinted24Hrs = ethers.utils.commify(ethers.utils.formatEther(res.data.zoomPerDays.nodes[res.data.zoomPerDays.nodes.length-1].minted));

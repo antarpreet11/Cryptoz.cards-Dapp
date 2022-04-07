@@ -237,6 +237,12 @@ export default {
               '01/05/2011 GMT', '01/06/2011 GMT','01/07/2011 GMT'
             ],
           },
+          legend: {
+            fontSize: "16px",
+            labels: {
+              useSeriesColors: true,
+            }
+          },
       },
       chartOptions: {
         markers: {

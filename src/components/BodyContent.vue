@@ -243,6 +243,7 @@ export default {
               useSeriesColors: true,
             }
           },
+          colors: ["#585858", "#04c1e8","#d5005a","#b92ee4","#d4e2f9","eaeef8"],
       },
       chartOptions: {
         markers: {
@@ -386,21 +387,7 @@ export default {
           },
         },
       },
-      barChartSeries : [
-        {
-          name: 'EPIC',
-          data: [44, 55, 41, 67, 22, 43, 23]
-        }, {
-          name: 'RARE',
-          data: [13, 23, 20, 8, 13, 27, 12]
-        }, {
-          name: 'UNCOMMON',
-          data: [11, 17, 15, 15, 21, 14,46]
-        }, {
-          name: 'COMMON',
-          data: [21, 7, 25, 13, 22, 8,34]
-        },
-      ],
+      barChartSeries : [{}],
       chartSeries: [
         {
           name: "minted",
@@ -528,18 +515,21 @@ export default {
       //bind the columns on bar chart
       this.barChartSeries = [
         {
-          name: 'EPIC',
-          data: this.rarityCount['epic'].slice(-14)
-        }, {
-          name: 'RARE',
-          data: this.rarityCount['rare'].slice(-14)
+          name: 'COMMON',
+          data: this.rarityCount['common'].slice(-14)
         }, {
           name: 'UNCOMMON',
           data: this.rarityCount['uncommon'].slice(-14)
         }, {
-          name: 'COMMON',
-          data: this.rarityCount['common'].slice(-14)
-        },
+          name: 'RARE',
+          data: this.rarityCount['rare'].slice(-14)
+        }, {
+          name: 'EPIC',
+          data: this.rarityCount['epic'].slice(-14)
+        }, {
+          name: 'PLATINUM',
+          data: this.rarityCount['platinum'].slice(-14)
+        }
       ]
 
       //bind the default daterange for bar column chart

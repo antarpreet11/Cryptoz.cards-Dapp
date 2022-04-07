@@ -38,11 +38,15 @@ export const querySubGraph = async () => {
         query,
       }),
     });
-    const res = await result.json();    
+    const res = await result.json();
     return res.data;
   } catch (e) {
     window.alert("There was a fatal error contacting SubQuery Servers,Please let us know in the Cardinal Entertainment Discord #support channel");
     console.error("SubQuery fetch error:", e);
     return;
   }
+};
+
+export const getLastWeeks = async () => {
+
 };

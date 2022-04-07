@@ -219,6 +219,7 @@ export default {
       NftsBurned24Hrs: "Loading...",
       mintedBoostersDateRange: [],
       graphData: Object(),
+      rarityCount: Object(),
       barChartOptions: {
           chart: {
             type: 'bar',
@@ -230,7 +231,7 @@ export default {
             '01/05/2011 GMT', '01/06/2011 GMT','01/07/2011 GMT'
           ],
         },
-        },
+      },
       chartOptions: {
         markers: {
           size: 3,
@@ -497,20 +498,50 @@ export default {
 //console.log("rarity",res.data.rarityPerDays.nodes);
 
 
-      let rarityCount = new Object({ date: [], diamond: [], platinum: [], epic: [], rare: [], uncommon: [], common: [] });
+      this.rarityCount = new Object({ date: [], diamond: [], platinum: [], epic: [], rare: [], uncommon: [], common: [] });
       //shape the data for the column chart. the 4 series and the date array
       res.data.rarityPerDays.nodes.forEach((item, i) => {
         //console.log(item);
-        rarityCount['date'].push(item.id);
-        rarityCount['diamond'].push(item.diamond);
-        rarityCount['platinum'].push(item.platinum);
-        rarityCount['epic'].push(item.epic);
-        rarityCount['rare'].push(item.rare);
-        rarityCount['uncommon'].push(item.uncommon);
-        rarityCount['common'].push(item.common);
+        this.rarityCount['date'].push(parseInt(item.id));
+        this.rarityCount['diamond'].push(item.diamond);
+        this.rarityCount['platinum'].push(item.platinum);
+        this.rarityCount['epic'].push(item.epic);
+        this.rarityCount['rare'].push(item.rare);
+        this.rarityCount['uncommon'].push(item.uncommon);
+        this.rarityCount['common'].push(item.common);
       });
 
-      console.log(rarityCount);
+  //    console.log(this.rarityCount);
+
+      //bind the columns on bar chart
+      this.barChartSeries = [
+        {
+          name: 'EPIC',
+          data: this.rarityCount['epic'].slice(-14)
+        }, {
+          name: 'RARE',
+          data: this.rarityCount['rare'].slice(-14)
+        }, {
+          name: 'UNCOMMON',
+          data: this.rarityCount['uncommon'].slice(-14)
+        }, {
+          name: 'COMMON',
+          data: this.rarityCount['common'].slice(-14)
+        },
+      ]
+
+      //bind the default daterange for bar column chart
+      this.barChartOptions = {
+          chart: {
+            type: "bar",
+            stacked: true
+          },
+          xaxis: {
+          type: "datetime",
+          //categories: [1641772800000,1641859200000],
+          categories: this.rarityCount['date'].slice(-14),
+        },
+      }
 
       //shape the data for dropdown for Minted Boosters 7 items -- 14 day items
 

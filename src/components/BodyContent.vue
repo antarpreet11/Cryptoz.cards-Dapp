@@ -143,36 +143,42 @@
             </b-dropdown>
             </b-col>
           </b-row>
-          <b-col>
-            <apexchart
-              id="barChartContainer"
-              ref="rarityChart"
-              width="100%"
-              type="bar"
-              :options="barChartOptions"
-              :series="barChartSeries"
-            ></apexchart>
-          </b-col>
-          <b-col>
-            <div>
+          <b-row align-v="end">
+            <b-col>
               <div class="graph-title">
-                Moonriver ZOOM
-                <img src="@/assets/zoomTokenCoin.svg" class="coin-logo" /> Token
-                Inflation
+                NFTs Minted by Rarity
               </div>
-              The ZOOM inflation chart tracks the amount of ZOOM tokens that
-              have been minted and burned in the last 100 days.<br />
-              Click and drag a region to zoom in
+              The NFT minted daily column chart indicates the proportion of NFTs minted per day by Rarity.<br/><br/>
               <apexchart
-                id="chartContainer"
-                ref="zoomChart"
+                id="barChartContainer"
+                ref="rarityChart"
                 width="100%"
-                type="line"
-                :options="chartOptions"
-                :series="chartSeries"
+                type="bar"
+                :options="barChartOptions"
+                :series="barChartSeries"
               ></apexchart>
-            </div>
-          </b-col>
+            </b-col>
+            <b-col>
+              <div>
+                <div class="graph-title">
+                  Moonriver ZOOM
+                  <img src="@/assets/zoomTokenCoin.svg" class="coin-logo" /> Token
+                  Inflation
+                </div>
+                The ZOOM inflation chart tracks the amount of ZOOM tokens that
+                have been minted and burned in the last 100 days.<br />
+                Click and drag a region to zoom in
+                <apexchart
+                  id="chartContainer"
+                  ref="zoomChart"
+                  width="100%"
+                  type="line"
+                  :options="chartOptions"
+                  :series="chartSeries"
+                ></apexchart>
+              </div>
+            </b-col>
+          </b-row>
         </b-row>
 
       </b-container>
@@ -226,11 +232,11 @@ export default {
             stacked: true
           },
           xaxis: {
-          type: 'datetime',
-          categories: ['01/01/2011 GMT', '01/02/2011 GMT', '01/03/2011 GMT', '01/04/2011 GMT',
-            '01/05/2011 GMT', '01/06/2011 GMT','01/07/2011 GMT'
-          ],
-        },
+            type: 'datetime',
+            categories: ['01/01/2011 GMT', '01/02/2011 GMT', '01/03/2011 GMT', '01/04/2011 GMT',
+              '01/05/2011 GMT', '01/06/2011 GMT','01/07/2011 GMT'
+            ],
+          },
       },
       chartOptions: {
         markers: {
@@ -325,23 +331,23 @@ export default {
         ],
   */ xaxis: {
           tickPlacement: "on",
-          title: {
-            text: "Day/Month",
-            style: {
-              color: "#deadfc",
-              fontSize: "22px",
-              fontFamily: "Helvetica, Arial, sans-serif",
-              fontWeight: 600,
-              cssClass: "apexcharts-xaxis-title",
-            },
-          },
+          // title: {
+          //   text: "Day/Month",
+          //   style: {
+          //     color: "#deadfc",
+          //     fontSize: "16px",
+          //     fontFamily: "Helvetica, Arial, sans-serif",
+          //     fontWeight: 600,
+          //     cssClass: "apexcharts-xaxis-title",
+          //   },
+          // },
           type: "datetime",
           categories: [],
           labels: {
-            format: "dd/MM",
+            //format: "dd/MM",
             style: {
               colors: "#FFFFFF",
-              fontSize: "16px",
+              fontSize: "14px",
               fontFamily: "Helvetica, Arial, sans-serif",
               fontWeight: 400,
               cssClass: "apexcharts-xaxis-label",
@@ -538,7 +544,6 @@ export default {
           },
           xaxis: {
           type: "datetime",
-          //categories: [1641772800000,1641859200000],
           categories: this.rarityCount['date'].slice(-14),
         },
       }
@@ -578,7 +583,6 @@ export default {
 
           // Add week to our collection
           weeks.push([buildDateString(beginOfWeek), buildDateString(endOfWeek)]);
-
           current = increaseDays(current, 1);
         }
 
@@ -633,6 +637,7 @@ export default {
 
       this.$refs.zoomChart.updateOptions({
         xaxis: {
+          /*
           title: {
             text: "Day/Month",
             style: {
@@ -643,13 +648,14 @@ export default {
               cssClass: "apexcharts-xaxis-title",
             },
           },
+          */
           type: "datetime",
           categories: graphData.date,
           labels: {
-            format: "dd/MM",
+            //format: "dd/MM",
             style: {
               colors: "#FFFFFF",
-              fontSize: "16px",
+              fontSize: "10px",
               fontFamily: "Helvetica, Arial, sans-serif",
               fontWeight: 400,
               cssClass: "apexcharts-xaxis-label",
@@ -779,7 +785,7 @@ export default {
 }
 
 .graph-title {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 500;
   line-height: 1.2;
   color: #7ef4f6;

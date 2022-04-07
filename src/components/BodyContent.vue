@@ -46,7 +46,7 @@
               </b-col>
 
               <b-col class="mt-4" sm="12" md="12">
-                <span class="zoombies-font h1">36,406</span><br />
+                <span class="zoombies-font h1">36,955</span><br />
                 <span class="text-purple h5">ZOOMBIE HERDERS</span>
               </b-col>
             </div>
@@ -232,10 +232,17 @@ export default {
             stacked: true
           },
           xaxis: {
+            labels: {
+              style: {
+                colors: "#FFFFFF",
+                fontSize: "14px",
+                fontFamily: "Helvetica, Arial, sans-serif",
+                fontWeight: 400,
+                cssClass: "apexcharts-xaxis-label",
+              },
+            },
             type: 'datetime',
-            categories: ['01/01/2011 GMT', '01/02/2011 GMT', '01/03/2011 GMT', '01/04/2011 GMT',
-              '01/05/2011 GMT', '01/06/2011 GMT','01/07/2011 GMT'
-            ],
+            categories: ['01/01/2011 GMT'],
           },
           legend: {
             fontSize: "16px",
@@ -244,6 +251,16 @@ export default {
             }
           },
           colors: ["#585858", "#04c1e8","#d5005a","#b92ee4","#d4e2f9","eaeef8"],
+          tooltip: {
+            style: {
+              fontSize: "12px",
+              fontFamily: "Helvetica, Arial, sans-serif",
+              color: "#000000",
+            },
+            fillSeriesColor: true,
+            theme: "dark",
+            followCursor: true,
+          },
       },
       chartOptions: {
         markers: {
@@ -300,61 +317,14 @@ export default {
           custom: undefined,
           fillSeriesColor: true,
         },
-        /*        responsive: [
-          {
-            breakpoint: 400,
-            options: {
-              height: "400",
-              legend: {
-                position: "bottom",
-              },
-              xaxis: {
-                title: {
-                  style: {
-                    color: "#deadfc",
-                    fontSize: "12px",
-                    fontFamily: "Helvetica, Arial, sans-serif",
-                    fontWeight: 300,
-                    cssClass: "apexcharts-xaxis-title",
-                  },
-                  axisTicks: {
-                    show: false,
-                  },
-                },
-              },
-              yaxis: {
-                title: {
-                  style: {
-                    color: "#deadfc",
-                    fontSize: "12px",
-                    fontFamily: "Helvetica, Arial, sans-serif",
-                    fontWeight: 300,
-                    cssClass: "apexcharts-yaxis-title",
-                  },
-                },
-              },
-            },
-          },
-        ],
-  */ xaxis: {
+        xaxis: {
           tickPlacement: "on",
-          // title: {
-          //   text: "Day/Month",
-          //   style: {
-          //     color: "#deadfc",
-          //     fontSize: "16px",
-          //     fontFamily: "Helvetica, Arial, sans-serif",
-          //     fontWeight: 600,
-          //     cssClass: "apexcharts-xaxis-title",
-          //   },
-          // },
           type: "datetime",
           categories: [],
           labels: {
-            //format: "dd/MM",
             style: {
               colors: "#FFFFFF",
-              fontSize: "14px",
+              fontSize: "18px",
               fontFamily: "Helvetica, Arial, sans-serif",
               fontWeight: 400,
               cssClass: "apexcharts-xaxis-label",
@@ -493,9 +463,6 @@ export default {
         }
       );
       const res = await result.json();
-//console.log(res);
-//console.log("rarity",res.data.rarityPerDays.nodes);
-
 
       this.rarityCount = new Object({ date: [], diamond: [], platinum: [], epic: [], rare: [], uncommon: [], common: [] });
       //shape the data for the column chart. the 4 series and the date array
@@ -509,8 +476,6 @@ export default {
         this.rarityCount['uncommon'].push(item.uncommon);
         this.rarityCount['common'].push(item.common);
       });
-
-  //    console.log(this.rarityCount);
 
       //bind the columns on bar chart
       this.barChartSeries = [

@@ -75,6 +75,10 @@
             <span class="attribute-name font-weight-bold">Sacrifice ZOOM:</span>
             <span>{{ parseInt(sacrifice_czxp).toLocaleString() }}</span>
           </div>
+          <div class="card-txt-black">
+            <span class="attribute-name font-weight-bold">Release Time:</span>
+            <span>{{ getFormattedReleasedLabel(release_time) }}</span>
+          </div>
           <p class="text-center">
             <img src="./assets/moonriver.svg" class="mr-logo" />
           </p>
@@ -87,6 +91,7 @@
 <script>
 import { BIconLink45deg } from "bootstrap-vue";
 import { showSuccessToast } from "../util/showToast";
+import moment from "moment";
 
 export default {
   name: "OwnedCardContent",
@@ -113,6 +118,7 @@ export default {
     "used_in_cardsets",
     "is_minted",
     "is_owned",
+    "release_time",
   ],
   components: {
     BIconLink45deg,
@@ -174,6 +180,9 @@ export default {
     onCopyLink() {
       navigator.clipboard.writeText(this.getTokenLink(this.id));
       showSuccessToast(this, "Link to Token copied to clipboard");
+    },
+    getFormattedReleasedLabel(releaseTime) {
+      return moment().subtract(releaseTime, 'days').format("MMM Do YYYY");
     },
   },
 };

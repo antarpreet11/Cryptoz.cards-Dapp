@@ -56,7 +56,7 @@
               </b-form-group>
               <div class="tab-content-cards">
                 <owned-card-content
-                  v-for="card in cardset.cards"
+                  v-for="card in getSortedCards(cardset.cards)"
                   :id="parseInt(card.id)"
                   :key="card.id"
                   :buy_czxp="card.buy_czxp"
@@ -76,6 +76,7 @@
                   :used_in_cardsets="true"
                   :is_minted="card.isMinted"
                   :is_owned="card.isOwned"
+                  :release_time="card.release_time"
                 >
                 </owned-card-content>
               </div>
@@ -108,6 +109,7 @@
             :used_in_cardsets="true"
             :is_minted="card.isMinted"
             :is_owned="card.isOwned"
+            :release_time="card.release_time"
           >
           </owned-card-content>
         </div>
@@ -239,6 +241,17 @@ export default {
         default:
           return null;
       }
+    },
+    getSortedCards(cards) {
+      if (cards) {
+        cards.sort((a, b) => {
+          return a.release_time - b.release_time;
+        });
+
+        return cards;
+      }
+
+      return [];
     },
   },
 };

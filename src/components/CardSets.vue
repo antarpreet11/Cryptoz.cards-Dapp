@@ -244,7 +244,7 @@ export default {
     },
     getSortedCards(cards) {
       if (cards) {
-        cards.sort((a, b) => {
+        cards = cards.slice().sort((a, b) => {
           return a.release_time - b.release_time;
         });
 

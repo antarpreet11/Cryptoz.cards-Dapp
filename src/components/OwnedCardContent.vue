@@ -76,7 +76,7 @@
             <span>{{ parseInt(sacrifice_czxp).toLocaleString() }}</span>
           </div>
           <div class="card-txt-black">
-            <span class="attribute-name font-weight-bold">Release Time:</span>
+            <span class="attribute-name font-weight-bold">Released:</span>
             <span>{{ getFormattedReleasedLabel(release_time) }}</span>
           </div>
           <p class="text-center">

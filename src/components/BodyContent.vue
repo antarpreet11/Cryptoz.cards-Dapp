@@ -412,6 +412,39 @@ export default {
     },
   },
   methods: {
+    bindBarChart: async function(start, end) {
+      //bind the columns on bar chart for the default view
+      this.barChartSeries = [
+        {
+          name: 'COMMON',
+          data: this.rarityCount['common'].slice(start, end)
+        }, {
+          name: 'UNCOMMON',
+          data: this.rarityCount['uncommon'].slice(start, end)
+        }, {
+          name: 'RARE',
+          data: this.rarityCount['rare'].slice(start, end)
+        }, {
+          name: 'EPIC',
+          data: this.rarityCount['epic'].slice(start, end)
+        }, {
+          name: 'PLATINUM',
+          data: this.rarityCount['platinum'].slice(start, end)
+        }
+      ]
+
+      //bind the default daterange for bar column chart
+      this.barChartOptions = {
+          chart: {
+            type: "bar",
+            stacked: true
+          },
+          xaxis: {
+          type: "datetime",
+          categories: this.rarityCount['date'].slice(start, end),
+        },
+      }
+    },
     getZoomGraph: async function () {
       const query = `query {
                       logCardMinteds(orderBy:BLOCK_NUMBER_ASC,last:5) {
@@ -477,37 +510,8 @@ export default {
         this.rarityCount['common'].push(item.common);
       });
 
-      //bind the columns on bar chart
-      this.barChartSeries = [
-        {
-          name: 'COMMON',
-          data: this.rarityCount['common'].slice(-14)
-        }, {
-          name: 'UNCOMMON',
-          data: this.rarityCount['uncommon'].slice(-14)
-        }, {
-          name: 'RARE',
-          data: this.rarityCount['rare'].slice(-14)
-        }, {
-          name: 'EPIC',
-          data: this.rarityCount['epic'].slice(-14)
-        }, {
-          name: 'PLATINUM',
-          data: this.rarityCount['platinum'].slice(-14)
-        }
-      ]
-
-      //bind the default daterange for bar column chart
-      this.barChartOptions = {
-          chart: {
-            type: "bar",
-            stacked: true
-          },
-          xaxis: {
-          type: "datetime",
-          categories: this.rarityCount['date'].slice(-14),
-        },
-      }
+      //Update the bar chart series data
+      this.bindBarChart(-14,-2);
 
       //shape the data for dropdown for Minted Boosters 7 items -- 14 day items
 

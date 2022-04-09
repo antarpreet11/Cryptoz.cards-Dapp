@@ -433,6 +433,11 @@ export default {
         }
       ]
 
+      let dateShift = 1;
+      if(start == 0){
+        dateShift = 0;
+      }
+
       //bind the default daterange for bar column chart
       this.barChartOptions = {
           chart: {
@@ -441,7 +446,7 @@ export default {
           },
           xaxis: {
           type: "datetime",
-          categories: this.rarityCount['date'].slice(start-1, end-1),
+          categories: this.rarityCount['date'].slice(start-dateShift, end-dateShift),
         },
       }
     },
@@ -466,7 +471,7 @@ export default {
                           burned
                         }
                       }
-                      rarityPerDays(last:100) {
+                      rarityPerDays(last:98) {
                         nodes {
                           id
                           diamond
@@ -511,19 +516,11 @@ export default {
       });
 
       //Update the bar chart series data
-      this.bindBarChart(-14,-2);
+      this.bindBarChart(83,97);
 
       //shape the data for dropdown for Minted Boosters 7 items -- 14 day items
-
-      //var d = new Date(this.rarityCount['date'].slice(99));
-      //console.log("date:",this.rarityCount['date'].slice(99))
-      //const from = d.setDate(d.getDate()-98);
-      //const from = new Date("2022-03-29T08:08:20.794Z");
-      //const to = new Date("2020-09-24T08:08:20.794Z");
-console.log(this.rarityCount['date']);
       const from = new Date(this.rarityCount['date'][0]);
-      const to = new Date(this.rarityCount['date'][99]);
-      console.log("from to",from,to);
+      const to = new Date(this.rarityCount['date'][97]);
 
       // Convert date string to dd/mm/yyyy format
       const buildDateString = (date) => {
@@ -560,7 +557,6 @@ console.log(this.rarityCount['date']);
       }
 
       const weeks = buildWeeks(from, to).reverse();
-console.log(weeks);
 
       //bind to dropdown
       this.mintedBoostersDateRange = weeks;

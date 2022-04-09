@@ -136,11 +136,7 @@
               Minted Boosters
             </b-col>
             <b-col>
-            <b-dropdown text="Select Range" block variant="primary" class="m-2">
-              <b-dropdown-item v-for="date in mintedBoostersDateRange" @change="`console.log(date[0])`">
-                {{date[0]}} - {{date[1]}}
-              </b-dropdown-item>
-            </b-dropdown>
+              <b-form-select v-model="rangeSelected" :options="mintedBoostersDateRange" @change="newRangeSelected"></b-form-select>
             </b-col>
           </b-row>
           <b-row align-v="end">
@@ -187,7 +183,7 @@
 </template>
 
 <script>
-import { BButton, BDropdown, BDropdownItem, BContainer, BRow, BCol, BImgLazy } from "bootstrap-vue";
+import { BButton, BFormSelect, BContainer, BRow, BCol, BImgLazy } from "bootstrap-vue";
 import { mapGetters } from "vuex";
 import apexchart from "vue-apexcharts";
 import { ethers } from "ethers";
@@ -198,8 +194,7 @@ export default {
   name: "BodyContent",
   components: {
     BButton,
-    BDropdown,
-    BDropdownItem,
+    BFormSelect,
     BContainer,
     BRow,
     BCol,
@@ -208,6 +203,7 @@ export default {
   },
   data() {
     return {
+      rangeSelected: null,
       zoomSold: "Loading..",
       zoomWalletsRemaining: "Loading..",
       totalCzxpToBuy: "",
@@ -412,6 +408,10 @@ export default {
     },
   },
   methods: {
+    newRangeSelected() {
+      let start = Math.trunc(this.rangeSelected*14);
+      this.bindBarChart(start, start+14)
+    },
     bindBarChart: async function(start, end) {
       //bind the columns on bar chart for the default view
       this.barChartSeries = [
@@ -441,7 +441,7 @@ export default {
           },
           xaxis: {
           type: "datetime",
-          categories: this.rarityCount['date'].slice(start, end),
+          categories: this.rarityCount['date'].slice(start-1, end-1),
         },
       }
     },
@@ -515,11 +515,15 @@ export default {
 
       //shape the data for dropdown for Minted Boosters 7 items -- 14 day items
 
-      var d = new Date();
-      const from = d.setDate(d.getDate()-98);
+      //var d = new Date(this.rarityCount['date'].slice(99));
+      //console.log("date:",this.rarityCount['date'].slice(99))
+      //const from = d.setDate(d.getDate()-98);
       //const from = new Date("2022-03-29T08:08:20.794Z");
       //const to = new Date("2020-09-24T08:08:20.794Z");
-      const to = new Date();
+console.log(this.rarityCount['date']);
+      const from = new Date(this.rarityCount['date'][0]);
+      const to = new Date(this.rarityCount['date'][99]);
+      console.log("from to",from,to);
 
       // Convert date string to dd/mm/yyyy format
       const buildDateString = (date) => {
@@ -535,28 +539,28 @@ export default {
 
       // Get all weeks in given period
       const buildWeeks = (start, end) => {
-        const weeks = [];
+        const weeks = [{ value: null, text: 'Please select a range' }];
         let current = new Date(start);
-
+        let counter = 0;
         while(current < end) {
           // Get start of the week
           const beginOfWeek = new Date(current);
           // Get end of the week
-          let endOfWeek = increaseDays(current, 6);
+          let endOfWeek = increaseDays(current, 13); //OVERRIDE for 2 weeks
           // If there are less then 7 days left before the end, use the end.
           endOfWeek = endOfWeek > end ? end : endOfWeek;
 
           // Add week to our collection
-          weeks.push([buildDateString(beginOfWeek), buildDateString(endOfWeek)]);
+          weeks.push({value: counter, text: buildDateString(beginOfWeek) +' - '+ buildDateString(endOfWeek)});
           current = increaseDays(current, 1);
+          counter++;
         }
 
         return weeks;
       }
 
-      const weeks = buildWeeks(from, to);
-
-      //weeks.forEach(([start, end]) => console.log(`${start} - ${end}`));
+      const weeks = buildWeeks(from, to).reverse();
+console.log(weeks);
 
       //bind to dropdown
       this.mintedBoostersDateRange = weeks;

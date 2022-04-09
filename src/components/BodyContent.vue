@@ -81,17 +81,23 @@
           <br />
           Over the previous 100 days:<br />
           <strong>Total ZOOM minted:</strong> {{ totalZoomMinted }}<br />
-          <strong>Total ZOOM Burned:</strong> {{ totalZoomBurned }}
+          <strong>Total ZOOM Burned:</strong> {{ totalZoomBurned }}<br /><br />
+
+          <strong>NFTs Minted - Last 24 hrs:</strong> {{ NftsMinted24Hrs }}<br />
+          <strong>NFTs Burned - Last 24 hrs:</strong> {{ NftsBurned24Hrs }}<br />
+          <strong>ZOOM Minted - Last 24 hrs:</strong> {{ zoomMinted24Hrs }}<br />
+          <strong>ZOOM Burned - Last 24 hrs:</strong> {{ zoomBurned24Hrs }}<br />
+
         </div>
 
-        <b-row align-v="center" align-h="start">
-          <b-col class="col-6">
+        <b-row  class="d-none d-md-block">
+          <b-col>
             <b-row align-v="center" align-h="start">
-              <b-col class="col-4  text-right">
+              <b-col md="4" lg="4" class="text-right">
                 <img src="https://zoombies.world/images/dapp/zoombies_card_back.svg" width="40%" /><br/>
                 <img src="https://zoombies.world/images/dapp/zoombies_card_back.svg" width="40%" />
               </b-col>
-              <b-col class="col-8  text-left">
+              <b-col md="8" lg="8" class="text-left">
                 <h3 class="zoombies-font">
                   {{NftsMinted24Hrs}}<br/>
                   NFTs Minted - Last 24 hrs<br/><br/>
@@ -101,13 +107,13 @@
               </b-col>
             </b-row>
           </b-col>
-          <b-col class="col-6">
+          <b-col class="mt-5">
             <b-row align-v="center" align-h="start">
-              <b-col class="col-4 text-right">
-                <img src="https://zoombies.world/images/zoombies_coin.svg" width="40%" /><br/><br/><br/>
+              <b-col md="4" class="text-right">
+                <img src="https://zoombies.world/images/zoombies_coin.svg" width="40%" /><br/><br/>
                 <img src="https://zoombies.world/images/zoombies_coin.svg" width="40%" />
               </b-col>
-              <b-col class="col-8 text-left">
+              <b-col md="8" class="text-left">
                 <h3 class="zoombies-font">
                   {{zoomMinted24Hrs}}<br/>
                   ZOOM Minted - Last 24 hrs<br/><br/>
@@ -119,32 +125,39 @@
           </b-col>
         </b-row>
 
-        <b-row class="">
+        <b-row class="mt-5">
           <b-col align-h="start" class="mx-auto">
             <h3 class="zoombies-font text-left">Last 5 NFTs Minted</h3>
             <span v-for="tokenId in lastFiveNFTs">
               <router-link :to="`/view/${tokenId}`">
-                <img :src="`https://moonbase.zoombies.world/nft-image/${tokenId}`" width="13%" />
+                <img :src="`https://moonbase.zoombies.world/nft-image/${tokenId}`" width="18%" />
               </router-link>
             </span>
           </b-col>
         </b-row>
 
-        <b-row class="d-none d-md-block">
-          <b-row align-v="center" align-h="center" style="border:4px solid #7df4f6; padding:0px">
-            <b-col>
-              Minted Boosters
-            </b-col>
-            <b-col>
-              <b-form-select v-model="rangeSelected" :options="mintedBoostersDateRange" @change="newRangeSelected"></b-form-select>
-            </b-col>
-          </b-row>
+        <b-row class="d-none d-md-block mt-5">
           <b-row align-v="end">
             <b-col>
               <div class="graph-title">
                 NFTs Minted by Rarity
               </div>
-              The NFT minted daily column chart indicates the proportion of NFTs minted per day by Rarity.<br/><br/>
+              <b-row>
+                <b-col class="col-7 text-right">
+                  The NFT minted daily column chart indicates the proportion of NFTs minted per day by Rarity.<br/>
+                </b-col>
+                <b-col  class="col-5">
+                  <b-form-select
+                    class="selectDropDown"
+                    size="sm"
+                    v-model="rangeSelected"
+                    :options="mintedBoostersDateRange"
+                    @change="newRangeSelected"
+                  ></b-form-select>
+                </b-col>
+              </b-row>
+
+              <br/>
               <apexchart
                 id="barChartContainer"
                 ref="rarityChart"
@@ -620,7 +633,7 @@ export default {
             //format: "dd/MM",
             style: {
               colors: "#FFFFFF",
-              fontSize: "10px",
+              fontSize: "14px",
               fontFamily: "Helvetica, Arial, sans-serif",
               fontWeight: 400,
               cssClass: "apexcharts-xaxis-label",
@@ -789,5 +802,11 @@ export default {
   border-right-color: #000000;
   border-width: 13px;
   margin-top: -13px;
+}
+
+.selectDropDown {
+  background-color: #343a40;
+  color: #0bdfe7;
+  margin-top: 0.4em;
 }
 </style>

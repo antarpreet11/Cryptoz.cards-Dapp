@@ -446,12 +446,8 @@ export default {
         }
       ]
 
-      let dateShift = 1;
-      if(start == 0){
-        dateShift = 0;
-      }
-
       //bind the default daterange for bar column chart
+      const dateShift = (start == 0) ? 0 : 1;
       this.barChartOptions = {
           chart: {
             type: "bar",

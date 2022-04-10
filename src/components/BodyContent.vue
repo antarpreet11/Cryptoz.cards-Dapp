@@ -90,8 +90,8 @@
 
         </div>
 
-        <b-row  class="d-none d-md-block">
-          <b-col>
+        <b-row align-v="end" class="">
+          <b-col lg="6" class="d-none d-md-block">
             <b-row align-v="center" align-h="start">
               <b-col md="4" lg="4" class="text-right">
                 <img src="https://zoombies.world/images/dapp/zoombies_card_back.svg" width="40%" /><br/>
@@ -107,7 +107,7 @@
               </b-col>
             </b-row>
           </b-col>
-          <b-col class="mt-5">
+          <b-col lg="6" class="d-none d-md-block mt-5">
             <b-row align-v="center" align-h="start">
               <b-col md="4" class="text-right">
                 <img src="https://zoombies.world/images/zoombies_coin.svg" width="40%" /><br/><br/>

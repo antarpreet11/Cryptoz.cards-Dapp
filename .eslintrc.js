@@ -13,5 +13,6 @@ module.exports = {
     "vue/prop-name-casing": "off",
     "vue/no-deprecated-destroyed-lifecycle": "warn",
     "vue/order-in-components": "off",
+    "vue/valid-v-for": "off",
   },
 };

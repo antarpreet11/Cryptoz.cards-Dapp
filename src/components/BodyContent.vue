@@ -83,25 +83,34 @@
           <strong>Total ZOOM minted:</strong> {{ totalZoomMinted }}<br />
           <strong>Total ZOOM Burned:</strong> {{ totalZoomBurned }}<br /><br />
 
-          <strong>NFTs Minted - Last 24 hrs:</strong> {{ NftsMinted24Hrs }}<br />
-          <strong>NFTs Burned - Last 24 hrs:</strong> {{ NftsBurned24Hrs }}<br />
-          <strong>ZOOM Minted - Last 24 hrs:</strong> {{ zoomMinted24Hrs }}<br />
-          <strong>ZOOM Burned - Last 24 hrs:</strong> {{ zoomBurned24Hrs }}<br />
-
+          <strong>NFTs Minted - Last 24 hrs:</strong> {{ NftsMinted24Hrs
+          }}<br />
+          <strong>NFTs Burned - Last 24 hrs:</strong> {{ NftsBurned24Hrs
+          }}<br />
+          <strong>ZOOM Minted - Last 24 hrs:</strong> {{ zoomMinted24Hrs
+          }}<br />
+          <strong>ZOOM Burned - Last 24 hrs:</strong> {{ zoomBurned24Hrs
+          }}<br />
         </div>
 
         <b-row align-v="end" class="">
           <b-col lg="6" class="d-none d-md-block">
             <b-row align-v="center" align-h="start">
               <b-col md="4" lg="4" class="text-right">
-                <img src="https://zoombies.world/images/dapp/zoombies_card_back.svg" width="40%" /><br/>
-                <img src="https://zoombies.world/images/dapp/zoombies_card_back.svg" width="40%" />
+                <img
+                  src="https://zoombies.world/images/dapp/zoombies_card_back.svg"
+                  width="40%"
+                /><br />
+                <img
+                  src="https://zoombies.world/images/dapp/zoombies_card_back.svg"
+                  width="40%"
+                />
               </b-col>
               <b-col md="8" lg="8" class="text-left">
                 <h3 class="zoombies-font">
-                  {{NftsMinted24Hrs}}<br/>
-                  NFTs Minted - Last 24 hrs<br/><br/>
-                  {{NftsBurned24Hrs}}<br/>
+                  {{ NftsMinted24Hrs }}<br />
+                  NFTs Minted - Last 24 hrs<br /><br />
+                  {{ NftsBurned24Hrs }}<br />
                   NFTs Burned - Last 24 hrs
                 </h3>
               </b-col>
@@ -110,14 +119,20 @@
           <b-col lg="6" class="d-none d-md-block mt-5">
             <b-row align-v="center" align-h="start">
               <b-col md="4" class="text-right">
-                <img src="https://zoombies.world/images/zoombies_coin.svg" width="40%" /><br/><br/>
-                <img src="https://zoombies.world/images/zoombies_coin.svg" width="40%" />
+                <img
+                  src="https://zoombies.world/images/zoombies_coin.svg"
+                  width="40%"
+                /><br /><br />
+                <img
+                  src="https://zoombies.world/images/zoombies_coin.svg"
+                  width="40%"
+                />
               </b-col>
               <b-col md="8" class="text-left">
                 <h3 class="zoombies-font">
-                  {{zoomMinted24Hrs}}<br/>
-                  ZOOM Minted - Last 24 hrs<br/><br/>
-                  {{zoomBurned24Hrs}}<br/>
+                  {{ zoomMinted24Hrs }}<br />
+                  ZOOM Minted - Last 24 hrs<br /><br />
+                  {{ zoomBurned24Hrs }}<br />
                   ZOOM Burned - Last 24 hrs
                 </h3>
               </b-col>
@@ -128,9 +143,12 @@
         <b-row class="mt-5">
           <b-col align-h="start" class="mx-auto">
             <h3 class="zoombies-font text-left">Last 5 NFTs Minted</h3>
-            <span v-for="tokenId in lastFiveNFTs">
+            <span v-for="tokenId in lastFiveNFTs" :key="tokenId">
               <router-link :to="`/view/${tokenId}`">
-                <img :src="`https://moonbase.zoombies.world/nft-image/${tokenId}`" width="18%" />
+                <img
+                  :src="`https://moonbase.zoombies.world/nft-image/${tokenId}`"
+                  width="18%"
+                />
               </router-link>
             </span>
           </b-col>
@@ -139,26 +157,26 @@
         <b-row class="d-none d-md-block mt-5">
           <b-row align-v="end">
             <b-col>
-              <div class="graph-title">
-                NFTs Minted by Rarity
-              </div>
+              <div class="graph-title">NFTs Minted by Rarity</div>
               <b-row>
                 <b-col class="col-7 text-right">
-                  The NFT minted daily column chart indicates the proportion of NFTs minted per day by Rarity.<br/>
+                  The NFT minted daily column chart indicates the proportion of
+                  NFTs minted per day by Rarity.<br />
                 </b-col>
-                <b-col  class="col-5">
+                <b-col class="col-5">
                   <b-form-select
+                    v-model="rangeSelected"
                     class="selectDropDown"
                     size="sm"
-                    v-model="rangeSelected"
                     :options="mintedBoostersDateRange"
                     @change="newRangeSelected"
                   ></b-form-select>
                 </b-col>
               </b-row>
 
-              <br/>
+              <br />
               <apexchart
+                v-if="barChartSeries"
                 id="barChartContainer"
                 ref="rarityChart"
                 width="100%"
@@ -171,8 +189,8 @@
               <div>
                 <div class="graph-title">
                   Moonriver ZOOM
-                  <img src="@/assets/zoomTokenCoin.svg" class="coin-logo" /> Token
-                  Inflation
+                  <img src="@/assets/zoomTokenCoin.svg" class="coin-logo" />
+                  Token Inflation
                 </div>
                 The ZOOM inflation chart tracks the amount of ZOOM tokens that
                 have been minted and burned in the last 100 days.<br />
@@ -189,14 +207,20 @@
             </b-col>
           </b-row>
         </b-row>
-
       </b-container>
     </main>
   </div>
 </template>
 
 <script>
-import { BButton, BFormSelect, BContainer, BRow, BCol, BImgLazy } from "bootstrap-vue";
+import {
+  BButton,
+  BFormSelect,
+  BContainer,
+  BRow,
+  BCol,
+  BImgLazy,
+} from "bootstrap-vue";
 import { mapGetters } from "vuex";
 import apexchart from "vue-apexcharts";
 import { ethers } from "ethers";
@@ -236,40 +260,47 @@ export default {
       graphData: Object(),
       rarityCount: Object(),
       barChartOptions: {
-          chart: {
-            type: 'bar',
-            stacked: true
-          },
-          xaxis: {
-            labels: {
-              style: {
-                colors: "#FFFFFF",
-                fontSize: "14px",
-                fontFamily: "Helvetica, Arial, sans-serif",
-                fontWeight: 400,
-                cssClass: "apexcharts-xaxis-label",
-              },
-            },
-            type: 'datetime',
-            categories: ['01/01/2011 GMT'],
-          },
-          legend: {
-            fontSize: "16px",
-            labels: {
-              useSeriesColors: true,
-            }
-          },
-          colors: ["#585858", "#04c1e8","#d5005a","#b92ee4","#d4e2f9","eaeef8"],
-          tooltip: {
+        chart: {
+          type: "bar",
+          stacked: true,
+        },
+        xaxis: {
+          labels: {
             style: {
-              fontSize: "12px",
+              colors: "#FFFFFF",
+              fontSize: "14px",
               fontFamily: "Helvetica, Arial, sans-serif",
-              color: "#000000",
+              fontWeight: 400,
+              cssClass: "apexcharts-xaxis-label",
             },
-            fillSeriesColor: true,
-            theme: "dark",
-            followCursor: true,
           },
+          type: "datetime",
+          categories: ["01/01/2011 GMT"],
+        },
+        legend: {
+          fontSize: "16px",
+          labels: {
+            useSeriesColors: true,
+          },
+        },
+        colors: [
+          "#585858",
+          "#04c1e8",
+          "#d5005a",
+          "#b92ee4",
+          "#d4e2f9",
+          "eaeef8",
+        ],
+        tooltip: {
+          style: {
+            fontSize: "12px",
+            fontFamily: "Helvetica, Arial, sans-serif",
+            color: "#000000",
+          },
+          fillSeriesColor: true,
+          theme: "dark",
+          followCursor: true,
+        },
       },
       chartOptions: {
         markers: {
@@ -366,7 +397,7 @@ export default {
           },
         },
       },
-      barChartSeries : [{}],
+      barChartSeries: null,
       chartSeries: [
         {
           name: "minted",
@@ -422,42 +453,49 @@ export default {
   },
   methods: {
     newRangeSelected() {
-      let start = Math.trunc(this.rangeSelected*14);
-      this.bindBarChart(start, start+14)
+      let start = Math.trunc(this.rangeSelected * 14);
+      this.bindBarChart(start, start + 14);
     },
-    bindBarChart: async function(start, end) {
+    bindBarChart: async function (start, end) {
       //bind the columns on bar chart for the default view
       this.barChartSeries = [
         {
-          name: 'COMMON',
-          data: this.rarityCount['common'].slice(start, end)
-        }, {
-          name: 'UNCOMMON',
-          data: this.rarityCount['uncommon'].slice(start, end)
-        }, {
-          name: 'RARE',
-          data: this.rarityCount['rare'].slice(start, end)
-        }, {
-          name: 'EPIC',
-          data: this.rarityCount['epic'].slice(start, end)
-        }, {
-          name: 'PLATINUM',
-          data: this.rarityCount['platinum'].slice(start, end)
-        }
-      ]
+          name: "COMMON",
+          data: this.rarityCount["common"].slice(start, end),
+        },
+        {
+          name: "UNCOMMON",
+          data: this.rarityCount["uncommon"].slice(start, end),
+        },
+        {
+          name: "RARE",
+          data: this.rarityCount["rare"].slice(start, end),
+        },
+        {
+          name: "EPIC",
+          data: this.rarityCount["epic"].slice(start, end),
+        },
+        {
+          name: "PLATINUM",
+          data: this.rarityCount["platinum"].slice(start, end),
+        },
+      ];
 
       //bind the default daterange for bar column chart
-      const dateShift = (start == 0) ? 0 : 1;
+      const dateShift = start == 0 ? 0 : 1;
       this.barChartOptions = {
-          chart: {
-            type: "bar",
-            stacked: true
-          },
-          xaxis: {
-          type: "datetime",
-          categories: this.rarityCount['date'].slice(start-dateShift, end-dateShift),
+        chart: {
+          type: "bar",
+          stacked: true,
         },
-      }
+        xaxis: {
+          type: "datetime",
+          categories: this.rarityCount["date"].slice(
+            start - dateShift,
+            end - dateShift
+          ),
+        },
+      };
     },
     getZoomGraph: async function () {
       const query = `query {
@@ -497,39 +535,45 @@ export default {
         ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph__cnlhb"
         : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver__cnlhb";
 
-      const result = await fetch(graphEndPoint,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            query,
-          }),
-        }
-      );
+      const result = await fetch(graphEndPoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          query,
+        }),
+      });
       const res = await result.json();
 
-      this.rarityCount = new Object({ date: [], diamond: [], platinum: [], epic: [], rare: [], uncommon: [], common: [] });
+      this.rarityCount = new Object({
+        date: [],
+        diamond: [],
+        platinum: [],
+        epic: [],
+        rare: [],
+        uncommon: [],
+        common: [],
+      });
       //shape the data for the column chart. the 4 series and the date array
       res.data.rarityPerDays.nodes.forEach((item, i) => {
         //console.log(item);
-        this.rarityCount['date'].push(parseInt(item.id));
-        this.rarityCount['diamond'].push(item.diamond);
-        this.rarityCount['platinum'].push(item.platinum);
-        this.rarityCount['epic'].push(item.epic);
-        this.rarityCount['rare'].push(item.rare);
-        this.rarityCount['uncommon'].push(item.uncommon);
-        this.rarityCount['common'].push(item.common);
+        this.rarityCount["date"].push(parseInt(item.id));
+        this.rarityCount["diamond"].push(item.diamond);
+        this.rarityCount["platinum"].push(item.platinum);
+        this.rarityCount["epic"].push(item.epic);
+        this.rarityCount["rare"].push(item.rare);
+        this.rarityCount["uncommon"].push(item.uncommon);
+        this.rarityCount["common"].push(item.common);
       });
 
       //Update the bar chart series data
-      this.bindBarChart(83,97);
+      this.bindBarChart(83, 97);
 
       //shape the data for dropdown for Minted Boosters 7 items -- 14 day items
-      const from = new Date(this.rarityCount['date'][0]);
-      const to = new Date(this.rarityCount['date'][97]);
+      const from = new Date(this.rarityCount["date"][0]);
+      const to = new Date(this.rarityCount["date"][97]);
 
       // Convert date string to dd/mm/yyyy format
       const buildDateString = (date) => {
@@ -538,17 +582,18 @@ export default {
         const year = date.getFullYear();
 
         return `${day}.${month}.${year}`;
-      }
+      };
 
       // Increase date by x amount of days
-      const increaseDays = (date, amount) => new Date(date.setDate(date.getDate() + amount));
+      const increaseDays = (date, amount) =>
+        new Date(date.setDate(date.getDate() + amount));
 
       // Get all weeks in given period
       const buildWeeks = (start, end) => {
-        const weeks = [{ value: null, text: 'Please select a range' }];
+        const weeks = [{ value: null, text: "Please select a range" }];
         let current = new Date(start);
         let counter = 0;
-        while(current < end) {
+        while (current < end) {
           // Get start of the week
           const beginOfWeek = new Date(current);
           // Get end of the week
@@ -557,29 +602,46 @@ export default {
           endOfWeek = endOfWeek > end ? end : endOfWeek;
 
           // Add week to our collection
-          weeks.push({value: counter, text: buildDateString(beginOfWeek) +' - '+ buildDateString(endOfWeek)});
+          weeks.push({
+            value: counter,
+            text:
+              buildDateString(beginOfWeek) + " - " + buildDateString(endOfWeek),
+          });
           current = increaseDays(current, 1);
           counter++;
         }
 
         return weeks;
-      }
+      };
 
       const weeks = buildWeeks(from, to).reverse();
 
       //bind to dropdown
       this.mintedBoostersDateRange = weeks;
 
-
       //Last 5 NFTs minted
       res.data.logCardMinteds.nodes.forEach((i) => {
-          this.lastFiveNFTs.push(i.tokenId);
-      })
+        this.lastFiveNFTs.push(i.tokenId);
+      });
 
-      this.NftsMinted24Hrs = ethers.utils.commify(res.data.nFTPerDays.nodes[res.data.nFTPerDays.nodes.length-1].minted);
-      this.NftsBurned24Hrs = ethers.utils.commify(res.data.nFTPerDays.nodes[res.data.nFTPerDays.nodes.length-1].burned);
-      this.zoomMinted24Hrs = ethers.utils.commify(ethers.utils.formatEther(res.data.zoomPerDays.nodes[res.data.zoomPerDays.nodes.length-1].minted));
-      this.zoomBurned24Hrs = ethers.utils.commify(ethers.utils.formatEther(res.data.zoomPerDays.nodes[res.data.zoomPerDays.nodes.length-1].burned));
+      this.NftsMinted24Hrs = ethers.utils.commify(
+        res.data.nFTPerDays.nodes[res.data.nFTPerDays.nodes.length - 1].minted
+      );
+      this.NftsBurned24Hrs = ethers.utils.commify(
+        res.data.nFTPerDays.nodes[res.data.nFTPerDays.nodes.length - 1].burned
+      );
+      this.zoomMinted24Hrs = ethers.utils.commify(
+        ethers.utils.formatEther(
+          res.data.zoomPerDays.nodes[res.data.zoomPerDays.nodes.length - 1]
+            .minted
+        )
+      );
+      this.zoomBurned24Hrs = ethers.utils.commify(
+        ethers.utils.formatEther(
+          res.data.zoomPerDays.nodes[res.data.zoomPerDays.nodes.length - 1]
+            .burned
+        )
+      );
 
       //Shape the zoomMinted and burned totals
       let graphData = new Object({ date: [], minted: [], burned: [] });

@@ -268,38 +268,12 @@ export default {
           labels: {
             style: {
               colors: "#FFFFFF",
-              fontSize: "14px",
+              fontSize: "34px",
               fontFamily: "Helvetica, Arial, sans-serif",
               fontWeight: 400,
-              cssClass: "apexcharts-xaxis-label",
+              cssClass: "apexcharts-legend-text",
             },
           },
-          type: "datetime",
-          categories: ["01/01/2011 GMT"],
-        },
-        legend: {
-          fontSize: "16px",
-          labels: {
-            useSeriesColors: true,
-          },
-        },
-        colors: [
-          "#585858",
-          "#04c1e8",
-          "#d5005a",
-          "#b92ee4",
-          "#d4e2f9",
-          "eaeef8",
-        ],
-        tooltip: {
-          style: {
-            fontSize: "12px",
-            fontFamily: "Helvetica, Arial, sans-serif",
-            color: "#000000",
-          },
-          fillSeriesColor: true,
-          theme: "dark",
-          followCursor: true,
         },
       },
       chartOptions: {
@@ -461,22 +435,27 @@ export default {
       this.barChartSeries = [
         {
           name: "COMMON",
+          color: "#585858",
           data: this.rarityCount["common"].slice(start, end),
         },
         {
           name: "UNCOMMON",
+          color: "#04c1e8",
           data: this.rarityCount["uncommon"].slice(start, end),
         },
         {
           name: "RARE",
+          color: "#d5005a",
           data: this.rarityCount["rare"].slice(start, end),
         },
         {
           name: "EPIC",
+          color: "#b92ee4",
           data: this.rarityCount["epic"].slice(start, end),
         },
         {
           name: "PLATINUM",
+          color: "#d4e2f9",
           data: this.rarityCount["platinum"].slice(start, end),
         },
       ];
@@ -488,7 +467,33 @@ export default {
           type: "bar",
           stacked: true,
         },
+        legend: {
+          fontSize: "16px",
+          labels: {
+            useSeriesColors: true,
+          },
+        },
+        tooltip: {
+          fillSeriesColor: true,
+          theme: "dark",
+          followCursor: true,
+          onDatasetHover: {
+            highlightDataSeries: true
+          },
+          style: {
+            fontSize: "18px",
+          }
+        },
         xaxis: {
+          labels: {
+            style: {
+              colors: "#FFFFFF",
+              fontSize: "14px",
+              fontFamily: "Helvetica, Arial, sans-serif",
+              fontWeight: 400,
+              cssClass: "apexcharts-xaxis-label",
+            },
+          },
           type: "datetime",
           categories: this.rarityCount["date"].slice(
             start - dateShift,
@@ -867,4 +872,13 @@ export default {
   color: #0bdfe7;
   margin-top: 0.4em;
 }
+
+span.apexcharts-legend-text {
+  color: #ffffff;
+}
+
+.apexcharts-legend-text {
+  color: #ffffff;
+}
+
 </style>

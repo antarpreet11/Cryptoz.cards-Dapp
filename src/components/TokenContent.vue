@@ -367,7 +367,7 @@ export default {
                       }`;
 
       const graphEndPoint = (isLocal)
-        ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph"
+        ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph__cnlhb"
         : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver" ;
 
       try {
@@ -388,6 +388,9 @@ export default {
         console.log("QUERY res:",res);
         //Filter the result set for this token
         const found = res.data.logCardMinteds.nodes.find(element => element.tokenId == this.token_id);
+        if(found == undefined) {
+          throw 'No minted NFTs found for NFT #'+this.token_id+', Please let us know in the Discord #Support channel'
+        }
 
         console.log(cardTypeId,this.token_id,found);
 

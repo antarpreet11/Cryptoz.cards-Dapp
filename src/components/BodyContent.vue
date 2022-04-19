@@ -627,6 +627,7 @@ export default {
       //Last 5 NFTs minted
       res.data.logCardMinteds.nodes.forEach((i) => {
         this.lastFiveNFTs.push(i.tokenId);
+        this.lastFiveNFTs = this.lastFiveNFTs.reverse();
       });
 
       this.NftsMinted24Hrs = ethers.utils.commify(

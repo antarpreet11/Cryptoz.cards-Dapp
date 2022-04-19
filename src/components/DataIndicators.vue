@@ -32,7 +32,7 @@
       >
         <b-tabs content-class="centered-container">
           <b-tab title="All NFTs" lazy>
-            <div class="doughnut-container" v-if="nftsMintedByRarity" lazy>
+            <div v-if="nftsMintedByRarity" class="doughnut-container" lazy>
               <doughnut-chart :chart-data="nftsMintedByRarity" />
             </div>
           </b-tab>
@@ -43,7 +43,7 @@
         header="Total NFTs Minted Over Time"
         header-tag="header"
       >
-        <div class="line-container" v-if="nftsMintedOverTime.cumulative">
+        <div v-if="nftsMintedOverTime.cumulative" class="line-container">
           <line-chart
             :chart-data="nftsMintedOverTime.cumulative"
             :options="options"

@@ -9,8 +9,8 @@
         <b-dropdown-item
           v-for="(name, type) in types"
           :key="type"
-          @click="changeSort(type)"
           :active="type === sortType"
+          @click="changeSort(type)"
         >
           {{ name }}
         </b-dropdown-item>

@@ -198,11 +198,7 @@
                     "
                   />
                   Mint NFT for
-                  {{
-                    getZoomBalance < parseInt(card.unlock_czxp)
-                      ? (card.cost * 3).toFixed(3)
-                      : card.cost
-                  }}
+                  {{ cardCost }}
                   <img src="@/assets/movr_logo.png" class="mr-icon" />
                 </b-button>
                 <img
@@ -346,6 +342,11 @@ export default {
   computed: {
     dAppState() {
       return this.$store.state.dAppState;
+    },
+    cardCost() {
+      return getZoomBalance < parseInt(card.unlock_czxp)
+        ? (card.cost * 3).toFixed(3)
+        : card.cost;
     },
     isWalletConnected() {
       return this.$store.state.dAppState === dAppStates.WALLET_CONNECTED;

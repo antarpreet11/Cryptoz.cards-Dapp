@@ -46,7 +46,7 @@
               </b-col>
 
               <b-col class="mt-4" sm="12" md="12">
-                <span class="zoombies-font h1">36,406</span><br />
+                <span class="zoombies-font h1">36,955</span><br />
                 <span class="text-purple h5">ZOOMBIE HERDERS</span>
               </b-col>
             </div>
@@ -81,29 +81,131 @@
           <br />
           Over the previous 100 days:<br />
           <strong>Total ZOOM minted:</strong> {{ totalZoomMinted }}<br />
-          <strong>Total ZOOM Burned:</strong> {{ totalZoomBurned }}
+          <strong>Total ZOOM Burned:</strong> {{ totalZoomBurned }}<br /><br />
+
+          <strong>NFTs Minted - Last 24 hrs:</strong> {{ NftsMinted24Hrs
+          }}<br />
+          <strong>NFTs Burned - Last 24 hrs:</strong> {{ NftsBurned24Hrs
+          }}<br />
+          <strong>ZOOM Minted - Last 24 hrs:</strong> {{ zoomMinted24Hrs
+          }}<br />
+          <strong>ZOOM Burned - Last 24 hrs:</strong> {{ zoomBurned24Hrs
+          }}<br />
         </div>
-        <b-row class="d-none d-md-block">
-          <b-col>
-            <div>
-              <div class="graph-title">
-                Moonriver ZOOM
-                <img src="@/assets/zoomTokenCoin.svg" class="coin-logo" /> Token
-                Inflation
-              </div>
-              The ZOOM inflation chart tracks the amount of ZOOM tokens that
-              have been minted and burned in the last 100 days.<br />
-              Click and drag a region to zoom in
-              <apexchart
-                id="chartContainer"
-                ref="zoomChart"
-                width="100%"
-                type="line"
-                :options="chartOptions"
-                :series="chartSeries"
-              ></apexchart>
-            </div>
+
+        <b-row align-v="end" class="">
+          <b-col lg="6" class="d-none d-md-block">
+            <b-row align-v="center" align-h="start">
+              <b-col md="4" lg="4" class="text-right">
+                <img
+                  src="https://zoombies.world/images/dapp/zoombies_card_back.svg"
+                  width="40%"
+                /><br />
+                <img
+                  src="https://zoombies.world/images/dapp/zoombies_card_back.svg"
+                  width="40%"
+                />
+              </b-col>
+              <b-col md="8" lg="8" class="text-left">
+                <h3 class="zoombies-font">
+                  {{ NftsMinted24Hrs }}<br />
+                  NFTs Minted - Last 24 hrs<br /><br />
+                  {{ NftsBurned24Hrs }}<br />
+                  NFTs Burned - Last 24 hrs
+                </h3>
+              </b-col>
+            </b-row>
           </b-col>
+          <b-col lg="6" class="d-none d-md-block mt-5">
+            <b-row align-v="center" align-h="start">
+              <b-col md="4" class="text-right">
+                <img
+                  src="https://zoombies.world/images/zoombies_coin.svg"
+                  width="40%"
+                /><br /><br />
+                <img
+                  src="https://zoombies.world/images/zoombies_coin.svg"
+                  width="40%"
+                />
+              </b-col>
+              <b-col md="8" class="text-left">
+                <h3 class="zoombies-font">
+                  {{ zoomMinted24Hrs }}<br />
+                  ZOOM Minted - Last 24 hrs<br /><br />
+                  {{ zoomBurned24Hrs }}<br />
+                  ZOOM Burned - Last 24 hrs
+                </h3>
+              </b-col>
+            </b-row>
+          </b-col>
+        </b-row>
+
+        <b-row class="mt-5">
+          <b-col align-h="start" class="mx-auto">
+            <h3 class="zoombies-font text-left">Last 5 NFTs Minted</h3>
+            <span v-for="tokenId in lastFiveNFTs" :key="tokenId">
+              <router-link :to="`/view/${tokenId}`">
+                <img
+                  :src="`https://moonbase.zoombies.world/nft-image/${tokenId}`"
+                  width="18%"
+                />
+              </router-link>
+            </span>
+          </b-col>
+        </b-row>
+
+        <b-row class="d-none d-md-block mt-5">
+          <b-row align-v="end">
+            <b-col>
+              <div class="graph-title">NFTs Minted by Rarity</div>
+              <b-row>
+                <b-col class="col-7 text-right">
+                  The NFT minted daily column chart indicates the proportion of
+                  NFTs minted per day by Rarity.<br />
+                </b-col>
+                <b-col class="col-5">
+                  <b-form-select
+                    v-model="rangeSelected"
+                    class="selectDropDown"
+                    size="sm"
+                    :options="mintedBoostersDateRange"
+                    @change="newRangeSelected"
+                  ></b-form-select>
+                </b-col>
+              </b-row>
+
+              <br />
+              <apexchart
+                v-if="barChartSeries"
+                id="barChartContainer"
+                ref="rarityChart"
+                width="100%"
+                type="bar"
+                :options="barChartOptions"
+                :series="barChartSeries"
+              ></apexchart>
+            </b-col>
+            <b-col>
+              <div>
+                <div class="graph-title">
+                  Moonriver ZOOM
+                  <img src="@/assets/zoomTokenCoin.svg" class="coin-logo" />
+                  Token Inflation
+                </div>
+                The ZOOM inflation chart tracks the amount of ZOOM tokens that
+                have been minted and burned in the last 100 days.<br />
+                Click and drag a region to zoom in
+                <apexchart
+                  id="chartContainer"
+                  ref="zoomChart"
+                  width="100%"
+                  type="line"
+                  :options="chartOptions"
+                  :series="chartSeries"
+                ></apexchart>
+              </div>
+            </b-col>
+          </b-row>
         </b-row>
       </b-container>
     </main>
@@ -111,16 +213,25 @@
 </template>
 
 <script>
-import { BButton, BContainer, BRow, BCol, BImgLazy } from "bootstrap-vue";
+import {
+  BButton,
+  BFormSelect,
+  BContainer,
+  BRow,
+  BCol,
+  BImgLazy,
+} from "bootstrap-vue";
 import { mapGetters } from "vuex";
 import apexchart from "vue-apexcharts";
 import { ethers } from "ethers";
 import { isMetamaskInstalled } from "../store/blockChainStore";
+import { isLocal } from "../util/constants/networks";
 
 export default {
   name: "BodyContent",
   components: {
     BButton,
+    BFormSelect,
     BContainer,
     BRow,
     BCol,
@@ -129,6 +240,7 @@ export default {
   },
   data() {
     return {
+      rangeSelected: null,
       zoomSold: "Loading..",
       zoomWalletsRemaining: "Loading..",
       totalCzxpToBuy: "",
@@ -137,9 +249,33 @@ export default {
       onMainNet: false,
       oldTotalZoom: 0,
       oldTotalNft: 0,
+      lastFiveNFTs: [],
       totalZoomMinted: "Loading...",
       totalZoomBurned: "Loading...",
+      zoomMinted24Hrs: "Loading...",
+      zoomBurned24Hrs: "Loading...",
+      NftsMinted24Hrs: "Loading...",
+      NftsBurned24Hrs: "Loading...",
+      mintedBoostersDateRange: [],
       graphData: Object(),
+      rarityCount: Object(),
+      barChartOptions: {
+        chart: {
+          type: "bar",
+          stacked: true,
+        },
+        xaxis: {
+          labels: {
+            style: {
+              colors: "#FFFFFF",
+              fontSize: "34px",
+              fontFamily: "Helvetica, Arial, sans-serif",
+              fontWeight: 400,
+              cssClass: "apexcharts-legend-text",
+            },
+          },
+        },
+      },
       chartOptions: {
         markers: {
           size: 3,
@@ -195,61 +331,14 @@ export default {
           custom: undefined,
           fillSeriesColor: true,
         },
-        /*        responsive: [
-          {
-            breakpoint: 400,
-            options: {
-              height: "400",
-              legend: {
-                position: "bottom",
-              },
-              xaxis: {
-                title: {
-                  style: {
-                    color: "#deadfc",
-                    fontSize: "12px",
-                    fontFamily: "Helvetica, Arial, sans-serif",
-                    fontWeight: 300,
-                    cssClass: "apexcharts-xaxis-title",
-                  },
-                  axisTicks: {
-                    show: false,
-                  },
-                },
-              },
-              yaxis: {
-                title: {
-                  style: {
-                    color: "#deadfc",
-                    fontSize: "12px",
-                    fontFamily: "Helvetica, Arial, sans-serif",
-                    fontWeight: 300,
-                    cssClass: "apexcharts-yaxis-title",
-                  },
-                },
-              },
-            },
-          },
-        ],
-  */ xaxis: {
+        xaxis: {
           tickPlacement: "on",
-          title: {
-            text: "Day/Month",
-            style: {
-              color: "#deadfc",
-              fontSize: "22px",
-              fontFamily: "Helvetica, Arial, sans-serif",
-              fontWeight: 600,
-              cssClass: "apexcharts-xaxis-title",
-            },
-          },
           type: "datetime",
           categories: [],
           labels: {
-            format: "dd/MM",
             style: {
               colors: "#FFFFFF",
-              fontSize: "16px",
+              fontSize: "18px",
               fontFamily: "Helvetica, Arial, sans-serif",
               fontWeight: 400,
               cssClass: "apexcharts-xaxis-label",
@@ -282,6 +371,7 @@ export default {
           },
         },
       },
+      barChartSeries: null,
       chartSeries: [
         {
           name: "minted",
@@ -336,28 +426,229 @@ export default {
     },
   },
   methods: {
-    getZoomGraph: async function () {
-      const query = `query { zoomPerDays(last:100) {
-                    nodes{
-                      id
-                      minted
-                      burned
-                    }
-                  }}`;
-      const result = await fetch(
-        "https://api.subquery.network/sq/ryanprice/zoombies-moonriver",
+    newRangeSelected() {
+      let start = Math.trunc(this.rangeSelected * 14);
+      this.bindBarChart(start, start + 14);
+    },
+    bindBarChart: async function (start, end) {
+      //bind the columns on bar chart for the default view
+      this.barChartSeries = [
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
+          name: "COMMON",
+          color: "#585858",
+          data: this.rarityCount["common"].slice(start, end),
+        },
+        {
+          name: "UNCOMMON",
+          color: "#04c1e8",
+          data: this.rarityCount["uncommon"].slice(start, end),
+        },
+        {
+          name: "RARE",
+          color: "#d5005a",
+          data: this.rarityCount["rare"].slice(start, end),
+        },
+        {
+          name: "EPIC",
+          color: "#b92ee4",
+          data: this.rarityCount["epic"].slice(start, end),
+        },
+        {
+          name: "PLATINUM",
+          color: "#d4e2f9",
+          data: this.rarityCount["platinum"].slice(start, end),
+        },
+      ];
+
+      //bind the default daterange for bar column chart
+      const dateShift = start == 0 ? 0 : 1;
+      this.barChartOptions = {
+        chart: {
+          type: "bar",
+          stacked: true,
+        },
+        legend: {
+          fontSize: "16px",
+          labels: {
+            useSeriesColors: true,
           },
-          body: JSON.stringify({
-            query,
-          }),
-        }
-      );
+        },
+        tooltip: {
+          fillSeriesColor: true,
+          theme: "dark",
+          followCursor: true,
+          onDatasetHover: {
+            highlightDataSeries: true
+          },
+          style: {
+            fontSize: "18px",
+          }
+        },
+        xaxis: {
+          labels: {
+            style: {
+              colors: "#FFFFFF",
+              fontSize: "14px",
+              fontFamily: "Helvetica, Arial, sans-serif",
+              fontWeight: 400,
+              cssClass: "apexcharts-xaxis-label",
+            },
+          },
+          type: "datetime",
+          categories: this.rarityCount["date"].slice(
+            start - dateShift,
+            end - dateShift
+          ),
+        },
+      };
+    },
+    getZoomGraph: async function () {
+      const query = `query {
+                      logCardMinteds(orderBy:BLOCK_NUMBER_ASC,last:5) {
+                        nodes {
+                          tokenId
+                        }
+                      }
+                      nFTPerDays(last:1) {
+                        nodes {
+                        id
+                        minted
+                        burned
+                        }
+                      }
+                      zoomPerDays(last:100) {
+                        nodes{
+                          id
+                          minted
+                          burned
+                        }
+                      }
+                      rarityPerDays(last:98) {
+                        nodes {
+                          id
+                          diamond
+                          platinum
+                          epic
+                          rare
+                          uncommon
+                          common
+                        }
+                      }
+                    }`;
+
+      const graphEndPoint = isLocal
+        ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph__cnlhb"
+        : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver__cnlhb";
+
+      const result = await fetch(graphEndPoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          query,
+        }),
+      });
       const res = await result.json();
+
+      this.rarityCount = new Object({
+        date: [],
+        diamond: [],
+        platinum: [],
+        epic: [],
+        rare: [],
+        uncommon: [],
+        common: [],
+      });
+      //shape the data for the column chart. the 4 series and the date array
+      res.data.rarityPerDays.nodes.forEach((item, i) => {
+        //console.log(item);
+        this.rarityCount["date"].push(parseInt(item.id));
+        this.rarityCount["diamond"].push(item.diamond);
+        this.rarityCount["platinum"].push(item.platinum);
+        this.rarityCount["epic"].push(item.epic);
+        this.rarityCount["rare"].push(item.rare);
+        this.rarityCount["uncommon"].push(item.uncommon);
+        this.rarityCount["common"].push(item.common);
+      });
+
+      //Update the bar chart series data
+      this.bindBarChart(83, 97);
+
+      //shape the data for dropdown for Minted Boosters 7 items -- 14 day items
+      const from = new Date(this.rarityCount["date"][0]);
+      const to = new Date(this.rarityCount["date"][97]);
+
+      // Convert date string to dd/mm/yyyy format
+      const buildDateString = (date) => {
+        const day = date.getDate().toString().padStart(2, "0");
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const year = date.getFullYear();
+
+        return `${day}.${month}.${year}`;
+      };
+
+      // Increase date by x amount of days
+      const increaseDays = (date, amount) =>
+        new Date(date.setDate(date.getDate() + amount));
+
+      // Get all weeks in given period
+      const buildWeeks = (start, end) => {
+        const weeks = [{ value: null, text: "Please select a range" }];
+        let current = new Date(start);
+        let counter = 0;
+        while (current < end) {
+          // Get start of the week
+          const beginOfWeek = new Date(current);
+          // Get end of the week
+          let endOfWeek = increaseDays(current, 13); //OVERRIDE for 2 weeks
+          // If there are less then 7 days left before the end, use the end.
+          endOfWeek = endOfWeek > end ? end : endOfWeek;
+
+          // Add week to our collection
+          weeks.push({
+            value: counter,
+            text:
+              buildDateString(beginOfWeek) + " - " + buildDateString(endOfWeek),
+          });
+          current = increaseDays(current, 1);
+          counter++;
+        }
+
+        return weeks;
+      };
+
+      const weeks = buildWeeks(from, to).reverse();
+
+      //bind to dropdown
+      this.mintedBoostersDateRange = weeks;
+
+      //Last 5 NFTs minted
+      res.data.logCardMinteds.nodes.forEach((i) => {
+        this.lastFiveNFTs.push(i.tokenId);
+      });
+
+      this.NftsMinted24Hrs = ethers.utils.commify(
+        res.data.nFTPerDays.nodes[res.data.nFTPerDays.nodes.length - 1].minted
+      );
+      this.NftsBurned24Hrs = ethers.utils.commify(
+        res.data.nFTPerDays.nodes[res.data.nFTPerDays.nodes.length - 1].burned
+      );
+      this.zoomMinted24Hrs = ethers.utils.commify(
+        ethers.utils.formatEther(
+          res.data.zoomPerDays.nodes[res.data.zoomPerDays.nodes.length - 1]
+            .minted
+        )
+      );
+      this.zoomBurned24Hrs = ethers.utils.commify(
+        ethers.utils.formatEther(
+          res.data.zoomPerDays.nodes[res.data.zoomPerDays.nodes.length - 1]
+            .burned
+        )
+      );
+
+      //Shape the zoomMinted and burned totals
       let graphData = new Object({ date: [], minted: [], burned: [] });
       this.totalZoomMinted = ethers.BigNumber.from("0");
       this.totalZoomBurned = ethers.BigNumber.from("0");
@@ -387,6 +678,7 @@ export default {
 
       this.$refs.zoomChart.updateOptions({
         xaxis: {
+          /*
           title: {
             text: "Day/Month",
             style: {
@@ -397,13 +689,14 @@ export default {
               cssClass: "apexcharts-xaxis-title",
             },
           },
+          */
           type: "datetime",
           categories: graphData.date,
           labels: {
-            format: "dd/MM",
+            //format: "dd/MM",
             style: {
               colors: "#FFFFFF",
-              fontSize: "16px",
+              fontSize: "14px",
               fontFamily: "Helvetica, Arial, sans-serif",
               fontWeight: 400,
               cssClass: "apexcharts-xaxis-label",
@@ -533,7 +826,7 @@ export default {
 }
 
 .graph-title {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 500;
   line-height: 1.2;
   color: #7ef4f6;
@@ -573,4 +866,19 @@ export default {
   border-width: 13px;
   margin-top: -13px;
 }
+
+.selectDropDown {
+  background-color: #343a40;
+  color: #0bdfe7;
+  margin-top: 0.4em;
+}
+
+span.apexcharts-legend-text {
+  color: #ffffff;
+}
+
+.apexcharts-legend-text {
+  color: #ffffff;
+}
+
 </style>

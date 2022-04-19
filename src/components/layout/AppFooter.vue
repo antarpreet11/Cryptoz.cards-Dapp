@@ -131,7 +131,7 @@
                 >
               </li>
               <li>
-                <a href="#!" v-b-modal.terms-of-use>Terms of Use</a>
+                <a v-b-modal.terms-of-use href="#!">Terms of Use</a>
               </li>
               <!--
               <li>

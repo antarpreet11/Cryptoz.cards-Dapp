@@ -10,8 +10,8 @@
         <div v-else class="col content">
           <b-input-group class="search" @keyup.enter="searchToken">
             <b-form-input
-              class="search-input"
               v-model="tokenToSearch"
+              class="search-input"
               type="text"
               placeholder="Search for a Zoombies Token"
             />

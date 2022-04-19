@@ -146,7 +146,7 @@
             <span v-for="tokenId in lastFiveNFTs" :key="tokenId">
               <router-link :to="`/view/${tokenId}`">
                 <img
-                  :src="`https://moonbase.zoombies.world/nft-image/${tokenId}`"
+                  :src="`https://zoombies.world/nft-image/${tokenId}`"
                   width="18%"
                 />
               </router-link>
@@ -538,7 +538,7 @@ export default {
 
       const graphEndPoint = isLocal
         ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph__cnlhb"
-        : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver__cnlhb";
+        : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver";
 
       const result = await fetch(graphEndPoint, {
         method: "POST",

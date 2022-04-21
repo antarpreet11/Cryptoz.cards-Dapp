@@ -326,7 +326,7 @@ export default {
                             tokenId: {
                               equalTo: "${this.token_id}"
                             }
-                          }, orderBy : BLOCK_NUMBER_DESC
+                          }, orderBy : BLOCK_NUMBER_ASC
                         ){
                           nodes {
                             blockTimestamp
@@ -341,13 +341,7 @@ export default {
                             },
                           }, orderBy : BLOCK_NUMBER_ASC
                         ){
-                          nodes {
-                            tokenId
-                            blockTimestamp
-                            buyer
-                            cardTypeId
-                            editionNumber
-                          }
+                          totalCount
                         }
                         logSacrificeNFTs(
                           filter: {
@@ -356,17 +350,13 @@ export default {
                             },
                           }
                         ){
-                          nodes{
-                            tokenId
-                            blockTimestamp
-                            owner
-                            cardTypeId
-                            zoomGained
-                          }
+                          totalCount
                         }
                       }`;
 
-      const graphEndPoint = (isLocal) ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph" : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver" ;
+      const graphEndPoint = (isLocal)
+        ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph__cnlhb"
+        : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver" ;
 
       try {
         const result = await fetch(
@@ -383,18 +373,21 @@ export default {
           }
         );
         const res = await result.json();
-        console.log("QUERY res:",res);
+        //console.log("QUERY res:",res);
         //Filter the result set for this token
-        const found = res.data.logCardMinteds.nodes.find(element => element.tokenId == this.token_id);
+        const found = res.data.nftTransfers.nodes.find(element => element.from == "0x0000000000000000000000000000000000000000");
+        if(found == undefined) {
+          throw 'No minted NFTs found for NFT #'+this.token_id+', Please let us know in the Discord #Support channel'
+        }
 
-        console.log(cardTypeId,this.token_id,found);
+        //console.log(cardTypeId,this.token_id,found);
 
         this.minted_date = new Date(found.blockTimestamp).toLocaleString();
-        this.total_minted = res.data.logCardMinteds.nodes.length;
-        this.total_sacrificed = res.data.logSacrificeNFTs.nodes.length;
+        this.total_minted = res.data.logCardMinteds.totalCount;
+        this.total_sacrificed = res.data.logSacrificeNFTs.totalCount;
         this.total_circulation = this.total_minted - this.total_sacrificed;
 
-        this.items = res.data.nftTransfers.nodes;
+        this.items = res.data.nftTransfers.nodes.reverse();
 
       }catch(e){
         window.alert("There was a fatal error contacting SubQuery Servers,Please let us know in the Cardinal Entertainment Discord #support channel");

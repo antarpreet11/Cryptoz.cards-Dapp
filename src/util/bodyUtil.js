@@ -3,6 +3,11 @@ import { isLocal } from "./constants/networks";
 
 export const querySubGraph = async () => {
   const query = `query {
+                  logCardMinteds(orderBy:BLOCK_NUMBER_ASC,last:5) {
+                    nodes {
+                      tokenId
+                    }
+                  }
                   zoomPerDays(last:100) {
                     nodes{
                       id

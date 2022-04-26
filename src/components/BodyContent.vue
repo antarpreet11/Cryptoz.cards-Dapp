@@ -226,6 +226,7 @@ import apexchart from "vue-apexcharts";
 import { ethers } from "ethers";
 import { isMetamaskInstalled } from "../store/blockChainStore";
 import { isLocal } from "../util/constants/networks";
+import { querySubGraph } from "../util/bodyUtil";
 
 export default {
   name: "BodyContent",
@@ -245,6 +246,7 @@ export default {
       zoomWalletsRemaining: "Loading..",
       totalCzxpToBuy: "",
       movrCost: 0,
+      last5NTFsInterval: 10000,
       myPurchaseTotal: 0,
       onMainNet: false,
       oldTotalZoom: 0,
@@ -410,6 +412,7 @@ export default {
     }
     this.graphData = new Object({ date: [], minted: [], burned: [] });
     this.getZoomGraph();
+    setInterval(this.getLast5NFTsMinted, this.last5NTFsInterval);
   },
   watch: {
     getTotalZoomBalance(newVal, oldVal) {
@@ -770,6 +773,22 @@ export default {
       }
 
       this.movrCost = parseFloat(this.totalCzxpToBuy / 10000000).toFixed(7);
+    },
+    promiseLast5NFTsMinted () {
+      return new Promise((resolve, reject) => {
+        querySubGraph().then((data)=>resolve(data)).catch(()=>reject());
+      });
+    },
+    getLast5NFTsMinted() {
+      let arr = [];
+      this.lastFiveNFTs = [];
+      arr.push(this.promiseLast5NFTsMinted());
+      Promise.all(arr).then((res) => {
+        res[0].logCardMinteds.nodes.forEach((i) => {
+          this.lastFiveNFTs.push(i.tokenId);
+          this.lastFiveNFTs = this.lastFiveNFTs.reverse();
+        });
+      })
     },
   },
 };

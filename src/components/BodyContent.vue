@@ -781,9 +781,9 @@ export default {
     },
     getLast5NFTsMinted() {
       let arr = [];
-      this.lastFiveNFTs = [];
       arr.push(this.promiseLast5NFTsMinted());
       Promise.all(arr).then((res) => {
+        this.lastFiveNFTs = [];
         res[0].logCardMinteds.nodes.forEach((i) => {
           this.lastFiveNFTs.push(i.tokenId);
           this.lastFiveNFTs = this.lastFiveNFTs.reverse();

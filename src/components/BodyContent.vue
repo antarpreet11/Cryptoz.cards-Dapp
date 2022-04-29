@@ -247,6 +247,7 @@ export default {
       totalCzxpToBuy: "",
       movrCost: 0,
       last5NTFsInterval: 10000,
+      last5NFTsTimer: null,
       myPurchaseTotal: 0,
       onMainNet: false,
       oldTotalZoom: 0,
@@ -401,6 +402,9 @@ export default {
       return isMetamaskInstalled();
     },
   },
+  beforeUnmount() {
+    clearInterval(this.last5NFTsTimer);
+  },
   mounted() {
     if (
       this.getChainId == 1285 ||
@@ -412,7 +416,7 @@ export default {
     }
     this.graphData = new Object({ date: [], minted: [], burned: [] });
     this.getZoomGraph();
-    setInterval(this.getLast5NFTsMinted, this.last5NTFsInterval);
+    this.last5NFTsTimer = setInterval(this.getLast5NFTsMinted, this.last5NTFsInterval);
   },
   watch: {
     getTotalZoomBalance(newVal, oldVal) {

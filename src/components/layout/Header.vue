@@ -287,15 +287,6 @@
             <span>Your Next Bonus: </span>
             <strong class="time-to-bonus">{{ timeToBonus }}</strong>
           </div>
-          <div class="network-chain">
-            <button v-b-modal.network-modal class="network-button-mobile">
-              <img
-                v-bind:src="networkImageUrl()"
-                class="network-icons"
-                alt=""
-              />
-            </button>
-          </div>
         </div>
       </ul>
       <div
@@ -328,6 +319,17 @@
           getWalletAddress.substr(0, 6) + "..." + getWalletAddress.substr(38)
         }}
       </span>
+      <div class="network-chain">
+        <button v-b-modal.network-modal class="network-button-mobile">
+          <img
+            v-bind:src="networkImageUrl()"
+            class="network-icons"
+            alt=""
+            width="25"
+            height="25"
+          />
+        </button>
+      </div>
       <div id="wallet-balance" v-b-tooltip.hover.bottom :title="getBalance">
         <img
           v-if="onMainNet"
@@ -1030,6 +1032,8 @@ export default {
     font: inherit;
     cursor: pointer;
     outline: inherit;
+    background-color: transparent;
+    margin-left: 16px;
 
     display: flex;
     align-items: center;

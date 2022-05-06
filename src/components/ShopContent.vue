@@ -198,7 +198,7 @@
                     "
                   />
                   Mint NFT for
-                  {{ cardCost }}
+                  <!-- {{ cardCost }} -->
                   <img src="@/assets/movr_logo.png" class="mr-icon" />
                 </b-button>
                 <img
@@ -344,7 +344,7 @@ export default {
       return this.$store.state.dAppState;
     },
     cardCost() {
-      return getZoomBalance < parseInt(card.unlock_czxp)
+      return this.getZoomBalance < parseInt(card.unlock_czxp)
         ? (card.cost * 3).toFixed(3)
         : card.cost;
     },

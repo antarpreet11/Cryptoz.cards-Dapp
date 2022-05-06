@@ -1023,25 +1023,25 @@ export default {
     width: 30px;
     margin-right: 8px;
   }
+}
 
-  .network-button-mobile {
-    background: none;
-    color: inherit;
-    border: none;
-    padding: 0;
-    font: inherit;
-    cursor: pointer;
-    outline: inherit;
-    background-color: transparent;
-    margin-left: 16px;
+.network-button-mobile {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  background-color: transparent;
+  margin-left: 16px;
 
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    p {
-      font-size: 20px;
-      color: white;
-    }
+  p {
+    font-size: 20px;
+    color: white;
   }
 }
 

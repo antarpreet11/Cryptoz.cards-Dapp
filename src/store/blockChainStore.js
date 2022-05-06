@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { BigNumber } from '@ethersproject/bignumber'
+import { BigNumber } from "@ethersproject/bignumber";
 import detectEthereumProvider from "@metamask/detect-provider";
 import zoombiesContractJson from "../contracts/Zoombies.json";
 import zoomContractJson from "../contracts/ZoomToken.json";
@@ -210,7 +210,7 @@ const eventCallback = async (dispatch, eventPayload, state) => {
 
 const blockchainStore = {
   namespaced: true,
-  state: () => DEFAULT_BLOCKCHAIN_STATE,
+  state: DEFAULT_BLOCKCHAIN_STATE,
   mutations: {
     [BLOCKCHAIN_MUTATIONS.SET_BLOCKCHAIN](state, payload) {
       const { walletAddress, walletBalance, chainId, contracts } = payload;
@@ -432,5 +432,5 @@ export const isMetamaskInstalled = () => {
  * @param value the gas value to pad
  */
 export function calculateGasMargin(value) {
-  return value.mul(120).div(100)
+  return value.mul(120).div(100);
 }

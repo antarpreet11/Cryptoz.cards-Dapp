@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+import { NETWORK_NAMES } from "../util/constants/networks";
 
 const lazyLoadComponents = (component) => {
   return () => import(`@/components/${component}.vue`);
@@ -12,6 +13,13 @@ const router = new Router({
   routes: [
     {
       path: "/",
+      redirect: to => {
+        return {path: `/${NETWORK_NAMES.MOONBASE}`}
+      }
+    },
+    ...Object.values(NETWORK_NAMES).map((name) => ({
+      path: `/${name}`,
+      alias: "/moonbase-alpha",
       name: "BodyContent",
       component: lazyLoadComponents("BodyContent"),
       meta: {
@@ -42,9 +50,9 @@ const router = new Router({
           },
         ],
       },
-    },
-    {
-      path: "/shop",
+    })),
+    ...Object.values(NETWORK_NAMES).map((name) => ({
+      path: `/${name}/shop`,
       name: "ShopContent",
       component: lazyLoadComponents("ShopContent"),
       meta: {
@@ -75,9 +83,9 @@ const router = new Router({
           },
         ],
       },
-    },
-    {
-      path: "/my-zoombies-nfts",
+    })),
+    ...Object.values(NETWORK_NAMES).map((name) => ({
+      path: `/${name}/my-zoombies-nfts`,
       name: "CryptContent",
       component: lazyLoadComponents("CryptContent"),
       meta: {
@@ -108,15 +116,15 @@ const router = new Router({
           },
         ],
       },
-    },
-    {
-      path: "/my-zoombies-nfts/:address",
+    })),
+    ...Object.values(NETWORK_NAMES).map((name) => ({
+      path: `/${name}/my-zoombies-nfts/:address`,
       name: "OthersCrypt",
       component: lazyLoadComponents("OthersCryptContent"),
       meta: {
-          title:
-            "Zoombies Cards - Your Crypt - A collection of all the NFTs owned by this wallet",
-          metaTags: [
+        title:
+          "Zoombies Cards - Your Crypt - A collection of all the NFTs owned by this wallet",
+        metaTags: [
           {
             name: "description",
             content: "Browse through other person's Zoombies NFTs!",
@@ -131,7 +139,8 @@ const router = new Router({
           },
           {
             property: "og:title",
-            content: "Zoombies Cards - Your Crypt - A collection of all the NFTs owned by this wallet",
+            content:
+              "Zoombies Cards - Your Crypt - A collection of all the NFTs owned by this wallet",
           },
           {
             property: "og:image",
@@ -139,9 +148,9 @@ const router = new Router({
           },
         ],
       },
-    },
-    {
-      path: "/market",
+    })),
+    ...Object.values(NETWORK_NAMES).map((name) => ({
+      path: `/${name}/market`,
       name: "MarketContent",
       component: lazyLoadComponents("MarketContent"),
       meta: {
@@ -172,9 +181,9 @@ const router = new Router({
           },
         ],
       },
-    },
-    {
-      path: "/help",
+    })),
+    ...Object.values(NETWORK_NAMES).map((name) => ({
+      path: `/${name}/help`,
       name: "HelpContent",
       props: (route) => ({ query: route.query.t }),
       component: lazyLoadComponents("HelpContent"),
@@ -206,9 +215,9 @@ const router = new Router({
           },
         ],
       },
-    },
-    {
-      path: "/feedback",
+    })),
+    ...Object.values(NETWORK_NAMES).map((name) => ({
+      path: `/${name}/feedback`,
       name: "Feedback",
       props: (route) => ({ query: route.query.t }),
       component: lazyLoadComponents("Feedback"),
@@ -240,9 +249,9 @@ const router = new Router({
           },
         ],
       },
-    },
-    {
-      path: "/view/:token_id",
+    })),
+    ...Object.values(NETWORK_NAMES).map((name) => ({
+      path: `/${name}/view/:token_id`,
       name: "TokenContent",
       component: lazyLoadComponents("TokenContent"),
       meta: {
@@ -273,9 +282,9 @@ const router = new Router({
           },
         ],
       },
-    },
-    {
-      path: "/data-indicators",
+    })),
+    ...Object.values(NETWORK_NAMES).map((name) => ({
+      path: `/${name}/data-indicators`,
       name: "DataIndicators",
       component: lazyLoadComponents("DataIndicators"),
       meta: {
@@ -306,14 +315,13 @@ const router = new Router({
           },
         ],
       },
-    },
-    {
-      path: "/card-sets",
+    })),
+    ...Object.values(NETWORK_NAMES).map((name) => ({
+      path: `/${name}/card-sets`,
       name: "CardSets",
       component: lazyLoadComponents("CardSets"),
       meta: {
-        title:
-          "Zoombies World - Card Type Sets - Complete the card sets",
+        title: "Zoombies World - Card Type Sets - Complete the card sets",
         metaTags: [
           {
             name: "description",
@@ -330,8 +338,7 @@ const router = new Router({
           },
           {
             property: "og:title",
-            content:
-              "Zoombies World - Card Type Sets - Complete the card sets",
+            content: "Zoombies World - Card Type Sets - Complete the card sets",
           },
           {
             property: "og:image",
@@ -339,7 +346,7 @@ const router = new Router({
           },
         ],
       },
-    },
+    })),
   ],
   scrollBehavior() {
     return { x: 0, y: 0 };

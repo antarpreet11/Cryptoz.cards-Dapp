@@ -133,8 +133,58 @@
         >
       </div>
     </b-modal>
+    <b-modal
+      v-if="isWalletConnected"
+      id="network-modal"
+      size="lg"
+      title="Select a network"
+      hide-footer
+      header-bg-variant="dark"
+      header-text-variant="light"
+      body-bg-variant="dark"
+      body-text-variant="dark"
+    >
+      <div class="button-wrapper">
+        <b-button
+          variant="outline-primary"
+          class="affiliate-button"
+          @click="
+            () => {
+              this.$store.dispatch('network/setNetwork', 'moonbase-alpha');
+              hideNetworkModel();
+            }
+          "
+          ><img v-bind:src="moonbaseAlphaImg" style="width: 30px" /> Moonbase
+          alpha</b-button
+        >
+        <b-button
+          variant="outline-primary"
+          class="affiliate-button"
+          @click="
+            () => {
+              this.$store.dispatch('network/setNetwork', 'moonriver'),
+                hideNetworkModel();
+            }
+          "
+          ><img v-bind:src="moonriverImg" style="width: 30px" />
+          Moonriver</b-button
+        >
+        <b-button
+          variant="outline-primary"
+          class="affiliate-button"
+          @click="
+            () => {
+              this.$store.dispatch('network/setNetwork', 'moonbeam'),
+                hideNetworkModel();
+            }
+          "
+          ><img v-bind:src="moonbeamImg" style="width: 30px" />
+          Moonbeam</b-button
+        >
+      </div>
+    </b-modal>
     <div class="app-menu-bar">
-      <router-link to="/">
+      <router-link :to="'/' + this.getNetwork">
         <img
           class="zoombie-logo"
           alt="Zoombies World Logo"
@@ -152,37 +202,58 @@
           </button>
         </li>
         <li>
-          <router-link class="header-item shop-header" to="/shop">
+          <router-link
+            class="header-item shop-header"
+            :to="'/' + this.getNetwork + '/shop'"
+          >
             Shop
           </router-link>
         </li>
         <li>
-          <router-link class="header-item aqua-header" to="/my-zoombies-nfts">
+          <router-link
+            class="header-item aqua-header"
+            :to="'/' + this.getNetwork + '/my-zoombies-nfts'"
+          >
             Your NFT Crypt
           </router-link>
         </li>
         <li>
-          <router-link class="header-item aqua-header" to="/market">
+          <router-link
+            class="header-item aqua-header"
+            :to="'/' + this.getNetwork + '/market'"
+          >
             Markets
           </router-link>
         </li>
         <li>
-          <router-link class="header-item white-header" to="/view/1">
+          <router-link
+            class="header-item white-header"
+            :to="'/' + this.getNetwork + '/view/1'"
+          >
             View
           </router-link>
         </li>
         <li>
-          <router-link class="header-item white-header" to="/help">
+          <router-link
+            class="header-item white-header"
+            :to="'/' + this.getNetwork + '/help'"
+          >
             Help
           </router-link>
         </li>
         <li>
-          <router-link class="header-item white-header" to="/feedback">
+          <router-link
+            class="header-item white-header"
+            :to="'/' + this.getNetwork + '/feedback'"
+          >
             Feedback
           </router-link>
         </li>
         <li>
-          <router-link class="header-item white-header" to="/card-sets">
+          <router-link
+            class="header-item white-header"
+            :to="'/' + this.getNetwork + '/card-sets'"
+          >
             Card Sets
           </router-link>
         </li>
@@ -215,6 +286,15 @@
           >
             <span>Your Next Bonus: </span>
             <strong class="time-to-bonus">{{ timeToBonus }}</strong>
+          </div>
+          <div class="network-chain">
+            <button v-b-modal.network-modal class="network-button-mobile">
+              <img
+                v-bind:src="networkImageUrl()"
+                class="network-icons"
+                alt=""
+              />
+            </button>
           </div>
         </div>
       </ul>
@@ -414,6 +494,10 @@ import {
 } from "bootstrap-vue";
 import { mapGetters } from "vuex";
 import { ethers } from "ethers";
+import {
+  NETWORK_ICONS,
+  getNetworkNameFromURL,
+} from "../../util/constants/networks";
 
 const baseAddress = "0x0000000000000000000000000000000000000000";
 
@@ -501,6 +585,7 @@ export default {
       getBalance: "blockChain/getBalance",
       getSignedZoomContract: "blockChain/getSignedZoomContract",
       getSignedZoombiesContract: "blockChain/getSignedZoombiesContract",
+      getNetwork: "network/getNetwork",
     }),
   },
   data() {
@@ -519,6 +604,9 @@ export default {
       showShareMyLink: false,
       onMainNet: false,
       isMobileDropdownOpen: false,
+      moonbaseAlphaImg: NETWORK_ICONS["moonbase-alpha"],
+      moonriverImg: NETWORK_ICONS["moonriver"],
+      moonbeamImg: NETWORK_ICONS["moonbeam"],
     };
   },
   watch: {
@@ -533,6 +621,9 @@ export default {
         this.checkSponsor(value);
         this.getZoomContributionStatus();
       }
+    },
+    getNetwork(value) {
+      history.pushState({}, "", `/${value}`);
     },
     $route(to) {
       if (!to.query.sponsor) {
@@ -662,6 +753,12 @@ export default {
       );
 
       this.$store.state.zoomContribution = parseInt(zoomContribution);
+    },
+    networkImageUrl: function () {
+      return NETWORK_ICONS[getNetworkNameFromURL()];
+    },
+    hideNetworkModel: function () {
+      this.$root.$emit("bv::hide::modal", "network-modal");
     },
   },
 };
@@ -885,6 +982,7 @@ export default {
 
   .desktop-connect-btn,
   .desktop-bonus,
+  .network-chain,
   .app-menu-bar-items,
   .wallet-info {
     display: none;
@@ -898,10 +996,12 @@ export default {
 }
 
 .desktop-bonus {
-  max-width: 210px;
+  max-width: 240px;
   margin-right: 32px;
   position: absolute;
   right: 0;
+  display: flex;
+  align-items: center;
 
   .bonusClass {
     font-size: 18px;
@@ -911,6 +1011,33 @@ export default {
 
   .bonusClassNo {
     max-width: 150px;
+  }
+
+  .network-chain {
+    margin-right: 50px;
+  }
+
+  .network-icons {
+    width: 30px;
+    margin-right: 8px;
+  }
+
+  .network-button-mobile {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+
+    display: flex;
+    align-items: center;
+
+    p {
+      font-size: 20px;
+      color: white;
+    }
   }
 }
 

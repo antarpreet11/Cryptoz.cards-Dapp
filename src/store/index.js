@@ -7,6 +7,7 @@ import cryptStore from "./cryptStore";
 import eventStore from "./eventsStore";
 import blockchainStore from "./blockChainStore";
 import cardsetStore from "./cardsetStore";
+import networkStore from "./networkStore";
 
 Vue.use(Vuex);
 
@@ -34,5 +35,6 @@ export const store = new Vuex.Store({
     events: eventStore,
     blockChain: blockchainStore,
     cardset: cardsetStore,
+    network: networkStore,
   },
 });

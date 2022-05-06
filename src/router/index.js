@@ -19,8 +19,7 @@ const router = new Router({
     },
     ...Object.values(NETWORK_NAMES).map((name) => ({
       path: `/${name}`,
-      alias: "/moonbase-alpha",
-      name: "BodyContent",
+      name: `${name}_BodyContent`,
       component: lazyLoadComponents("BodyContent"),
       meta: {
         title:
@@ -53,7 +52,7 @@ const router = new Router({
     })),
     ...Object.values(NETWORK_NAMES).map((name) => ({
       path: `/${name}/shop`,
-      name: "ShopContent",
+      name: `${name}_ShopContent`,
       component: lazyLoadComponents("ShopContent"),
       meta: {
         title:
@@ -86,7 +85,7 @@ const router = new Router({
     })),
     ...Object.values(NETWORK_NAMES).map((name) => ({
       path: `/${name}/my-zoombies-nfts`,
-      name: "CryptContent",
+      name: `${name}_CryptContent`,
       component: lazyLoadComponents("CryptContent"),
       meta: {
         title:
@@ -119,7 +118,7 @@ const router = new Router({
     })),
     ...Object.values(NETWORK_NAMES).map((name) => ({
       path: `/${name}/my-zoombies-nfts/:address`,
-      name: "OthersCrypt",
+      name: `${name}_OthersCrypt`,
       component: lazyLoadComponents("OthersCryptContent"),
       meta: {
         title:
@@ -151,7 +150,7 @@ const router = new Router({
     })),
     ...Object.values(NETWORK_NAMES).map((name) => ({
       path: `/${name}/market`,
-      name: "MarketContent",
+      name: `${name}_MarketContent`,
       component: lazyLoadComponents("MarketContent"),
       meta: {
         title:
@@ -184,7 +183,7 @@ const router = new Router({
     })),
     ...Object.values(NETWORK_NAMES).map((name) => ({
       path: `/${name}/help`,
-      name: "HelpContent",
+      name: `${name}_HelpContent`,
       props: (route) => ({ query: route.query.t }),
       component: lazyLoadComponents("HelpContent"),
       meta: {
@@ -218,7 +217,7 @@ const router = new Router({
     })),
     ...Object.values(NETWORK_NAMES).map((name) => ({
       path: `/${name}/feedback`,
-      name: "Feedback",
+      name: `${name}_Feedback`,
       props: (route) => ({ query: route.query.t }),
       component: lazyLoadComponents("Feedback"),
       meta: {
@@ -252,7 +251,7 @@ const router = new Router({
     })),
     ...Object.values(NETWORK_NAMES).map((name) => ({
       path: `/${name}/view/:token_id`,
-      name: "TokenContent",
+      name: `${name}_TokenContent`,
       component: lazyLoadComponents("TokenContent"),
       meta: {
         title:
@@ -285,7 +284,7 @@ const router = new Router({
     })),
     ...Object.values(NETWORK_NAMES).map((name) => ({
       path: `/${name}/data-indicators`,
-      name: "DataIndicators",
+      name: `${name}_DataIndicators`,
       component: lazyLoadComponents("DataIndicators"),
       meta: {
         title:
@@ -318,7 +317,7 @@ const router = new Router({
     })),
     ...Object.values(NETWORK_NAMES).map((name) => ({
       path: `/${name}/card-sets`,
-      name: "CardSets",
+      name: `${name}_CardSets`,
       component: lazyLoadComponents("CardSets"),
       meta: {
         title: "Zoombies World - Card Type Sets - Complete the card sets",

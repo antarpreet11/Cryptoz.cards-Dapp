@@ -270,7 +270,7 @@
       class="desktop-connect-btn"
       @click="$emit('connect')"
     >
-      Connect To {{ onMainNet ? "Moonriver" : "Moonbase" }}
+      Connect
     </b-button>
     <div
       ref="mobileDropdown"
@@ -285,7 +285,7 @@
         variant="warning"
         @click="$emit('connect')"
       >
-        Connect To {{ onMainNet ? "Moonriver" : "Moonbase (testnet)" }}
+        Connect
       </b-button>
       <div v-if="isWalletConnected" class="mobile-wallet-info">
         <div v-if="ZoomContribution == 20000000000000000000">

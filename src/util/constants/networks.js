@@ -88,3 +88,28 @@ export const getNetworkNameFromURL = () => {
 
   return null
 }
+
+export const METAMASK_CHAIN_PARAMS = {
+  'moonbase-alpha': {
+    chainId: '0x507', // Moonbase Alpha's chainId is 1287, which is 0x507 in hex
+    chainName: 'Moonbase Alpha',
+    nativeCurrency: {
+      name: 'DEV',
+      symbol: 'DEV',
+      decimals: 18,
+    },
+    rpcUrls: [NETWORKTYPES['moonbase-alpha'].httpRPC],
+    blockExplorerUrls: ['https://moonbase.moonscan.io/'],
+  },
+  moonriver: {
+    chainId: '0x505', // Moonriver's chainId is 1285, which is 0x505 in hex
+    chainName: 'Moonriver',
+    nativeCurrency: {
+      name: 'MOVR',
+      symbol: 'MOVR',
+      decimals: 18,
+    },
+    rpcUrls: [NETWORKTYPES.moonriver.httpRPC],
+    blockExplorerUrls: ['https://moonriver.moonscan.io/'],
+  },
+}

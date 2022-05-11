@@ -12,7 +12,7 @@ import {
 } from "../util/watcherUtil";
 import WebsocketProvider from "../util/WebsocketProvider";
 import { MessageBus } from "../messageBus";
-import { isLocal } from "../util/constants/networks";
+import { isLocal, METAMASK_CHAIN_PARAMS } from "../util/constants/networks";
 
 const DEFAULT_BLOCKCHAIN_STATE = {
   metamaskContract: null,
@@ -43,43 +43,21 @@ export const BLOCKCHAIN_MUTATIONS = {
   SET_UNIVERSE_BALANCES: "SET_UNIVERSE_BALANCES",
 };
 
-const devChainParam = {
-  chainId: "0x507", // Moonbase Alpha's chainId is 1287, which is 0x507 in hex
-  chainName: "Moonbase Alpha",
-  nativeCurrency: {
-    name: "DEV",
-    symbol: "DEV",
-    decimals: 18,
-  },
-  rpcUrls: ["https://rpc.api.moonbase.moonbeam.network"],
-  blockExplorerUrls: ["https://moonbase.moonscan.io/"],
-};
-
-const prodChainParam = {
-  chainId: "0x505", // Moonriver's chainId is 1285, which is 0x505 in hex
-  chainName: "Moonriver",
-  nativeCurrency: {
-    name: "MOVR",
-    symbol: "MOVR",
-    decimals: 18,
-  },
-  rpcUrls: ["https://rpc.api.moonriver.moonbeam.network"],
-  blockExplorerUrls: ["https://moonriver.moonscan.io/"],
-};
-
-const setupMetamask = async () => {
+const setupMetamask = async (chainName = 'moonbase-alpha') => {
   try {
     const metamaskProvider = await detectEthereumProvider({
       mustBeMetaMask: true,
     });
 
     if (metamaskProvider) {
+      const metamaskParam = METAMASK_CHAIN_PARAMS[chainName]
+
       await metamaskProvider.request({
         method: "eth_requestAccounts",
       });
       await metamaskProvider.request({
         method: "wallet_addEthereumChain",
-        params: [isLocal ? devChainParam : prodChainParam],
+        params: [metamaskParam],
       });
 
       const etherWrapper = new ethers.providers.Web3Provider(window.ethereum);
@@ -259,7 +237,8 @@ const blockchainStore = {
      * }
      */
     async initBlockchain({ commit, state, dispatch }, payload) {
-      const metamaskProviderData = await setupMetamask();
+      const chainName = window.location.pathname.replace('/', '')
+      const metamaskProviderData = await setupMetamask(chainName);
       if (!metamaskProviderData) {
         payload.noMetamaskCallback();
         return;

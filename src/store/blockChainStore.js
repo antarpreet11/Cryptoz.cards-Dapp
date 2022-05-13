@@ -131,7 +131,7 @@ const subscribeToMetamaskProviderEvents = (metamaskProvider, dispatch) => {
   });
 
   metamaskProvider.on("chainChanged", (chainId) => {
-    window.location.reload();
+    dispatch("setChainId", chainId);
   });
 
   metamaskProvider.on("accountsChanged", async (accounts) => {
@@ -237,7 +237,11 @@ const blockchainStore = {
      * }
      */
     async initBlockchain({ commit, state, dispatch }, payload) {
-      const chainName = window.location.pathname.replace('/', '')
+      let chainName = window.location.pathname.replace('/', '')
+      if (!chainName) {
+        chainName = 'moonbase-alpha';
+      }
+      
       const metamaskProviderData = await setupMetamask(chainName);
       if (!metamaskProviderData) {
         payload.noMetamaskCallback();

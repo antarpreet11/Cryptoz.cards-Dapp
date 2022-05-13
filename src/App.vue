@@ -106,7 +106,6 @@ export default {
     },
     ...mapGetters({
       getWalletAddress: "blockChain/getWalletAddress",
-      getNetwork: "network/getNetwork",
     }),
   },
   watch: {
@@ -121,10 +120,6 @@ export default {
       } else {
         this.stop();
       }
-    },
-    getNetwork(val) {
-      history.pushState({}, "", `/${val}`);
-      window.location.reload();
     },
   },
   beforeCreate() {

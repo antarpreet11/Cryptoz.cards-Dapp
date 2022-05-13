@@ -397,6 +397,7 @@ export default {
       getTotalNftSupply: "blockChain/getTotalNftSupply",
       getTotalNftTypes: "blockChain/getTotalNftTypes",
       getChainId: "blockChain/getChainId",
+      getNetwork: "network/getNetwork",
     }),
     metamaskInstalled: () => {
       return isMetamaskInstalled();
@@ -430,6 +431,9 @@ export default {
         this.oldTotalNft = oldVal;
         this.pulsateText(this.$refs.nftSupply);
       }
+    },
+    getNetwork(newVal) {
+      this.$store.dispatch("blockChain/initBlockchain");
     },
   },
   methods: {

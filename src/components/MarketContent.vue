@@ -7,14 +7,47 @@
 
       <b-card class="market-card" no-body>
         <b-tabs card>
-          <b-tab title="Zoombies NFT Cards">
-            <h3>Zoombies NFT Collectible Cards</h3>
+          <b-tab title="Zoombie NFTs">
+            <h3>Zoombie NFTs</h3>
             <h5>
               ERC-721 NFT tokens are supported on the following auction
               marketplaces:<br />
             </h5>
             Zoombies NFT Contract - 0x08716e418e68564C96b68192E985762740728018
             <br /><br />
+
+           <b-row>
+              <b-col></b-col>
+              <b-col>
+                <b-card class="market" no-body>
+                  <a
+                    class="market-btn"
+                    href="https://market.zoombies.world/"
+                    target="_blank"
+                  >
+                    <div class="market-info">
+                      <div class="">
+                        <img
+                          class="markets-logo"
+                          src="https://zoombies.world/images/zoombies_coin.svg"
+                          align="absmiddle"
+                        />
+                        <img style="float:right; max-width:42px"
+                          src="https://market.zoombies.world/static/media/mynew.da1b3c41.png"
+                        />
+                      </div>
+                      <div class="market-detail">
+                        <h2>ZOOM Auction Market</h2>
+                        <p>
+                          No Commission timed auction NFT market featuring advanced Zoombies and Zoom token support.
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </b-card>
+                </b-col>
+                <b-col></b-col>
+            </b-row>
 
             <b-row>
               <b-col>

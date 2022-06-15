@@ -11,6 +11,39 @@ const router = new Router({
   mode: "history",
   routes: [
     {
+      path: "/admin",
+      name: "Admin",
+      component: lazyLoadComponents("Admin"),
+      meta: {
+        title:
+          "Zoombies NFT World - Where the dead live forever on the Blockchain",
+        metaTags: [
+          {
+            name: "description",
+            content:
+              "A world of limited edition BEP-721 NFT collectible zombie cards stored in your BSC blockchain wallet",
+          },
+          {
+            property: "og:url",
+            content: "https://movr.zoombies.world/admin",
+          },
+          {
+            property: "og:type",
+            content: "website",
+          },
+          {
+            property: "og:title",
+            content:
+              "Zoombies NFT Cards are unique and fun collectibles on the Moonriver blockchain",
+          },
+          {
+            property: "og:image",
+            content: "https://movr.zoombies.world/assets/zoombies_logo.svg",
+          },
+        ],
+      },
+    },
+    {
       path: "/",
       name: "BodyContent",
       component: lazyLoadComponents("BodyContent"),

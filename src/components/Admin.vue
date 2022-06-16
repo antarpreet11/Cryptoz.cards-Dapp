@@ -46,12 +46,9 @@ export default {
   components: {
     BFormInput,
     BButton,
-    BFormSelect,
     BContainer,
     BRow,
     BCol,
-    BImgLazy,
-    apexchart,
   },
   data() {
     return {
@@ -62,12 +59,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getWalletAddress: "blockChain/getWalletAddress",
-      getZoomBalance: "blockChain/getZoomBalance",
-      getTotalZoomBalance: "blockChain/getTotalZoomBalance",
-      getTotalNftSupply: "blockChain/getTotalNftSupply",
-      getTotalNftTypes: "blockChain/getTotalNftTypes",
-      getChainId: "blockChain/getChainId",
       getSignedZoombiesContract: "blockChain/getSignedZoombiesContract",
     }),
     metamaskInstalled: () => {
@@ -75,7 +66,6 @@ export default {
     },
   },
   beforeUnmount() {
-    clearInterval(this.last5NFTsTimer);
   },
   mounted() {
     if (
@@ -89,9 +79,7 @@ export default {
 
   },
   watch: {
-
     getSignedZoombiesContract: async function() {
-      console.log("got the signed contract");
       this.totalRewarded = await this.getSignedZoombiesContract.totalBoostersRewarded();
     }
 
@@ -108,57 +96,6 @@ export default {
       }catch(error) {
         alert(error.message);
       }
-    },
-    formatNumber(number) {
-      return parseInt(number.toFixed(0)).toLocaleString();
-    },
-    pulsateText(ref) {
-      ref.$el.classList.value = ref.$el.classList.value + "pulsate";
-      ref.play();
-      setTimeout(() => {
-        ref.$el.classList.value = "";
-      }, 500);
-    },
-    addZOOMtoMetaMask: async function () {
-      const tokenAddress = this.onMainNet
-        ? "0x8bd5180Ccdd7AE4aF832c8C03e21Ce8484A128d4"
-        : "0x8e21404bAd3A1d2327cc6D2B2118f47911a1f316";
-      const tokenSymbol = this.onMainNet ? "ZOOM" : "ZOOM-DEV";
-      const tokenDecimals = 18;
-      const tokenImage = "https://zoombies.world/images/zoombies_coin.svg";
-
-      try {
-        // wasAdded is a boolean. Like any RPC method, an error may be thrown.
-        const wasAdded = await ethereum.request({
-          method: "wallet_watchAsset",
-          params: {
-            type: "ERC20", // Initially only supports ERC20, but eventually more!
-            options: {
-              address: tokenAddress, // The address that the token is at.
-              symbol: tokenSymbol, // A ticker symbol or shorthand, up to 5 chars.
-              decimals: tokenDecimals, // The number of decimals in the token
-              image: tokenImage, // A string url of the token logo
-            },
-          },
-        });
-      } catch (error) {
-        console.log("addCZXPtoMetaMask error:", error);
-      }
-    },
-    updateBadge: async function () {
-      console.log("ggogogogo");
-    },
-    filterCzxpInput: function () {
-      this.totalCzxpToBuy = this.totalCzxpToBuy.replace(/[^\d]/g, "");
-      if (
-        this.myPurchaseTotal + parseInt(this.totalCzxpToBuy * 100000000000) >
-        20000000000000000000
-      ) {
-        this.totalCzxpToBuy =
-          (20000000000000000000 - this.myPurchaseTotal) / 100000000000;
-      }
-
-      this.movrCost = parseFloat(this.totalCzxpToBuy / 10000000).toFixed(7);
     },
   },
 };

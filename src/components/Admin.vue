@@ -3,8 +3,10 @@
     <main role="main" class="container">
       <b-container fluid class="text-center">
         <h1>Administrative functions</h1>
-        <p>Don't bother trying unless you have the contract admin wallet connected</p>
+        <p>Don't bother trying unless you are the owner of the contract</p>
+        <br/><br/>
         <h4>Award Booster Credits:</h4>
+        Total boosters Rewarded: {{totalRewarded}}
         <b-row>
           <b-col sm="8">
             <b-form-input type="text" v-model="walletToReward" placeholder="0x00....00"></b-form-input>
@@ -13,9 +15,10 @@
             <b-form-input type="number" min="1" max="50" v-model="creditAmountToAward" placeholder="# of credits"></b-form-input>
           </b-col>
           <b-col>
-            <b-button type="submit" variant="primary">Submit</b-button>
+            <b-button type="submit" variant="primary" @click="awardBoosterCredits">Submit</b-button>
           </b-col>
         </b-row>
+        <br/><br/><br/><br/>
       </b-container>
     </main>
   </div>
@@ -36,7 +39,7 @@ import apexchart from "vue-apexcharts";
 import { ethers } from "ethers";
 import { isMetamaskInstalled } from "../store/blockChainStore";
 import { isLocal } from "../util/constants/networks";
-import { querySubGraph } from "../util/bodyUtil";
+import { querySubGraph } from "../util/bodyUtil"; 
 
 export default {
   name: "Admin",
@@ -54,6 +57,7 @@ export default {
     return {
       walletToReward: "",
       creditAmountToAward: "",
+      totalRewarded: "Loading...",
     };
   },
   computed: {
@@ -64,6 +68,7 @@ export default {
       getTotalNftSupply: "blockChain/getTotalNftSupply",
       getTotalNftTypes: "blockChain/getTotalNftTypes",
       getChainId: "blockChain/getChainId",
+      getSignedZoombiesContract: "blockChain/getSignedZoombiesContract",
     }),
     metamaskInstalled: () => {
       return isMetamaskInstalled();
@@ -85,8 +90,25 @@ export default {
   },
   watch: {
 
+    getSignedZoombiesContract: async function() {
+      console.log("got the signed contract");
+      this.totalRewarded = await this.getSignedZoombiesContract.totalBoostersRewarded();
+    }
+
   },
   methods: {
+    awardBoosterCredits: async function() {
+      console.log("clicked !");
+      console.log(this.walletToReward);
+      console.log(this.creditAmountToAward);
+      //const tbr = await this.getSignedZoombiesContract.totalBoostersRewarded();
+      //console.log(tbr);
+      try {
+        await this.getSignedZoombiesContract.awardBoosterCredits(this.walletToReward, this.creditAmountToAward.toString());
+      }catch(error) {
+        alert(error.message);
+      }
+    },
     formatNumber(number) {
       return parseInt(number.toFixed(0)).toLocaleString();
     },

@@ -198,7 +198,11 @@
                     "
                   />
                   Mint NFT for
-                  {{ cardCost }}
+                  {{
+                    getZoomBalance < parseInt(card.unlock_czxp)
+                      ? (card.cost * 3).toFixed(3)
+                      : card.cost
+                  }}
                   <img src="@/assets/movr_logo.png" class="mr-icon" />
                 </b-button>
                 <img

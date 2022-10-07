@@ -355,8 +355,8 @@ export default {
                       }`;
 
       const graphEndPoint = (isLocal)
-        ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph__cnlhb"
-        : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver" ;
+        ? "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver"
+        : "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver" ;
 
       try {
         const result = await fetch(

@@ -137,8 +137,8 @@ export const queryMintedTypes = async () => {
       `;
 
       const graphEndPoint = isLocal
-        ? "https://api.subquery.network/sq/ryanprice/moonbase-alpha-zoom-and-zoombies-nft-subgraph"
-        : "https://api.subquery.network/sq/ryanprice/zoombies-moonriver";
+        ? "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver"
+        : "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver";
 
       const result = await fetch(graphEndPoint, {
         method: "POST",

@@ -204,7 +204,8 @@
                   </a>
                 </b-card>
               </b-col>
-              <b-col sm="12" lg="6">
+
+              <!-- b-col sm="12" lg="6">
                 <b-card class="market" no-body>
                   <a
                     class="market-btn"
@@ -229,7 +230,8 @@
                     </div>
                   </a>
                 </b-card>
-              </b-col>
+              </b-col-->
+              
             </b-row>
 
             <br />

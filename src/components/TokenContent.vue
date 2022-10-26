@@ -29,8 +29,11 @@
           </div>
           <div v-else class="row">
             <div class="col-sm text-center"><br/>
-              <h4 class="valuation-label">Card Scarcity Rating</h4>
-              Most Scarce = 100
+              <a href="https://zoombies.world/valuator/" target="_blank" class="text-white btn btn-success btn-sm">What is this ?</a><br/>
+<br/>
+              <h4 class="valuation-label">NFT Value Score</h4>
+              
+              Most Valuable = 100
 
               <apexchart
                 id="chartContainer"
@@ -40,6 +43,7 @@
                 :options="chartOptions"
                 :series="chartSeries"
               ></apexchart>
+
 
               <span class="valuation-label">Valuation Data:</span><br/>
               <strong>Edition Maximum:</strong> {{edition_max}}<br/>
@@ -230,6 +234,7 @@ export default {
       total_minted: "Fetching...",
       total_sacrificed: "Fetching...",
       total_circulation: "Fetching...",
+      ZVScore: 0,
       card: {
         id: null,
         name: "Loading...",
@@ -253,31 +258,43 @@ export default {
       etherscan_token_id:
         "https://blockscout.moonriver.moonbeam.network/tokens/",
       tokenToSearch: "",
-      chartSeries: [70],
+      chartSeries: [0],
       chartOptions: {
         chart: {
           type: 'radialBar',
         },
+        labels: [""],
+        colors: ["#f8ff01"],
+        fill: {
+          type: "gradient",
+          gradient: {
+            shade: "dark",
+            type: "vertical",
+            gradientToColors: ["#28a745"],
+            stops: [0, 100]
+          }
+        },
         plotOptions: {
           radialBar: {
-            hollow: {
-              margin: 10,
-              size: '40%',
-            },
             dataLabels: {
-              show: true,
               name: {
-                show: true,
-                fontSize: '36px',
-                fontWeight: 900,
+                show: false,
+                color: "#fff",
+                fontSize: "16px"
               },
               value: {
-                show: false
-              }
-            },
+                show: true,
+                offsetY: 8,
+                color: "#fff",
+                fontSize: '25px',
+                formatter: function (value) {
+                  return (value + " ")
+                }
+              },
+            }
           },
         },
-        labels: ['??'],
+
       },
       items: [
         {
@@ -304,10 +321,12 @@ export default {
     getReadOnlyZoombiesContract(value) {
       if (value) {
         this.loadCard(this.token_id);
+        this.getZVScore();
       }
     },
     "$route.params.token_id": function (id) {
       this.token_id = parseInt(id);
+      this.getZVScore();
       this.loadCard(this.token_id);
     },
   },
@@ -315,10 +334,33 @@ export default {
     //grab the token id from the url
     this.token_id = parseInt(this.$route.params.token_id);
     if (this.isDAppConnected) {
+      this.getZVScore();
       this.loadCard(this.token_id);
     }
   },
   methods: {
+    getZVScore: async function () {
+      console.log("Get ZVScore for token ", this.token_id);
+      try {
+        const result = await fetch(
+          `https://api.zoombies.world/valuator/getZVScore/${this.token_id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          }
+        )
+        const res = await result.json();
+        console.log(res);
+        console.log("ZVScore got :", res.Score);
+        this.ZVScore = res.Score;
+        this.chartSeries= [res.Score];
+      }catch(e){
+        console.error("getZVScore FAILED:", e.message);
+      }
+    },
     querySubGraph: async function (cardTypeId) {
       const query = `query {
                         nftTransfers(
@@ -396,6 +438,7 @@ export default {
       }
     },
     loadCard: async function (token_id) {
+      console.log("Load card....");
       if (!this.getReadOnlyZoombiesContract) return;
       try {
         const res = await this.getReadOnlyZoombiesContract.nfts(token_id);

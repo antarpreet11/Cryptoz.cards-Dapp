@@ -183,7 +183,7 @@
                 <b-card class="market" no-body>
                   <a
                     class="market-btn"
-                    href="https://app.moonlit.finance/farm?farmPool=ZOOM_MOVR"
+                    href="https://app.moonlit.finance/?swapPair=MOVR_ZOOM"
                     target="_blank"
                   >
                     <div class="market-info">
@@ -231,7 +231,7 @@
                   </a>
                 </b-card>
               </b-col-->
-              
+
             </b-row>
 
             <br />

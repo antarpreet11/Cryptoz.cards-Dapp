@@ -209,6 +209,27 @@
         </b-row>
       </b-container>
     </main>
+    <div class="network-modal">
+      <h1 id="network-modal-title">Select a network</h1>
+      <div class="network-switch-btn-container">
+        <button class="network-links">
+          <img
+            src="https://zoombies.world/images/moonbase.png"
+            alt="Moonbase Alpha Logo"
+            class="network-icons"
+          />
+          <p>Moonbase Alpha</p>
+        </button>
+        <button class="network-links">
+          <img
+            src="https://zoombies.world/images/mr-icon.png"
+            alt="Moonriver Logo"
+            class="network-icons"
+          />
+          <p>Moonriver</p>
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -433,6 +454,9 @@ export default {
     },
   },
   methods: {
+    goto: function (link) {
+      window.location.replace(link)
+    },
     newRangeSelected() {
       let start = Math.trunc(this.rangeSelected * 14);
       this.bindBarChart(start, start + 14);
@@ -903,6 +927,58 @@ span.apexcharts-legend-text {
 
 .apexcharts-legend-text {
   color: #ffffff;
+}
+
+.network-modal {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 450px;
+  border: 2px solid white;
+  border-radius: 5px;
+  background-color: #2c2b2d;
+  padding: 8px 16px;
+  padding-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.network-switch-btn-container {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  margin-top: 16px;
+  grid-column-gap: 8px;
+  column-gap: 8px;
+  grid-row-gap: 16px;
+  row-gap: 16px;
+}
+
+.network-switch-btn-container :hover {
+  background-color: #4a4a4a;
+}
+
+.network-links {
+  color: white;
+  margin-right: 16px;
+  background: none;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.network-links p {
+  font-size: 16px;
+  margin: 0;
+}
+.network-icons {
+  width: 30px;
+  border-radius: 9999px;
+  margin-right: 8px;
 }
 
 </style>

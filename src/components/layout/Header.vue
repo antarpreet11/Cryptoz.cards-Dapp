@@ -8,7 +8,7 @@
       hide-footer
       header-bg-variant="dark"
       header-text-variant="light"
-      body-bg-variant="dark"
+      body-bg-variant="dark" 
       body-text-variant="dark"
     >
       <b-jumbotron class="jumbo" :lead="sponsorTitle">
@@ -186,6 +186,11 @@
             Card Sets
           </router-link>
         </li>
+        <div class="network-container">
+          <button class="network-button" @click="networkChangeHandler">
+            <img src="../assets/movr_logo.png" class="network-img" alt="network-logo"/>
+          </button>  
+        </div>
         <div class="desktop-bonus">
           <div
             v-if="isWalletConnected && bonusReady && showSpinner == false"
@@ -402,6 +407,7 @@
 import { showSuccessToast, showErrorToast } from "../../util/showToast";
 import moment from "moment";
 import dAppStates from "@/dAppStates";
+// import VModal from 'vue-js-modal'
 import {
   BModal,
   BJumbotron,
@@ -550,6 +556,9 @@ export default {
     this.getDailyBonusTime();
   },
   methods: {
+    networkChangeHandler: function() {
+      console.log('Click!');
+    },
     toggleMobileDropdown: function () {
       if (this.isMobileDropdownOpen) {
         this.isMobileDropdownOpen = false;
@@ -837,6 +846,38 @@ export default {
       }
     }
   }
+}
+
+.network-img {
+  border-radius: 9999px;
+  width: 100%;
+}
+
+.network-button {
+  border-radius: 9999px;
+  width: 10%;
+}
+
+.network-container {
+  display: flex;
+  justify-content: flex-end;
+  :hover {
+    transform: scale(1.1);
+  }
+}
+
+.network-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.network-switch-btn-container {
+
+}
+
+.network-icons {
+
 }
 
 @media screen and (max-width: 1075px) {

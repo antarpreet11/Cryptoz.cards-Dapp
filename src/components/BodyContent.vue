@@ -212,7 +212,7 @@
     <div class="network-modal">
       <h1 id="network-modal-title">Select a network</h1>
       <div class="network-switch-btn-container">
-        <button class="network-links">
+        <button class="network-links" @click="networkSwitchHandler">
           <img
             src="https://zoombies.world/images/moonbase.png"
             alt="Moonbase Alpha Logo"
@@ -220,7 +220,7 @@
           />
           <p>Moonbase Alpha</p>
         </button>
-        <button class="network-links">
+        <button class="network-links" @click="networkSwitchHandler">
           <img
             src="https://zoombies.world/images/mr-icon.png"
             alt="Moonriver Logo"
@@ -456,6 +456,21 @@ export default {
   methods: {
     goto: function (link) {
       window.location.replace(link)
+    },
+    networkSwitchHandler: function () {
+      window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [{
+            chainId: "0x507",
+            rpcUrls: ["https://rpc.api.moonbase.moonbeam.network/"],
+            chainName: "Moonbase Alpha",
+            nativeCurrency: {
+                name: "DEV",
+                symbol: "DEV",
+                decimals: 18
+            }
+        }]
+    });
     },
     newRangeSelected() {
       let start = Math.trunc(this.rangeSelected * 14);

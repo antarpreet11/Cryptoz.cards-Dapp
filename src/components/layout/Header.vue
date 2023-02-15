@@ -133,6 +133,36 @@
         >
       </div>
     </b-modal>
+    <b-modal
+      id="network-modal"
+      header-bg-variant="dark"
+      body-bg-variant="dark" 
+      body-text-variant="light"
+      footer-bg-variant="dark"
+      hide-footer="true"
+      centered
+    >
+      <h1 id="network-modal-title">Select a network</h1>
+      <div class="network-switch-btn-container">
+        <button class="network-links" @click="moonbaseConnector">
+          <img
+            src="https://zoombies.world/images/moonbase.png"
+            alt="Moonbase Alpha Logo"
+            class="network-icons"
+          />
+          <p>Moonbase Alpha</p>
+        </button>
+        <button class="network-links" @click="moonriverConnector">
+          <img
+            src="https://zoombies.world/images/mr-icon.png"
+            alt="Moonriver Logo"
+            class="network-icons"
+          />
+          <p>Moonriver</p>
+        </button>
+      </div>
+    
+    </b-modal>
     <div class="app-menu-bar">
       <router-link to="/">
         <img
@@ -187,7 +217,7 @@
           </router-link>
         </li>
         <div class="network-container">
-          <button class="network-button" @click="networkChangeHandler">
+          <button class="network-button" @click="networkModalHandler">
             <img src="../assets/movr_logo.png" class="network-img" alt="network-logo"/>
           </button>  
         </div>
@@ -556,8 +586,16 @@ export default {
     this.getDailyBonusTime();
   },
   methods: {
-    networkChangeHandler: function() {
-      console.log('Click!');
+    networkModalHandler: function() {
+      this.$bvModal.show('network-modal');
+    },
+    moonbaseConnector: function () {
+      this.$router.push("/moonbase");
+      this.$bvModal.hide('network-modal');
+    },
+    moonriverConnector: function () {
+      this.$router.push("/moonriver");
+      this.$bvModal.hide('network-modal');
     },
     toggleMobileDropdown: function () {
       if (this.isMobileDropdownOpen) {
@@ -866,19 +904,6 @@ export default {
   }
 }
 
-.network-modal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-}
-
-.network-switch-btn-container {
-
-}
-
-.network-icons {
-
-}
 
 @media screen and (max-width: 1075px) {
   .app-header {
@@ -1284,6 +1309,59 @@ a {
 }
 
 .events-drawer-button {
+  margin-right: 8px;
+}
+
+
+.network-modal {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 450px;
+  border: 2px solid white;
+  border-radius: 5px;
+  background-color: #2c2b2d;
+  padding: 8px 16px;
+  padding-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.network-switch-btn-container {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  margin-top: 16px;
+  grid-column-gap: 8px;
+  column-gap: 8px;
+  grid-row-gap: 16px;
+  row-gap: 16px;
+}
+
+.network-switch-btn-container :hover {
+  background-color: #4a4a4a;
+}
+
+.network-links {
+  color: white;
+  margin-right: 16px;
+  background: none;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.network-links p {
+  font-size: 16px;
+  margin: 0;
+}
+.network-icons {
+  width: 30px;
+  border-radius: 9999px;
   margin-right: 8px;
 }
 </style>

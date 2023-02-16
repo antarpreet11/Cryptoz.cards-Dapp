@@ -30,5 +30,5 @@ export const NETWORKS = {
 
 export const isLocal =
   process.env.NODE_ENV === "development" ||
-  window.location.host !== "movr.zoombies.world";
+  window.location.pathname !== "/moonriver";
 // export const isLocal = false;

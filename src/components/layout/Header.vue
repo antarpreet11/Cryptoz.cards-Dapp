@@ -216,11 +216,11 @@
             Card Sets
           </router-link>
         </li>
-        <div class="network-container">
+        <li class="network-li">
           <button class="network-button" @click="networkModalHandler">
             <img src="../assets/movr_logo.png" class="network-img" alt="network-logo"/>
           </button>  
-        </div>
+        </li>  
         <div class="desktop-bonus">
           <div
             v-if="isWalletConnected && bonusReady && showSpinner == false"
@@ -411,6 +411,13 @@
         <li @click="toggleMobileDropdown">
           <router-link to="/market" class="aqua-header">Markets</router-link>
         </li>
+        <li class="network-li">
+          <div class="network-container">
+            <button class="network-button" @click="networkModalHandler();toggleMobileDropdown();">
+              <img src="../assets/movr_logo.png" class="network-img" alt="network-logo"/>
+            </button>  
+          </div>
+        </li>
         <li><img class="brain" src="@/components/assets/brain.svg" /></li>
         <li @click="toggleMobileDropdown">
           <router-link to="/view/1" class="white-header">View</router-link>
@@ -491,7 +498,7 @@ export default {
     getSponsorRoute() {
       let url;
 
-      if (window.location.host === "moonbase.zoombies.world") {
+      if (window.location.host === "/moonbase") {
         url = "https://moonbase.zoombies.world";
       } else if (process.env.NODE_ENV === "development") {
         url = "localhost:8080";
@@ -578,7 +585,7 @@ export default {
     },
   },
   mounted() {
-    if (window.location.host == "movr.zoombies.world") {
+    if (window.location.pathname == "/moonriver") {
       this.onMainNet = true;
     } else {
       this.onMainNet = false;
@@ -893,17 +900,8 @@ export default {
 
 .network-button {
   border-radius: 9999px;
-  width: 10%;
+  width: 50px;
 }
-
-.network-container {
-  display: flex;
-  justify-content: flex-end;
-  :hover {
-    transform: scale(1.1);
-  }
-}
-
 
 @media screen and (max-width: 1075px) {
   .app-header {
@@ -1363,5 +1361,11 @@ a {
   width: 30px;
   border-radius: 9999px;
   margin-right: 8px;
+}
+
+.network-li {
+  display: inline-block;
+  margin-right: 12px;
+  max-width: min-content;
 }
 </style>

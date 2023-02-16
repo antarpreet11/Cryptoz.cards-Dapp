@@ -408,7 +408,7 @@ export default {
   mounted() {
     if (
       this.getChainId == 1285 ||
-      window.location.host == "movr.zoombies.world"
+      window.location.pathname == "/moonriver"
     ) {
       this.onMainNet = true;
     } else {

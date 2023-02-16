@@ -29,6 +29,5 @@ export const NETWORKS = {
 */
 
 export const isLocal =
-  process.env.NODE_ENV === "development" ||
-  window.location.pathname !== "/moonriver";
+  window.location.pathname == "/moonbase";
 // export const isLocal = false;

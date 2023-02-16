@@ -68,3 +68,5 @@ var topVue = new Vue({
   },
   render: (h) => h(App),
 });
+
+app.config.globalProperties.window = window;

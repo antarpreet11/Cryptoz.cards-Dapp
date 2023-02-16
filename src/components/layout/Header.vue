@@ -218,7 +218,16 @@
         </li>
         <li class="network-li">
           <button class="network-button" @click="networkModalHandler">
-            <img src="../assets/movr_logo.png" class="network-img" alt="network-logo"/>
+            <img v-if="isMovr"
+                src="../assets/movr_logo.png" 
+                class="network-img" 
+                alt="network-logo"
+              />
+              <img v-else
+                src="https://zoombies.world/images/moonbase.png"
+                class="network-img" 
+                alt="network-logo"
+              />
           </button>  
         </li>  
         <div class="desktop-bonus">
@@ -414,7 +423,16 @@
         <li class="network-li">
           <div class="network-container">
             <button class="network-button" @click="networkModalHandler();toggleMobileDropdown();">
-              <img src="../assets/movr_logo.png" class="network-img" alt="network-logo"/>
+              <img v-if="isMovr"
+                src="../assets/movr_logo.png" 
+                class="network-img" 
+                alt="network-logo"
+              />
+              <img v-else
+                src="https://zoombies.world/images/moonbase.png"
+                class="network-img" 
+                alt="network-logo"
+              />
             </button>  
           </div>
         </li>
@@ -475,6 +493,14 @@ export default {
     BButton,
   },
   computed: {
+    isMovr() {
+      if(window.location.pathname == '/moonriver') { 
+        return true;
+      }
+      else {
+        return false;
+      }
+    },
     classObject: function () {
       //Style the link colours
       //const chainId = getChainId();
@@ -498,7 +524,7 @@ export default {
     getSponsorRoute() {
       let url;
 
-      if (window.location.host === "/moonbase") {
+      if (window.location.pathname === "/moonbase") {
         url = "https://moonbase.zoombies.world";
       } else if (process.env.NODE_ENV === "development") {
         url = "localhost:8080";
@@ -594,15 +620,22 @@ export default {
   },
   methods: {
     networkModalHandler: function() {
+      console.log(window.location)
       this.$bvModal.show('network-modal');
     },
     moonbaseConnector: function () {
-      this.$router.push("/moonbase");
       this.$bvModal.hide('network-modal');
+      if(window.location.pathname !== '/moonbase') {
+        this.$router.push("/moonbase");
+        setTimeout(() => window.location.reload(), 500);
+      }
     },
     moonriverConnector: function () {
-      this.$router.push("/moonriver");
       this.$bvModal.hide('network-modal');
+      if(window.location.pathname !== './moonriver') {
+        this.$router.push("/moonriver");
+        setTimeout(() => window.location.reload(), 500);
+      }
     },
     toggleMobileDropdown: function () {
       if (this.isMobileDropdownOpen) {

@@ -365,15 +365,17 @@ export default {
     },
     getMyCryptLink() {
       let url;
-      if (window.location.host === "/moonbase") {
+      if (window.location.pathname === "/moonbase") {
         url = "https://moonbase.zoombies.world";
       } else if (process.env.NODE_ENV === "development") {
         url = "localhost:8080";
       } else {
         url = "https://movr.zoombies.world";
       }
+      // "https://zoombies.world"
 
       return `${url}/my-zoombies-nfts/${this.getWalletAddress}`;
+      return "https://zoombies.world/moonriver/my-zoombies-nfts"
     },
   },
   watch: {

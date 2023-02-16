@@ -470,7 +470,7 @@ export default {
     getCryptLink(owner) {
       let url;
 
-      if (window.location.host === "/moonbase") {
+      if (window.location.pathname === "/moonbase") {
         url = "https://moonbase.zoombies.world";
       } else if (process.env.NODE_ENV === "development") {
         url = "http://localhost:8080";

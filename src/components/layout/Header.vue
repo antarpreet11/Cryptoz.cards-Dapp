@@ -169,6 +169,7 @@
           class="zoombie-logo"
           alt="Zoombies World Logo"
           src="@/assets/zoombies_logo.svg"
+          @click="logoClickHandler"
         />
       </router-link>
       <ul class="app-menu-bar-items">
@@ -298,6 +299,11 @@
           src="https://zoombies.world/images/mr-icon.png"
           class="header-icon"
         />
+        <img
+          v-else
+          src="../assets/moonbase.png"
+          class="header-icon"
+        />
         <span
           >{{
             onMainNet
@@ -368,7 +374,7 @@
           />
           <span
             >{{
-              onMainNet ? getBalance.toFixed(4) : getBalance.toFixed(3) + " DEV"
+              onMainNet ? getBalance.toFixed(4) + " MOVR" : getBalance.toFixed(3) + " DEV"
             }}
           </span>
         </div>
@@ -494,7 +500,8 @@ export default {
   },
   computed: {
     isMovr() {
-      if(window.location.pathname == '/moonriver') { 
+      if(window.location.pathname == '/moonriver' || window.location.pathname == '/') 
+      { 
         return true;
       }
       else {
@@ -611,7 +618,9 @@ export default {
     },
   },
   mounted() {
-    if (window.location.pathname == "/moonriver") {
+    if (window.location.pathname == "/moonriver" || 
+        window.location.pathname == '/'
+    ) {
       this.onMainNet = true;
     } else {
       this.onMainNet = false;
@@ -619,6 +628,15 @@ export default {
     this.getDailyBonusTime();
   },
   methods: {
+    logoClickHandler: function() {
+      if (window.location.pathname == "/moonriver" || 
+        window.location.pathname == '/') 
+      {
+        this.onMainNet = true;
+      } else {
+        this.onMainNet = false;
+      }
+    },
     networkModalHandler: function() {
       console.log(window.location)
       this.$bvModal.show('network-modal');

@@ -70,13 +70,13 @@ export default {
   mounted() {
     if (
       this.getChainId == 1285 ||
-      window.location.pathname == "/moonriver"
+      window.location.pathname == "/moonriver" ||
+      window.location.pathname == '/'
     ) {
       this.onMainNet = true;
     } else {
       this.onMainNet = false;
     }
-
   },
   watch: {
     getSignedZoombiesContract: async function() {

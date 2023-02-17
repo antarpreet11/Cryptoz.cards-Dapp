@@ -32,5 +32,5 @@ export const CURR_CHAIN =
   window.location.pathname == "/moonbase" ? 1287
   : window.location.pathname == "/moonriver" ? 1285
   : window.location.pathname == "/moonbeam" ? 1284 : 
-  1284;
+  1285;
 // export const CURR_CHAIN = false;

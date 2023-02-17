@@ -67,7 +67,7 @@ import animationData from "./assets/NotificationLottie.json";
 import "./main.css";
 
 import { mapGetters } from "vuex";
-import { isLocal } from "./util/constants/networks";
+import { CURR_CHAIN } from "./util/constants/networks";
 
 export default {
   name: "App",
@@ -93,7 +93,7 @@ export default {
   async created() {
     MessageBus.$on("connect", () => {
       this.$store.dispatch("blockChain/initBlockchain", {
-        isLocal: isLocal,
+        CURR_CHAIN: CURR_CHAIN,
         noMetamaskCallback: () => {
           this.$bvModal.show("no-web3-modal");
         },
@@ -125,7 +125,7 @@ export default {
   beforeCreate() {
     if (window.ethereum) {
       this.$store.dispatch("blockChain/initBlockchain", {
-        isLocal: isLocal,
+        CURR_CHAIN: CURR_CHAIN,
         noMetamaskCallback: () => {
           this.$bvModal.show("no-web3-modal");
         },
@@ -136,7 +136,7 @@ export default {
         "ethereum#initialized",
         () => {
           this.$store.dispatch("blockChain/initBlockchain", {
-            isLocal: isLocal,
+            CURR_CHAIN: CURR_CHAIN,
             noMetamaskCallback: () => {
               this.$bvModal.show("no-web3-modal");
             },

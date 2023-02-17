@@ -225,7 +225,7 @@ import { mapGetters } from "vuex";
 import apexchart from "vue-apexcharts";
 import { ethers } from "ethers";
 import { isMetamaskInstalled } from "../store/blockChainStore";
-import { isLocal } from "../util/constants/networks";
+import { CURR_CHAIN } from "../util/constants/networks";
 import { querySubGraph } from "../util/bodyUtil";
 
 export default {
@@ -577,9 +577,9 @@ export default {
                       }
                     }`;
 
-      const graphEndPoint = isLocal
-        ? "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver"
-        : "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver";
+      const graphEndPoint = CURR_CHAIN == 1285 ? "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver"
+        : CURR_CHAIN == 1287 ? "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver"
+        : CURR_CHAIN == 1284 ? "moonbeam-url-here" : "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver";
 
       const result = await fetch(graphEndPoint, {
         method: "POST",

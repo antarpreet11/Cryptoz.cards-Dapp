@@ -12,7 +12,7 @@ import {
 } from "../util/watcherUtil";
 import WebsocketProvider from "../util/WebsocketProvider";
 import { MessageBus } from "../messageBus";
-import { isLocal } from "../util/constants/networks";
+import { CURR_CHAIN } from "../util/constants/networks";
 
 const DEFAULT_BLOCKCHAIN_STATE = {
   metamaskContract: null,
@@ -67,6 +67,18 @@ const prodChainParam = {
   blockExplorerUrls: ["https://moonriver.moonscan.io/"],
 };
 
+const moonbeamChainParam = {
+  chainId: "0x504", // Moonriver's chainId is 1285, which is 0x505 in hex
+  chainName: "Moonbeam",
+  nativeCurrency: {
+    name: "GLMR",
+    symbol: "GLMR",
+    decimals: 18,
+  },
+  rpcUrls: [""],
+  blockExplorerUrls: ["https://moonriver.moonscan.io/"],
+};
+
 const setupMetamask = async () => {
   try {
     const metamaskProvider = await detectEthereumProvider({
@@ -79,7 +91,10 @@ const setupMetamask = async () => {
       });
       await metamaskProvider.request({
         method: "wallet_addEthereumChain",
-        params: [isLocal ? devChainParam : prodChainParam],
+        params: [CURR_CHAIN == 1287 ? devChainParam 
+                : CURR_CHAIN == 1285 ? prodChainParam 
+                : CURR_CHAIN == 1284 ? moonbeamChainParam 
+                : prodChainParam],
       });
 
       const etherWrapper = new ethers.providers.Web3Provider(window.ethereum);
@@ -255,7 +270,7 @@ const blockchainStore = {
      * @param {*} payload
      * {
      *  noMetamaskCallback: a callback fn to call when no metamask detected.
-     *  isLocal: boolean
+     *  CURR_CHAIN: boolean
      * }
      */
     async initBlockchain({ commit, state, dispatch }, payload) {
@@ -270,7 +285,7 @@ const blockchainStore = {
         dispatch
       );
 
-      const websocketProvider = new WebsocketProvider(isLocal, (provider) => {
+      const websocketProvider = new WebsocketProvider(CURR_CHAIN, (provider) => {
         /**
          * After websocket reconnects:
          * - Set new contracts

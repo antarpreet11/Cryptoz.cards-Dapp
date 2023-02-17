@@ -28,6 +28,9 @@ export const NETWORKS = {
 }
 */
 
-export const isLocal =
-  window.location.pathname == "/moonbase";
-// export const isLocal = false;
+export const CURR_CHAIN =
+  window.location.pathname == "/moonbase" ? 1287
+  : window.location.pathname == "/moonriver" ? 1285
+  : window.location.pathname == "/moonbeam" ? 1284 : 
+  1284;
+// export const CURR_CHAIN = false;

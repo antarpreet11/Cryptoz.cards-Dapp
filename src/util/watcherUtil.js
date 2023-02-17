@@ -3,9 +3,9 @@ import { ethers } from "ethers";
 import zoomTokenContractJson from "../contracts/ZoomToken.json";
 import zoombiesContractJson from "../contracts/Zoombies.json";
 
-import { isLocal } from "./constants/networks";
+import { CURR_CHAIN } from "./constants/networks";
 
-const networkId = isLocal ? 1287 : 1285;
+const networkId = CURR_CHAIN;
 
 const zoomTokenContractAddress =
   zoomTokenContractJson.networks[networkId].address;

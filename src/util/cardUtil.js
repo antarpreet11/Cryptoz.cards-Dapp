@@ -1,5 +1,5 @@
 import axios from "axios";
-import { isLocal } from "./constants/networks";
+import { CURR_CHAIN } from "./constants/networks";
 
 export const RARITY_CLASSES = {
   Common: "card-bg card-bg-6",
@@ -136,9 +136,9 @@ export const queryMintedTypes = async () => {
       }
       `;
 
-      const graphEndPoint = isLocal
-        ? "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver"
-        : "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver";
+      const graphEndPoint = CURR_CHAIN == 1285 ? "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver"
+        : CURR_CHAIN == 1287 ? "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver"
+        : CURR_CHAIN == 1284 ? "moonbeam-url-here" : "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver";
 
       const result = await fetch(graphEndPoint, {
         method: "POST",

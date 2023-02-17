@@ -164,12 +164,11 @@
     
     </b-modal>
     <div class="app-menu-bar">
-      <router-link to="/">
+      <router-link to="/" @click="logoClickHandler()">
         <img
           class="zoombie-logo"
           alt="Zoombies World Logo"
           src="@/assets/zoombies_logo.svg"
-          @click="logoClickHandler"
         />
       </router-link>
       <ul class="app-menu-bar-items">

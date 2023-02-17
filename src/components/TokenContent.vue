@@ -199,7 +199,7 @@
 </template>
 
 <script>
-import { isLocal } from "../util/constants/networks";
+import { CURR_CHAIN } from "../util/constants/networks";
 import axios from "axios";
 import OwnedCardContent from "@/components/OwnedCardContent.vue";
 import dAppStates from "@/dAppStates";
@@ -396,9 +396,9 @@ export default {
                         }
                       }`;
 
-      const graphEndPoint = (isLocal)
-        ? "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver"
-        : "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver" ;
+      const graphEndPoint = CURR_CHAIN == 1285 ? "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver"
+        : CURR_CHAIN == 1287 ? "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver"
+        : CURR_CHAIN == 1284 ? "moonbeam-url-here" : "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver";
 
       try {
         const result = await fetch(

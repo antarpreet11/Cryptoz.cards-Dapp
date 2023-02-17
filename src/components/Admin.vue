@@ -38,7 +38,7 @@ import { mapGetters } from "vuex";
 import apexchart from "vue-apexcharts";
 import { ethers } from "ethers";
 import { isMetamaskInstalled } from "../store/blockChainStore";
-import { isLocal } from "../util/constants/networks";
+import { CURR_CHAIN } from "../util/constants/networks";
 import { querySubGraph } from "../util/bodyUtil"; 
 
 export default {

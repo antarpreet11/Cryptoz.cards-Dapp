@@ -1,4 +1,4 @@
-import { isLocal } from "./constants/networks";
+import { CURR_CHAIN } from "./constants/networks";
 
 
 export const querySubGraph = async () => {
@@ -28,9 +28,9 @@ export const querySubGraph = async () => {
                   }
                 }`;
 
-  const graphEndPoint = isLocal
-    ? "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver"
-    : "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver";
+  const graphEndPoint = CURR_CHAIN == 1285 ? "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver"
+    : CURR_CHAIN == 1287 ? "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver"
+    : CURR_CHAIN == 1284 ? "moonbeam-url-here" : "https://api.subquery.network/sq/Cardinal-Entertainment/zoombies-moonriver";
 
   try {
     const result = await fetch(graphEndPoint, {
